@@ -40,42 +40,57 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  /* AMANCE Brand Colors */
+  --color-amance-green: var(--amance-green);
+  --color-amance-green-light: var(--amance-green-light);
+  --color-amance-green-dark: var(--amance-green-dark);
+  --color-amance-blue: var(--amance-blue);
+  --color-amance-blue-light: var(--amance-blue-light);
+  --color-amance-blue-dark: var(--amance-blue-dark);
 }
 
 :root {
-  --primary: var(--color-blue-700);
-  --primary-foreground: var(--color-blue-50);
-  --sidebar-primary: var(--color-blue-600);
-  --sidebar-primary-foreground: var(--color-blue-50);
-  --chart-1: var(--color-blue-300);
-  --chart-2: var(--color-blue-500);
-  --chart-3: var(--color-blue-600);
-  --chart-4: var(--color-blue-700);
-  --chart-5: var(--color-blue-800);
-  --radius: 0.65rem;
+  /* AMANCE Brand Colors */
+  --amance-green: oklch(0.52 0.15 145);
+  --amance-green-light: oklch(0.72 0.12 145);
+  --amance-green-dark: oklch(0.36 0.14 145);
+  --amance-blue: oklch(0.26 0.09 240);
+  --amance-blue-light: oklch(0.42 0.10 240);
+  --amance-blue-dark: oklch(0.16 0.08 240);
+
+  --primary: oklch(0.52 0.15 145);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.26 0.09 240);
+  --secondary-foreground: oklch(1 0 0);
+  --sidebar-primary: oklch(0.52 0.15 145);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --chart-1: oklch(0.52 0.15 145);
+  --chart-2: oklch(0.26 0.09 240);
+  --chart-3: oklch(0.65 0.12 145);
+  --chart-4: oklch(0.42 0.10 240);
+  --chart-5: oklch(0.72 0.12 145);
+  --radius: 0.75rem;
   --background: oklch(1 0 0);
-  --foreground: oklch(0.235 0.015 65);
+  --foreground: oklch(0.18 0.08 240);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.235 0.015 65);
+  --card-foreground: oklch(0.18 0.08 240);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.235 0.015 65);
-  --secondary: oklch(0.98 0.001 286.375);
-  --secondary-foreground: oklch(0.4 0.015 65);
-  --muted: oklch(0.967 0.001 286.375);
-  --muted-foreground: oklch(0.552 0.016 285.938);
-  --accent: oklch(0.967 0.001 286.375);
-  --accent-foreground: oklch(0.141 0.005 285.823);
+  --popover-foreground: oklch(0.18 0.08 240);
+  --muted: oklch(0.96 0.005 240);
+  --muted-foreground: oklch(0.55 0.03 240);
+  --accent: oklch(0.92 0.05 145);
+  --accent-foreground: oklch(0.26 0.09 240);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(0.92 0.004 286.32);
-  --input: oklch(0.92 0.004 286.32);
-  --ring: oklch(0.623 0.214 259.815);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.235 0.015 65);
-  --sidebar-accent: oklch(0.967 0.001 286.375);
-  --sidebar-accent-foreground: oklch(0.141 0.005 285.823);
-  --sidebar-border: oklch(0.92 0.004 286.32);
-  --sidebar-ring: oklch(0.623 0.214 259.815);
+  --border: oklch(0.90 0.01 240);
+  --input: oklch(0.90 0.01 240);
+  --ring: oklch(0.52 0.15 145);
+  --sidebar: oklch(0.97 0.005 240);
+  --sidebar-foreground: oklch(0.18 0.08 240);
+  --sidebar-accent: oklch(0.92 0.05 145);
+  --sidebar-accent-foreground: oklch(0.26 0.09 240);
+  --sidebar-border: oklch(0.90 0.01 240);
+  --sidebar-ring: oklch(0.52 0.15 145);
 }
 
 .dark {
@@ -119,6 +134,14 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Open Sans', 'Roboto', sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', 'Lato', sans-serif;
+    font-weight: 700;
+  }
+  html {
+    scroll-behavior: smooth;
   }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
@@ -174,4 +197,61 @@
       max-width: 1280px; /* Standard content width */
     }
   }
+
+  /* AMANCE Custom Utilities */
+  .btn-primary {
+    @apply inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-white transition-all duration-300 shadow-md hover:shadow-lg;
+    background-color: var(--amance-green);
+  }
+  .btn-primary:hover {
+    background-color: var(--amance-green-dark);
+    transform: translateY(-1px);
+  }
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-white transition-all duration-300 shadow-md hover:shadow-lg;
+    background-color: var(--amance-blue);
+  }
+  .btn-secondary:hover {
+    background-color: var(--amance-blue-dark);
+    transform: translateY(-1px);
+  }
+  .btn-outline-white {
+    @apply inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-white border-2 border-white transition-all duration-300;
+  }
+  .btn-outline-white:hover {
+    background-color: white;
+    color: var(--amance-blue);
+  }
+  .card-amance {
+    @apply bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden;
+  }
+  .section-title {
+    font-family: 'Montserrat', 'Lato', sans-serif;
+    font-weight: 800;
+    color: var(--amance-blue);
+    @apply text-3xl md:text-4xl mb-4;
+  }
+  .section-subtitle {
+    @apply text-lg text-gray-600 max-w-2xl mx-auto;
+  }
+  .gradient-hero {
+    background: linear-gradient(135deg, oklch(0.16 0.08 240) 0%, oklch(0.26 0.09 240) 50%, oklch(0.36 0.14 145) 100%);
+  }
+  .gradient-green {
+    background: linear-gradient(135deg, oklch(0.52 0.15 145) 0%, oklch(0.36 0.14 145) 100%);
+  }
+  .gradient-blue {
+    background: linear-gradient(135deg, oklch(0.26 0.09 240) 0%, oklch(0.16 0.08 240) 100%);
+  }
+  .text-amance-green { color: var(--amance-green); }
+  .text-amance-blue { color: var(--amance-blue); }
+  .bg-amance-green { background-color: var(--amance-green); }
+  .bg-amance-green-light { background-color: var(--amance-green-light); }
+  .bg-amance-green-dark { background-color: var(--amance-green-dark); }
+  .bg-amance-blue { background-color: var(--amance-blue); }
+  .bg-amance-blue-light { background-color: var(--amance-blue-light); }
+  .bg-amance-blue-dark { background-color: var(--amance-blue-dark); }
+  .bg-amance-gray-light { background-color: oklch(0.97 0.005 240); }
+  .border-amance-green { border-color: var(--amance-green); }
+  .border-amance-blue { border-color: var(--amance-blue); }
 }

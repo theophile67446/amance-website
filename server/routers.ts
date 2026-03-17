@@ -2,27 +2,97 @@ import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
+import { z } from "zod";
+import { getDb } from "./db";
+import { contacts, registrations } from "../drizzle/schema";
+import { notifyOwner } from "./_core/notification";
 
 export const appRouter = router({
-    // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
   system: systemRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
       const cookieOptions = getSessionCookieOptions(ctx.req);
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
-      return {
-        success: true,
-      } as const;
+      return { success: true } as const;
     }),
   }),
 
-  // TODO: add feature routers here, e.g.
-  // todo: router({
-  //   list: protectedProcedure.query(({ ctx }) =>
-  //     db.getUserTodos(ctx.user.id)
-  //   ),
-  // }),
+  contact: router({
+    submit: publicProcedure
+      .input(z.object({
+        firstName: z.string().min(1),
+        lastName: z.string().min(1),
+        email: z.string().email(),
+        phone: z.string().optional(),
+        subject: z.string().min(1),
+        message: z.string().min(10),
+      }))
+      .mutation(async ({ input }) => {
+        const db = await getDb();
+        if (db) {
+          await db.insert(contacts).values({
+            firstName: input.firstName,
+            lastName: input.lastName,
+            email: input.email,
+            phone: input.phone ?? null,
+            subject: input.subject,
+            message: input.message,
+          });
+        }
+        // Notify the owner
+        await notifyOwner({
+          title: `📩 Nouveau message de contact : ${input.subject}`,
+          content: `De : ${input.firstName} ${input.lastName} (${input.email})\n\nSujet : ${input.subject}\n\nMessage : ${input.message}`,
+        });
+        return { success: true };
+      }),
+  }),
+
+  registration: router({
+    submit: publicProcedure
+      .input(z.object({
+        type: z.enum(["benevole", "partenaire"]),
+        firstName: z.string().min(1),
+        lastName: z.string().min(1),
+        email: z.string().email(),
+        phone: z.string().optional(),
+        organization: z.string().optional(),
+        city: z.string().optional(),
+        country: z.string().optional(),
+        motivation: z.string().optional(),
+        skills: z.string().optional(),
+        availability: z.string().optional(),
+        partnerType: z.string().optional(),
+        website: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const db = await getDb();
+        if (db) {
+          await db.insert(registrations).values({
+            type: input.type,
+            firstName: input.firstName,
+            lastName: input.lastName,
+            email: input.email,
+            phone: input.phone ?? null,
+            organization: input.organization ?? null,
+            city: input.city ?? null,
+            country: input.country ?? "Cameroun",
+            motivation: input.motivation ?? null,
+            skills: input.skills ?? null,
+            availability: input.availability ?? null,
+            partnerType: input.partnerType ?? null,
+            website: input.website ?? null,
+          });
+        }
+        const typeLabel = input.type === "benevole" ? "Bénévole" : "Partenaire";
+        await notifyOwner({
+          title: `🙋 Nouvelle inscription ${typeLabel} : ${input.firstName} ${input.lastName}`,
+          content: `Type : ${typeLabel}\nNom : ${input.firstName} ${input.lastName}\nEmail : ${input.email}\nOrganisation : ${input.organization ?? "N/A"}\nMotivation : ${input.motivation ?? "N/A"}`,
+        });
+        return { success: true };
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

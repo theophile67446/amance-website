@@ -1,5 +1,27 @@
 {
   "version": "7",
   "dialect": "mysql",
-  "entries": []
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1773725671269,
+      "tag": "0000_groovy_ken_ellis",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1773725878602,
+      "tag": "0001_numerous_spectrum",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1773725916026,
+      "tag": "0002_spotty_wallow",
+      "breakpoints": true
+    }
+  ]
 }
