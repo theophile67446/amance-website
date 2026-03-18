@@ -1,0 +1,42 @@
+{
+  "buildCommand": "pnpm build",
+  "outputDirectory": "dist/public",
+  "framework": "vite",
+  "env": {
+    "VITE_APP_ID": "@VITE_APP_ID",
+    "JWT_SECRET": "@JWT_SECRET",
+    "DATABASE_URL": "@DATABASE_URL",
+    "OAUTH_SERVER_URL": "@OAUTH_SERVER_URL",
+    "OWNER_OPEN_ID": "@OWNER_OPEN_ID",
+    "NODE_ENV": "production",
+    "BUILT_IN_FORGE_API_URL": "@BUILT_IN_FORGE_API_URL",
+    "BUILT_IN_FORGE_API_KEY": "@BUILT_IN_FORGE_API_KEY"
+  },
+  "functions": {
+    "api/**/*.ts": {
+      "memory": 1024,
+      "maxDuration": 30
+    }
+  },
+  "routes": [
+    {
+      "src": "/api/trpc/(.*)",
+      "dest": "/api/trpc.ts",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE",
+        "PATCH"
+      ]
+    },
+    {
+      "src": "/api/oauth/(.*)",
+      "dest": "/api/oauth.ts"
+    },
+    {
+      "src": "/(?!api/.*)",
+      "dest": "/index.html"
+    }
+  ]
+}
