@@ -17,6 +17,7 @@ import ProjetDetail from "./pages/ProjetDetail";
 import ActualiteDetail from "./pages/ActualiteDetail";
 import MentionsLegales from "./pages/MentionsLegales";
 import PolitiqueConfidentialite from "./pages/PolitiqueConfidentialite";
+import Admin from "./pages/Admin";
 
 function Router() {
   return (
@@ -32,6 +33,7 @@ function Router() {
       <Route path="/transparence" component={Transparence} />
       <Route path="/projets/:slug" component={ProjetDetail} />
       <Route path="/actualites/:slug" component={ActualiteDetail} />
+      <Route path="/admin" component={Admin} />
       <Route path="/mentions-legales" component={MentionsLegales} />
       <Route path="/politique-de-confidentialite" component={PolitiqueConfidentialite} />
       <Route path="/404" component={NotFound} />

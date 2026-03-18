@@ -68,7 +68,7 @@ export default function Admin() {
 }
 
 function ArticlesTab({ setMessage }: { setMessage: (msg: string) => void }) {
-  const { data: articles = [] } = trpc.articles.list.useQuery({ published: false });
+  const { data: articles = [] } = trpc.articles.list.useQuery({});
   const createMutation = trpc.articles.create.useMutation();
   const deleteMutation = trpc.articles.delete.useMutation();
 
@@ -164,8 +164,8 @@ function ArticlesTab({ setMessage }: { setMessage: (msg: string) => void }) {
                 placeholder="https://..."
               />
             </div>
-            <Button type="submit" className="w-full" disabled={createMutation.isLoading}>
-              {createMutation.isLoading ? "Création..." : "Créer Article"}
+            <Button type="submit" className="w-full" disabled={createMutation.isPending}>
+              {createMutation.isPending ? "Création..." : "Créer Article"}
             </Button>
           </form>
         </CardContent>
@@ -293,8 +293,8 @@ function ProjetsTab({ setMessage }: { setMessage: (msg: string) => void }) {
                 onChange={(e) => setForm({ ...form, location: e.target.value })}
               />
             </div>
-            <Button type="submit" className="w-full" disabled={createMutation.isLoading}>
-              {createMutation.isLoading ? "Création..." : "Créer Projet"}
+            <Button type="submit" className="w-full" disabled={createMutation.isPending}>
+              {createMutation.isPending ? "Création..." : "Créer Projet"}
             </Button>
           </form>
         </CardContent>
