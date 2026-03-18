@@ -1,48 +1,55 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu, X, Heart, ChevronDown } from "lucide-react";
+import { Menu, X, Heart, ChevronDown, Globe } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const LOGO_URL = "https://d2xsxph8kpxj0f.cloudfront.net/310519663349492546/QAH5oD3g9NaLpXrMvyrp4h/amance-logo_b61079fb.webp";
-
-const navLinks = [
-  { label: "Accueil", href: "/" },
-  {
-    label: "À Propos",
-    href: "/a-propos",
-    children: [
-      { label: "Mission & Vision", href: "/a-propos#mission" },
-      { label: "Notre Équipe", href: "/a-propos#equipe" },
-      { label: "Transparence", href: "/a-propos#transparence" },
-    ],
-  },
-  {
-    label: "Nos Actions",
-    href: "/nos-actions",
-    children: [
-      { label: "Aide Humanitaire", href: "/nos-actions#humanitaire" },
-      { label: "Santé & Bien-être", href: "/nos-actions#sante" },
-      { label: "Développement Communautaire", href: "/nos-actions#communautaire" },
-      { label: "Conservation Environnementale", href: "/nos-actions#conservation" },
-    ],
-  },
-  { label: "Projets", href: "/projets" },
-  { label: "Actualités", href: "/actualites" },
-  {
-    label: "S'impliquer",
-    href: "/s-impliquer",
-    children: [
-      { label: "Devenir Bénévole", href: "/s-impliquer#benevole" },
-      { label: "Devenir Partenaire", href: "/s-impliquer#partenaire" },
-    ],
-  },
-  { label: "Contact", href: "/contact" },
-];
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [location] = useLocation();
+  const { t, i18n } = useTranslation();
+
+  const toggleLanguage = () => {
+    const newLang = i18n.language === "fr" ? "en" : "fr";
+    i18n.changeLanguage(newLang);
+  };
+
+  const navLinks = [
+    { label: t("nav.home"), href: "/" },
+    {
+      label: t("nav.about"),
+      href: "/a-propos",
+      children: [
+        { label: t("nav.mission"), href: "/a-propos#mission" },
+        { label: t("nav.team"), href: "/a-propos#equipe" },
+        { label: t("nav.transparency"), href: "/a-propos#transparence" },
+      ],
+    },
+    {
+      label: t("nav.actions"),
+      href: "/nos-actions",
+      children: [
+        { label: t("nav.humanitarian"), href: "/nos-actions#humanitaire" },
+        { label: t("nav.health"), href: "/nos-actions#sante" },
+        { label: t("nav.community"), href: "/nos-actions#communautaire" },
+        { label: t("nav.environment"), href: "/nos-actions#conservation" },
+      ],
+    },
+    { label: t("nav.projects"), href: "/projets" },
+    { label: t("nav.news"), href: "/actualites" },
+    {
+      label: t("nav.getInvolved"),
+      href: "/s-impliquer",
+      children: [
+        { label: t("nav.volunteer"), href: "/s-impliquer#benevole" },
+        { label: t("nav.partner"), href: "/s-impliquer#partenaire" },
+      ],
+    },
+    { label: t("nav.contact"), href: "/contact" },
+  ];
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -59,12 +66,12 @@ export default function Navbar() {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-white shadow-lg border-b border-gray-100"
-          : "bg-white/95 backdrop-blur-sm shadow-sm"
+          ? "bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100 py-1"
+          : "bg-white/80 backdrop-blur-sm py-3"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-20 transition-all duration-300">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 flex-shrink-0">
             <img
@@ -74,8 +81,7 @@ export default function Navbar() {
             />
             <div className="hidden sm:block">
               <div
-                className="text-xl font-extrabold leading-tight"
-                style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}
+                className="text-xl font-extrabold leading-tight font-heading text-amance-blue"
               >
                 AMANCE
               </div>
@@ -98,26 +104,9 @@ export default function Navbar() {
                   href={link.href}
                   className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
                     location === link.href
-                      ? "text-white"
-                      : "text-gray-700 hover:text-white"
+                      ? "bg-amance-green text-white"
+                      : "text-gray-700 hover:bg-amance-green hover:text-white"
                   }`}
-                  style={
-                    location === link.href
-                      ? { backgroundColor: "var(--amance-green)" }
-                      : undefined
-                  }
-                  onMouseEnter={(e) => {
-                    if (location !== link.href) {
-                      (e.currentTarget as HTMLElement).style.backgroundColor = "var(--amance-green)";
-                      (e.currentTarget as HTMLElement).style.color = "white";
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (location !== link.href) {
-                      (e.currentTarget as HTMLElement).style.backgroundColor = "";
-                      (e.currentTarget as HTMLElement).style.color = "";
-                    }
-                  }}
                 >
                   {link.label}
                   {link.children && <ChevronDown size={14} />}
@@ -130,16 +119,7 @@ export default function Navbar() {
                       <Link
                         key={child.href}
                         href={child.href}
-                        className="block px-4 py-2.5 text-sm text-gray-700 hover:text-white transition-colors duration-150"
-                        style={{ fontFamily: "Open Sans, sans-serif" }}
-                        onMouseEnter={(e) => {
-                          (e.currentTarget as HTMLElement).style.backgroundColor = "var(--amance-green)";
-                          (e.currentTarget as HTMLElement).style.color = "white";
-                        }}
-                        onMouseLeave={(e) => {
-                          (e.currentTarget as HTMLElement).style.backgroundColor = "";
-                          (e.currentTarget as HTMLElement).style.color = "";
-                        }}
+                        className="block px-4 py-2.5 text-sm font-sans text-gray-700 hover:bg-amance-green hover:text-white transition-colors duration-150"
                       >
                         {child.label}
                       </Link>
@@ -150,52 +130,51 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* CTA Donation Button */}
+          {/* CTA & Lang */}
           <div className="hidden lg:flex items-center gap-3">
+            <button
+              onClick={toggleLanguage}
+              className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-bold text-gray-700 hover:bg-gray-100 transition-colors"
+            >
+              <Globe size={16} />
+              {i18n.language.toUpperCase()}
+            </button>
             <Link
               href="/faire-un-don"
-              className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold text-white transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5"
-              style={{ backgroundColor: "var(--amance-green)", fontFamily: "Montserrat, sans-serif" }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor = "var(--amance-green-dark)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor = "var(--amance-green)";
-              }}
+              className="btn-primary"
             >
               <Heart size={16} fill="white" />
-              Faire un Don
+              {t("nav.donate")}
             </Link>
           </div>
 
           {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
-          >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          <div className="lg:hidden flex items-center gap-2">
+            <button
+              onClick={toggleLanguage}
+              className="p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+            >
+              <Globe size={18} />
+            </button>
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+            >
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="lg:hidden bg-white border-t border-gray-100 shadow-lg">
+        <div className="lg:hidden bg-white/95 backdrop-blur-md border-t border-gray-100 shadow-lg animate-in slide-in-from-top-2 fade-in duration-300">
           <div className="px-4 py-4 space-y-1 max-h-[80vh] overflow-y-auto">
             {navLinks.map((link) => (
               <div key={link.href}>
                 <Link
                   href={link.href}
-                  className="block px-4 py-3 rounded-lg text-sm font-medium text-gray-700 hover:text-white transition-colors"
-                  style={{ fontFamily: "Open Sans, sans-serif" }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.backgroundColor = "var(--amance-green)";
-                    (e.currentTarget as HTMLElement).style.color = "white";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.backgroundColor = "";
-                    (e.currentTarget as HTMLElement).style.color = "";
-                  }}
+                  className="block px-4 py-3 rounded-lg text-sm font-medium font-sans text-gray-700 hover:bg-amance-green hover:text-white transition-colors"
                 >
                   {link.label}
                 </Link>
@@ -205,15 +184,7 @@ export default function Navbar() {
                       <Link
                         key={child.href}
                         href={child.href}
-                        className="block px-4 py-2 rounded-lg text-xs text-gray-500 hover:text-white transition-colors"
-                        onMouseEnter={(e) => {
-                          (e.currentTarget as HTMLElement).style.backgroundColor = "var(--amance-blue)";
-                          (e.currentTarget as HTMLElement).style.color = "white";
-                        }}
-                        onMouseLeave={(e) => {
-                          (e.currentTarget as HTMLElement).style.backgroundColor = "";
-                          (e.currentTarget as HTMLElement).style.color = "";
-                        }}
+                        className="block px-4 py-2 rounded-lg text-xs text-gray-500 hover:bg-amance-blue hover:text-white transition-colors"
                       >
                         {child.label}
                       </Link>
@@ -225,8 +196,7 @@ export default function Navbar() {
             <div className="pt-4 border-t border-gray-100">
               <Link
                 href="/faire-un-don"
-                className="flex items-center justify-center gap-2 w-full px-5 py-3 rounded-full text-sm font-bold text-white"
-                style={{ backgroundColor: "var(--amance-green)", fontFamily: "Montserrat, sans-serif" }}
+                className="btn-primary w-full"
               >
                 <Heart size={16} fill="white" />
                 Faire un Don

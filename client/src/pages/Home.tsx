@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 import Layout from "@/components/Layout";
+import { useTranslation } from "react-i18next";
 import {
   Heart,
   Users,
@@ -62,71 +63,64 @@ function useInView(threshold = 0.2) {
 const domains = [
   {
     icon: HandHeart,
-    title: "Aide Humanitaire & Sociale",
-    description:
-      "Nous apportons une assistance directe aux personnes en situation de précarité : nourriture, abri, soutien psychosocial et aide matérielle d'urgence.",
-    color: "var(--amance-green)",
+    titleKey: "domains.humanitarian.title",
+    descKey: "domains.humanitarian.desc",
+    color: "bg-amance-green/15 text-amance-green",
     href: "/nos-actions#humanitaire",
   },
   {
     icon: Stethoscope,
-    title: "Santé & Bien-être",
-    description:
-      "Faciliter l'accès aux soins de santé de base, à l'éducation à l'hygiène et au bien-être pour les communautés rurales et les populations vulnérables.",
-    color: "var(--amance-blue)",
+    titleKey: "domains.health.title",
+    descKey: "domains.health.desc",
+    color: "bg-amance-blue/15 text-amance-blue",
     href: "/nos-actions#sante",
   },
   {
     icon: HomeIcon,
-    title: "Développement Communautaire",
-    description:
-      "Renforcer l'autonomie des communautés locales par des projets de développement durable, l'éducation, la formation professionnelle et l'entrepreneuriat.",
-    color: "var(--amance-green-dark)",
+    titleKey: "domains.community.title",
+    descKey: "domains.community.desc",
+    color: "bg-amance-green-dark/15 text-amance-green-dark",
     href: "/nos-actions#communautaire",
   },
   {
     icon: TreePine,
-    title: "Conservation Environnementale",
-    description:
-      "Protéger la faune et la flore exceptionnelles du Cameroun à travers des programmes d'éducation environnementale et de conservation active de la biodiversité.",
-    color: "var(--amance-blue-light)",
+    titleKey: "domains.environment.title",
+    descKey: "domains.environment.desc",
+    color: "bg-amance-blue-light/15 text-amance-blue-light",
     href: "/nos-actions#conservation",
   },
 ];
 
 const stats = [
-  { value: 10000, suffix: "+", label: "Personnes Aidées", icon: Users },
-  { value: 5, suffix: "+", label: "Projets de Conservation", icon: Leaf },
-  { value: 500, suffix: "+", label: "Familles Accompagnées", icon: Heart },
-  { value: 95, suffix: "%", label: "Dons Alloués au Terrain", icon: Globe },
+  { value: 10000, suffix: "+", labelKey: "impact.stat1_label", icon: Users },
+  { value: 5, suffix: "+", labelKey: "impact.stat2_label", icon: Leaf },
+  { value: 500, suffix: "+", labelKey: "impact.stat3_label", icon: Heart },
+  { value: 95, suffix: "%", labelKey: "impact.stat4_label", icon: Globe },
 ];
 
 const newsItems = [
   {
     image: NEWS_1,
-    category: "Terrain",
-    date: "15 Mars 2026",
-    title: "Distribution alimentaire d'urgence dans la région du Nord-Ouest",
-    excerpt:
-      "L'équipe AMANCE a organisé une distribution d'aide alimentaire pour plus de 200 familles déplacées dans la région du Nord-Ouest du Cameroun.",
+    categoryKey: "news.categories.terrain",
+    dateKey: "news.item1.date",
+    titleKey: "news.item1.title",
+    excerptKey: "news.item1.excerpt",
     href: "/actualites/distribution-alimentaire-nord-ouest",
   },
   {
     image: NEWS_2,
-    category: "Conservation",
-    date: "8 Mars 2026",
-    title: "Lancement du programme de reboisement à Buea",
-    excerpt:
-      "En partenariat avec les autorités locales, AMANCE lance un programme ambitieux de reboisement visant à restaurer 50 hectares de forêt dégradée.",
+    categoryKey: "news.categories.conservation",
+    dateKey: "news.item2.date",
+    titleKey: "news.item2.title",
+    excerptKey: "news.item2.excerpt",
     href: "/actualites/reboisement-buea",
   },
   {
     image: NEWS_3,
-    category: "Communauté",
-    date: "1 Mars 2026",
-    title: "Formation en agroforesterie pour 80 agriculteurs",
-    excerpt:
-      "AMANCE a formé 80 agriculteurs des communautés rurales aux techniques d'agroforesterie durable, combinant production alimentaire et protection de l'environnement.",
+    categoryKey: "news.categories.community",
+    dateKey: "news.item3.date",
+    titleKey: "news.item3.title",
+    excerptKey: "news.item3.excerpt",
     href: "/actualites/formation-agroforesterie",
   },
 ];
@@ -134,39 +128,37 @@ const newsItems = [
 const helpWays = [
   {
     icon: Heart,
-    title: "Faire un Don",
-    description:
-      "Votre soutien financier est vital. Il nous permet de planifier nos actions, de répondre aux urgences et de garantir la pérennité de nos projets sur le terrain.",
-    cta: "Je Donne Maintenant",
+    titleKey: "help.donation.title",
+    descKey: "help.donation.desc",
+    ctaKey: "help.donation.cta",
     href: "/faire-un-don",
     primary: true,
-    bg: "var(--amance-green)",
+    bg: "bg-amance-green",
   },
   {
     icon: Building2,
-    title: "Devenir Partenaire",
-    description:
-      "Institutions, entreprises, ONG : unissons nos forces pour un impact démultiplié. Contactez-nous pour explorer les synergies et opportunités de collaboration.",
-    cta: "Devenir Partenaire",
+    titleKey: "help.partner.title",
+    descKey: "help.partner.desc",
+    ctaKey: "help.partner.cta",
     href: "/s-impliquer#partenaire",
     primary: false,
-    bg: "var(--amance-blue)",
+    bg: "bg-amance-blue",
   },
   {
     icon: Users,
-    title: "Devenir Bénévole",
-    description:
-      "Offrez votre temps et vos compétences. Rejoignez une équipe passionnée et vivez une expérience humaine et professionnelle inoubliable sur le terrain au Cameroun.",
-    cta: "Rejoindre nos Bénévoles",
+    titleKey: "help.volunteer.title",
+    descKey: "help.volunteer.desc",
+    ctaKey: "help.volunteer.cta",
     href: "/s-impliquer#benevole",
     primary: false,
-    bg: "var(--amance-green-dark)",
+    bg: "bg-amance-green-dark",
   },
 ];
 
 export default function Home() {
   const { ref: statsRef, inView: statsInView } = useInView();
   const [heroLoaded, setHeroLoaded] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const timer = setTimeout(() => setHeroLoaded(true), 100);
@@ -176,121 +168,89 @@ export default function Home() {
   return (
     <Layout>
       {/* ===== SECTION 1: HERO ===== */}
-      <section className="relative min-h-screen flex items-center overflow-hidden">
+      <section className="relative pt-32 pb-48 lg:pt-48 lg:pb-64 overflow-hidden bg-gray-900">
         {/* Background Image */}
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60"
           style={{ backgroundImage: `url(${HERO_IMAGE})` }}
         />
-        {/* Gradient Overlay */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(22,36,71,0.92) 0%, rgba(28,58,95,0.85) 50%, rgba(42,100,60,0.75) 100%)",
-          }}
-        />
+        {/* Modern Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-950/95 via-gray-900/80 to-amance-green-dark/60" />
 
         {/* Content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-          <div className="max-w-3xl">
-            {/* Badge */}
-            <div
-              className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium text-white mb-6 transition-all duration-700 ${
-                heroLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-              }`}
-              style={{ backgroundColor: "rgba(255,255,255,0.15)", backdropFilter: "blur(10px)" }}
-            >
-              <Star size={14} fill="currentColor" style={{ color: "var(--amance-green-light)" }} />
-              ONG Camerounaise — Buea, Sud-Ouest
-            </div>
+        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
+          <div
+            className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium font-sans text-white mb-6 backdrop-blur-md bg-white/15 transition-all duration-700 ${
+              heroLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            }`}
+          >
+            <Star size={14} fill="currentColor" className="text-amance-green-light" />
+            {t("hero.badge")}
+          </div>
 
-            {/* Main Title */}
-            <h1
-              className={`text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6 transition-all duration-700 delay-100 ${
-                heroLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-              }`}
-              style={{ fontFamily: "Montserrat, sans-serif" }}
-            >
-              Agir pour{" "}
-              <span style={{ color: "var(--amance-green-light)" }}>l'Humain</span>
-              <br />
-              et la{" "}
-              <span style={{ color: "var(--amance-green-light)" }}>Nature</span>
-              <br />
-              au Cameroun.
-            </h1>
+          <h1
+            className={`text-5xl md:text-6xl lg:text-[5.5rem] font-extrabold font-heading text-white leading-[1.1] mb-8 transition-all duration-700 delay-100 ${
+              heroLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            }`}
+            style={{ textShadow: "0 10px 30px rgba(0,0,0,0.5)" }}
+          >
+            {t("hero.title1")} <span className="text-amance-green-light relative inline-block">
+              {t("hero.title2")}
+            </span>
+            <br />
+            {t("hero.title3")}
+          </h1>
 
-            {/* Subtitle */}
-            <p
-              className={`text-lg md:text-xl text-gray-200 leading-relaxed mb-8 max-w-2xl transition-all duration-700 delay-200 ${
-                heroLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-              }`}
-              style={{ fontFamily: "Open Sans, sans-serif" }}
-            >
-              AMANCE s'engage à soulager les souffrances des plus vulnérables et à préserver la
-              biodiversité unique du Cameroun. Ensemble, construisons un avenir durable et digne pour tous.
-            </p>
+          <p
+            className={`text-lg md:text-xl text-gray-300 font-sans leading-relaxed mb-10 max-w-2xl mx-auto transition-all duration-700 delay-200 ${
+              heroLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            }`}
+          >
+            {t("hero.subtitle")}
+          </p>
 
-            {/* CTA Buttons */}
-            <div
-              className={`flex flex-wrap gap-4 transition-all duration-700 delay-300 ${
-                heroLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-              }`}
+          <div
+            className={`flex flex-wrap justify-center gap-5 transition-all duration-700 delay-300 ${
+              heroLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            }`}
+          >
+            <Link
+              href="/faire-un-don"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-bold text-white transition-all duration-300 shadow-[0_8px_30px_rgb(5,150,105,0.4)] hover:shadow-[0_8px_30px_rgb(5,150,105,0.6)] bg-amance-green hover:bg-amance-green-dark hover:-translate-y-1"
             >
-              <Link
-                href="/faire-un-don"
-                className="flex items-center gap-2 px-8 py-4 rounded-full text-base font-bold text-white transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-xl"
-                style={{ backgroundColor: "var(--amance-green)", fontFamily: "Montserrat, sans-serif" }}
-              >
-                <Heart size={18} fill="white" />
-                Faire un Don
-              </Link>
-              <Link
-                href="/nos-actions"
-                className="flex items-center gap-2 px-8 py-4 rounded-full text-base font-bold text-white border-2 border-white transition-all duration-300 hover:bg-white hover:-translate-y-1"
-                style={{ fontFamily: "Montserrat, sans-serif" }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.color = "var(--amance-blue)";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.color = "white";
-                }}
-              >
-                Découvrir nos actions
-                <ArrowRight size={18} />
-              </Link>
-            </div>
+              <Heart size={18} fill="white" />
+              {t("hero.cta_donate")}
+            </Link>
+            <Link
+              href="/nos-actions"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-bold text-white transition-all duration-300 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 hover:-translate-y-1"
+            >
+              {t("hero.cta_discover")}
+              <ArrowRight size={18} />
+            </Link>
+          </div>
+        </div>
 
-            {/* Quick Stats */}
-            <div
-              className={`flex flex-wrap gap-8 mt-12 pt-8 border-t border-white/20 transition-all duration-700 delay-500 ${
-                heroLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-              }`}
-            >
+        {/* Bottom Bar: Stats */}
+        <div className="absolute bottom-0 left-0 w-full border-t border-white/10 bg-black/30 backdrop-blur-md">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="flex flex-wrap items-center justify-center gap-12 md:gap-32">
               {[
-                { value: "10 000+", label: "Bénéficiaires" },
-                { value: "5+", label: "Projets actifs" },
-                { value: "2024", label: "Fondée en" },
-              ].map((stat) => (
-                <div key={stat.label}>
-                  <div
-                    className="text-2xl font-extrabold text-white"
-                    style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-green-light)" }}
-                  >
+                { value: t("hero.stat1_val"), label: t("hero.stat1_label") },
+                { value: t("hero.stat2_val"), label: t("hero.stat2_label") },
+                { value: t("hero.stat3_val"), label: t("hero.stat3_label") },
+              ].map((stat, idx) => (
+                <div key={idx} className="flex flex-col items-center text-center">
+                  <div className="text-3xl md:text-4xl font-extrabold font-heading text-amance-green-light mb-3">
                     {stat.value}
                   </div>
-                  <div className="text-sm text-gray-300">{stat.label}</div>
+                  <div className="text-sm font-sans text-gray-300 uppercase tracking-widest font-semibold">
+                    {stat.label}
+                  </div>
                 </div>
               ))}
             </div>
           </div>
-        </div>
-
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/60">
-          <span className="text-xs uppercase tracking-widest">Défiler</span>
-          <div className="w-0.5 h-8 bg-white/30 rounded-full animate-pulse" />
         </div>
       </section>
 
@@ -300,21 +260,18 @@ export default function Home() {
           {/* Header */}
           <div className="text-center mb-16">
             <div
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold mb-4"
-              style={{ backgroundColor: "rgba(82,180,82,0.1)", color: "var(--amance-green)" }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold font-sans bg-amance-green/10 text-amance-green mb-4"
             >
               <Leaf size={14} />
-              Nos Domaines d'Action
+              {t("domains.badge")}
             </div>
             <h2
-              className="text-3xl md:text-4xl font-extrabold mb-4"
-              style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}
+              className="section-title"
             >
-              Notre Engagement sur le Terrain
+              {t("domains.title")}
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto" style={{ fontFamily: "Open Sans, sans-serif" }}>
-              Quatre piliers d'action complémentaires pour un impact global, durable et mesurable
-              sur les communautés camerounaises.
+            <p className="section-subtitle">
+              {t("domains.subtitle")}
             </p>
           </div>
 
@@ -326,28 +283,25 @@ export default function Home() {
                 <Link
                   key={i}
                   href={domain.href}
-                  className="group bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 flex flex-col"
+                  className="group card-amance p-8 flex flex-col"
                 >
                   <div
-                    className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 transition-transform duration-300 group-hover:scale-110"
-                    style={{ backgroundColor: `${domain.color}15` }}
+                    className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-110 ${domain.color}`}
                   >
-                    <Icon size={28} style={{ color: domain.color }} />
+                    <Icon size={28} />
                   </div>
                   <h3
-                    className="text-base font-bold mb-3"
-                    style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}
+                    className="text-lg font-bold font-heading text-amance-blue mb-3 group-hover:text-amance-green transition-colors"
                   >
-                    {domain.title}
+                    {t(domain.titleKey)}
                   </h3>
-                  <p className="text-sm text-gray-600 leading-relaxed flex-1" style={{ fontFamily: "Open Sans, sans-serif" }}>
-                    {domain.description}
+                  <p className="text-sm text-gray-600 font-sans leading-relaxed flex-1">
+                    {t(domain.descKey)}
                   </p>
                   <div
-                    className="flex items-center gap-1 mt-4 text-sm font-semibold transition-colors"
-                    style={{ color: domain.color }}
+                    className="flex items-center gap-1 mt-6 text-sm font-bold transition-colors text-amance-green group-hover:translate-x-1"
                   >
-                    En savoir plus <ChevronRight size={16} />
+                    {t("common.learn_more")} <ChevronRight size={16} />
                   </div>
                 </Link>
               );
@@ -359,26 +313,23 @@ export default function Home() {
       {/* ===== SECTION 3: IMPACT EN CHIFFRES ===== */}
       <section
         ref={statsRef}
-        className="py-24"
-        style={{ background: "linear-gradient(135deg, var(--amance-blue-dark) 0%, var(--amance-blue) 100%)" }}
+        className="py-24 gradient-blue"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <div
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold mb-4 text-white"
-              style={{ backgroundColor: "rgba(255,255,255,0.15)" }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold font-sans mb-4 text-white bg-white/10 backdrop-blur-md"
             >
               <Star size={14} fill="currentColor" />
-              Notre Impact
+              {t("impact.badge")}
             </div>
             <h2
-              className="text-3xl md:text-4xl font-extrabold text-white mb-4"
-              style={{ fontFamily: "Montserrat, sans-serif" }}
+              className="text-3xl md:text-5xl font-extrabold font-heading text-white mb-4"
             >
-              Un Impact Concret, Mesurable et Durable
+              {t("impact.title")}
             </h2>
-            <p className="text-lg text-blue-200 max-w-2xl mx-auto" style={{ fontFamily: "Open Sans, sans-serif" }}>
-              Chaque action compte. Chaque don transforme des vies. Voici ce que nous avons accompli ensemble.
+            <p className="text-lg text-blue-100 font-sans max-w-2xl mx-auto">
+              {t("impact.subtitle")}
             </p>
           </div>
 
@@ -389,19 +340,17 @@ export default function Home() {
               return (
                 <div key={i} className="text-center">
                   <div
-                    className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4"
-                    style={{ backgroundColor: "rgba(255,255,255,0.15)" }}
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 bg-white/10 backdrop-blur-md"
                   >
                     <Icon size={28} className="text-white" />
                   </div>
                   <div
-                    className="text-4xl md:text-5xl font-extrabold text-white mb-2"
-                    style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-green-light)" }}
+                    className="text-4xl md:text-6xl font-extrabold font-heading text-amance-green-light mb-4"
                   >
                     {count.toLocaleString()}{stat.suffix}
                   </div>
-                  <div className="text-blue-200 text-sm font-medium" style={{ fontFamily: "Open Sans, sans-serif" }}>
-                    {stat.label}
+                  <div className="text-blue-100 text-sm font-medium font-sans tracking-wide uppercase">
+                    {t(stat.labelKey)}
                   </div>
                 </div>
               );
@@ -419,80 +368,69 @@ export default function Home() {
               <div className="rounded-3xl overflow-hidden shadow-2xl">
                 <img
                   src={PROJECT_IMAGE}
-                  alt="Projet de reboisement AMANCE"
+                  alt={t("featured_project.alt")}
                   className="w-full h-80 lg:h-96 object-cover"
                 />
               </div>
               {/* Floating badge */}
               <div
-                className="absolute -bottom-6 -right-6 bg-white rounded-2xl shadow-xl p-5 max-w-[200px]"
+                className="absolute -bottom-6 -right-6 bg-white rounded-3xl shadow-xl p-6 max-w-[220px]"
               >
                 <div
-                  className="text-2xl font-extrabold mb-1"
-                  style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-green)" }}
+                  className="text-3xl font-extrabold font-heading text-amance-green mb-1"
                 >
                   50 ha
                 </div>
-                <div className="text-xs text-gray-600">de forêt reboisée dans la région de l'Est</div>
+                <div className="text-xs font-sans text-gray-600 leading-relaxed">{t("featured_project.floating_badge")}</div>
               </div>
             </div>
 
             {/* Content */}
             <div>
               <div
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold mb-6"
-                style={{ backgroundColor: "rgba(82,180,82,0.1)", color: "var(--amance-green)" }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold font-sans mb-6 bg-amance-green/10 text-amance-green"
               >
                 <TreePine size={14} />
-                Projet à la Une
+                {t("featured_project.badge")}
               </div>
               <h2
-                className="text-3xl md:text-4xl font-extrabold mb-6"
-                style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}
+                className="section-title"
               >
-                La Forêt de Demain
+                {t("featured_project.title")}
               </h2>
-              <p className="text-gray-600 leading-relaxed mb-6" style={{ fontFamily: "Open Sans, sans-serif" }}>
-                Au cœur des forêts camerounaises, notre projet phare de conservation et de reboisement
-                combine protection de la biodiversité et développement économique local. Nous formons
-                les communautés rurales à l'agroforesterie durable, créant ainsi un modèle réplicable
-                à l'échelle nationale.
+              <p className="text-gray-600 font-sans leading-relaxed mb-6">
+                {t("featured_project.desc1")}
               </p>
-              <p className="text-gray-600 leading-relaxed mb-8" style={{ fontFamily: "Open Sans, sans-serif" }}>
-                Ce projet a déjà permis de reboiser plus de 50 hectares de forêt dégradée, de former
-                80 agriculteurs et d'améliorer les revenus de 200 familles rurales. Il s'inscrit
-                directement dans les Objectifs de Développement Durable (ODD 13, 15) des Nations Unies.
+              <p className="text-gray-600 font-sans leading-relaxed mb-8">
+                {t("featured_project.desc2")}
               </p>
 
               {/* Impact metrics */}
               <div className="grid grid-cols-3 gap-4 mb-8">
                 {[
-                  { value: "50 ha", label: "Reboisés" },
-                  { value: "80", label: "Agriculteurs formés" },
-                  { value: "200", label: "Familles bénéficiaires" },
+                  { value: "50 ha", labelKey: "featured_project.metric1_label" },
+                  { value: "80", labelKey: "featured_project.metric2_label" },
+                  { value: "200", labelKey: "featured_project.metric3_label" },
                 ].map((m) => (
                   <div
-                    key={m.label}
-                    className="text-center p-3 rounded-xl"
-                    style={{ backgroundColor: "rgba(82,180,82,0.08)" }}
+                    key={m.labelKey}
+                    className="text-center p-4 rounded-2xl bg-amance-green/5 border border-amance-green/10"
                   >
                     <div
-                      className="text-xl font-extrabold"
-                      style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-green)" }}
+                      className="text-2xl font-extrabold font-heading text-amance-green"
                     >
                       {m.value}
                     </div>
-                    <div className="text-xs text-gray-500 mt-1">{m.label}</div>
+                    <div className="text-xs font-sans text-gray-500 mt-1">{t(m.labelKey)}</div>
                   </div>
                 ))}
               </div>
 
               <Link
                 href="/projets/la-foret-de-demain"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-white transition-all duration-300 hover:-translate-y-1 shadow-md hover:shadow-lg"
-                style={{ backgroundColor: "var(--amance-green)", fontFamily: "Montserrat, sans-serif" }}
+                className="btn-primary"
               >
-                En savoir plus sur ce projet
+                {t("featured_project.cta")}
                 <ArrowRight size={18} />
               </Link>
             </div>
@@ -501,25 +439,22 @@ export default function Home() {
       </section>
 
       {/* ===== SECTION 5: COMMENT AIDER ===== */}
-      <section className="py-24 bg-amance-gray-light" style={{ backgroundColor: "oklch(0.97 0.005 240)" }}>
+      <section className="py-24 bg-amance-gray-light">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <div
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold mb-4"
-              style={{ backgroundColor: "rgba(82,180,82,0.1)", color: "var(--amance-green)" }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold font-sans mb-4 bg-amance-green/10 text-amance-green"
             >
               <HandHeart size={14} />
-              Agir Ensemble
+              {t("help.badge")}
             </div>
             <h2
-              className="text-3xl md:text-4xl font-extrabold mb-4"
-              style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}
+              className="section-title"
             >
-              Rejoignez-nous. Chaque Geste Compte.
+              {t("help.title")}
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto" style={{ fontFamily: "Open Sans, sans-serif" }}>
-              Que vous soyez un particulier, une entreprise ou une institution, il existe un moyen
-              de contribuer à notre mission et d'amplifier notre impact.
+            <p className="section-subtitle">
+              {t("help.subtitle")}
             </p>
           </div>
 
@@ -529,29 +464,26 @@ export default function Home() {
               return (
                 <div
                   key={i}
-                  className="bg-white rounded-3xl p-8 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2 flex flex-col"
+                  className="card-amance p-8 flex flex-col group hover:-translate-y-3"
                 >
                   <div
-                    className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6"
-                    style={{ backgroundColor: way.bg }}
+                    className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-8 ${way.bg}`}
                   >
                     <Icon size={28} className="text-white" />
                   </div>
                   <h3
-                    className="text-xl font-bold mb-4"
-                    style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}
+                    className="text-2xl font-bold font-heading text-amance-blue mb-4"
                   >
-                    {way.title}
+                    {t(way.titleKey)}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed flex-1 mb-6" style={{ fontFamily: "Open Sans, sans-serif" }}>
-                    {way.description}
+                  <p className="text-gray-600 font-sans leading-relaxed flex-1 mb-8">
+                    {t(way.descKey)}
                   </p>
                   <Link
                     href={way.href}
-                    className="flex items-center justify-center gap-2 px-6 py-3 rounded-full font-bold text-white text-sm transition-all duration-300 hover:opacity-90"
-                    style={{ backgroundColor: way.bg, fontFamily: "Montserrat, sans-serif" }}
+                    className={`flex items-center justify-center gap-2 px-6 py-4 rounded-full font-bold font-heading text-white text-sm transition-all duration-300 ${way.bg} hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:-translate-y-1`}
                   >
-                    {way.cta}
+                    {t(way.ctaKey)}
                     <ArrowRight size={16} />
                   </Link>
                 </div>
@@ -567,37 +499,22 @@ export default function Home() {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-16 gap-4">
             <div>
               <div
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold mb-4"
-                style={{ backgroundColor: "rgba(82,180,82,0.1)", color: "var(--amance-green)" }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold font-sans mb-4 bg-amance-green/10 text-amance-green"
               >
                 <Globe size={14} />
-                Actualités
+                {t("news.badge")}
               </div>
               <h2
-                className="text-3xl md:text-4xl font-extrabold"
-                style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}
+                className="section-title"
               >
-                Nos Dernières Actualités
+                {t("news.title")}
               </h2>
             </div>
             <Link
               href="/actualites"
-              className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold border-2 transition-all duration-300 hover:text-white flex-shrink-0"
-              style={{
-                borderColor: "var(--amance-green)",
-                color: "var(--amance-green)",
-                fontFamily: "Montserrat, sans-serif",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor = "var(--amance-green)";
-                (e.currentTarget as HTMLElement).style.color = "white";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor = "";
-                (e.currentTarget as HTMLElement).style.color = "var(--amance-green)";
-              }}
+              className="flex items-center gap-2 px-6 py-3 rounded-full font-bold font-heading text-amance-green border-2 border-amance-green transition-all duration-300 hover:bg-amance-green hover:text-white hover:-translate-y-1 flex-shrink-0"
             >
-              Toutes les actualités <ArrowRight size={16} />
+              {t("news.all_news")} <ArrowRight size={16} />
             </Link>
           </div>
 
@@ -606,39 +523,36 @@ export default function Home() {
               <Link
                 key={i}
                 href={news.href}
-                className="group bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col"
+                className="group card-amance hover:-translate-y-3 flex flex-col"
               >
-                <div className="relative overflow-hidden h-48">
+                <div className="relative overflow-hidden h-56">
                   <img
                     src={news.image}
-                    alt={news.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    alt={t(news.titleKey)}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   <div
-                    className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-bold text-white"
-                    style={{ backgroundColor: "var(--amance-green)" }}
+                    className="absolute top-4 left-4 px-4 py-1.5 rounded-full text-xs font-bold font-heading uppercase tracking-wider text-white bg-amance-green shadow-lg"
                   >
-                    {news.category}
+                    {t(news.categoryKey)}
                   </div>
                 </div>
-                <div className="p-6 flex flex-col flex-1">
-                  <p className="text-xs text-gray-400 mb-2" style={{ fontFamily: "Open Sans, sans-serif" }}>
-                    {news.date}
+                <div className="p-8 flex flex-col flex-1">
+                  <p className="text-sm font-sans font-semibold text-amance-green mb-3">
+                    {t(news.dateKey)}
                   </p>
                   <h3
-                    className="text-base font-bold mb-3 line-clamp-2 group-hover:text-amance-green transition-colors"
-                    style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}
+                    className="text-xl font-bold font-heading text-amance-blue mb-4 line-clamp-2 group-hover:text-amance-green transition-colors"
                   >
-                    {news.title}
+                    {t(news.titleKey)}
                   </h3>
-                  <p className="text-sm text-gray-600 leading-relaxed flex-1 line-clamp-3" style={{ fontFamily: "Open Sans, sans-serif" }}>
-                    {news.excerpt}
+                  <p className="text-gray-600 font-sans leading-relaxed flex-1 line-clamp-3">
+                    {t(news.excerptKey)}
                   </p>
                   <div
-                    className="flex items-center gap-1 mt-4 text-sm font-semibold"
-                    style={{ color: "var(--amance-green)" }}
+                    className="flex items-center gap-1 mt-6 text-sm font-bold text-amance-green transition-transform group-hover:translate-x-1"
                   >
-                    Lire la suite <ChevronRight size={16} />
+                    {t("common.read_more")} <ChevronRight size={16} />
                   </div>
                 </div>
               </Link>
@@ -649,57 +563,49 @@ export default function Home() {
 
       {/* ===== SECTION 7: TÉMOIGNAGE ===== */}
       <section
-        className="py-24"
-        style={{ background: "linear-gradient(135deg, oklch(0.97 0.005 240) 0%, oklch(0.93 0.04 145) 100%)" }}
+        className="py-24 bg-amance-gray-light"
       >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold mb-8"
-            style={{ backgroundColor: "rgba(82,180,82,0.1)", color: "var(--amance-green)" }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold font-sans mb-8 bg-amance-green/10 text-amance-green"
           >
             <Quote size={14} />
-            Témoignages
+            {t("testimonials.badge")}
           </div>
 
-          <div className="bg-white rounded-3xl shadow-xl p-10 md:p-14 relative">
+          <div className="card-amance p-10 md:p-14 relative overflow-visible">
             <Quote
-              size={48}
-              className="absolute top-6 left-8 opacity-10"
-              style={{ color: "var(--amance-green)" }}
+              size={64}
+              className="absolute -top-8 -left-8 text-amance-green/20 rotate-180"
             />
             <blockquote
-              className="text-xl md:text-2xl text-gray-700 leading-relaxed mb-8 italic relative z-10"
-              style={{ fontFamily: "Open Sans, sans-serif" }}
+              className="text-2xl md:text-3xl font-heading font-medium text-amance-blue leading-relaxed mb-10 relative z-10"
             >
-              "Grâce à AMANCE, j'ai pu suivre une formation en agriculture durable. Aujourd'hui,
-              je nourris ma famille et vends mes récoltes au marché local. Ils n'ont pas seulement
-              changé ma vie — ils ont redonné espoir à tout notre village."
+              {t("testimonials.quote")}
             </blockquote>
 
-            <div className="flex items-center justify-center gap-4">
+            <div className="flex flex-col items-center justify-center gap-4">
               <img
                 src={TESTIMONIAL_IMAGE}
-                alt="Marie, bénéficiaire"
-                className="w-14 h-14 rounded-full object-cover border-4"
-                style={{ borderColor: "var(--amance-green)" }}
+                alt={t("testimonials.name")}
+                className="w-20 h-20 rounded-full object-cover border-4 border-amance-green shadow-lg"
               />
-              <div className="text-left">
+              <div className="text-center">
                 <div
-                  className="font-bold text-base"
-                  style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}
+                  className="font-bold font-heading text-lg text-amance-blue"
                 >
-                  Marie Ngono
+                  {t("testimonials.name")}
                 </div>
-                <div className="text-sm text-gray-500" style={{ fontFamily: "Open Sans, sans-serif" }}>
-                  Bénéficiaire — Programme de développement communautaire, Région du Centre
+                <div className="text-sm font-sans text-gray-500 mt-1">
+                  {t("testimonials.role")}
                 </div>
               </div>
             </div>
 
             {/* Stars */}
-            <div className="flex justify-center gap-1 mt-6">
+            <div className="flex justify-center gap-1 mt-8">
               {[1, 2, 3, 4, 5].map((s) => (
-                <Star key={s} size={18} fill="currentColor" style={{ color: "var(--amance-green)" }} />
+                <Star key={s} size={20} fill="currentColor" className="text-amance-accent" />
               ))}
             </div>
           </div>
@@ -708,42 +614,31 @@ export default function Home() {
 
       {/* ===== SECTION 8: CALL TO ACTION FINAL ===== */}
       <section
-        className="py-20"
-        style={{ background: "linear-gradient(135deg, var(--amance-blue-dark) 0%, var(--amance-blue) 100%)" }}
+        className="py-32 gradient-hero"
       >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2
-            className="text-3xl md:text-4xl font-extrabold text-white mb-6"
-            style={{ fontFamily: "Montserrat, sans-serif" }}
+            className="text-4xl md:text-6xl font-extrabold font-heading text-white mb-8 leading-tight"
           >
-            Ensemble, nous pouvons faire la différence.
+            {t("final_cta.title")}
           </h2>
-          <p className="text-lg text-blue-200 mb-10 max-w-2xl mx-auto" style={{ fontFamily: "Open Sans, sans-serif" }}>
-            Rejoignez AMANCE et contribuez à construire un Cameroun plus juste, plus sain et plus vert.
-            Chaque contribution, grande ou petite, a un impact réel sur des vies réelles.
+          <p className="text-xl font-sans text-blue-100 mb-12 max-w-2xl mx-auto leading-relaxed">
+            {t("final_cta.subtitle")}
           </p>
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-6">
             <Link
               href="/faire-un-don"
-              className="flex items-center gap-2 px-8 py-4 rounded-full text-base font-bold text-white transition-all duration-300 hover:-translate-y-1 shadow-lg"
-              style={{ backgroundColor: "var(--amance-green)", fontFamily: "Montserrat, sans-serif" }}
+              className="btn-primary"
             >
-              <Heart size={18} fill="white" />
-              Faire un Don Maintenant
+              <Heart size={20} fill="white" />
+              {t("final_cta.cta_donate")}
             </Link>
             <Link
               href="/contact"
-              className="flex items-center gap-2 px-8 py-4 rounded-full text-base font-bold text-white border-2 border-white transition-all duration-300 hover:bg-white"
-              style={{ fontFamily: "Montserrat, sans-serif" }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.color = "var(--amance-blue)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.color = "white";
-              }}
+              className="btn-outline-white"
             >
-              Nous Contacter
-              <ArrowRight size={18} />
+              {t("final_cta.cta_contact")}
+              <ArrowRight size={20} />
             </Link>
           </div>
         </div>

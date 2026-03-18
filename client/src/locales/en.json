@@ -1,0 +1,139 @@
+{
+  "common": {
+    "learn_more": "Learn more",
+    "read_more": "Read more"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About Us",
+    "mission": "Mission & Vision",
+    "team": "Our Team",
+    "transparency": "Transparency",
+    "actions": "Our Actions",
+    "humanitarian": "Humanitarian Aid",
+    "health": "Health & Well-being",
+    "community": "Community Development",
+    "environment": "Environmental Conservation",
+    "projects": "Projects",
+    "news": "News",
+    "getInvolved": "Get Involved",
+    "volunteer": "Become a Volunteer",
+    "partner": "Become a Partner",
+    "contact": "Contact",
+    "donate": "Donate"
+  },
+  "hero": {
+    "badge": "Cameroonian NGO — Buea, South-West",
+    "title1": "Acting for Humanity",
+    "title2": "and Nature",
+    "title3": "in Cameroon.",
+    "subtitle": "AMANCE is committed to alleviating the suffering of the most vulnerable and preserving Cameroon's unique biodiversity. Together, let's build a sustainable and dignified future for all.",
+    "cta_donate": "Support our mission",
+    "cta_discover": "Discover our actions",
+    "stat1_val": "10,000+",
+    "stat1_label": "People assisted",
+    "stat2_val": "50+ ha",
+    "stat2_label": "Protected forest",
+    "stat3_val": "100%",
+    "stat3_label": "Commitment"
+  },
+  "domains": {
+    "badge": "Our Areas of Action",
+    "title": "Our Commitment on the Ground",
+    "subtitle": "Four complementary pillars of action for a global, sustainable and measurable impact on Cameroonian communities.",
+    "humanitarian": {
+      "title": "Humanitarian & Social Aid",
+      "desc": "We provide direct assistance to people in precarious situations: food, shelter, psychosocial support and emergency material aid."
+    },
+    "health": {
+      "title": "Health & Well-being",
+      "desc": "Facilitating access to basic health care, hygiene education and well-being for rural communities and vulnerable populations."
+    },
+    "community": {
+      "title": "Community Development",
+      "desc": "Strengthening the autonomy of local communities through sustainable development projects, education, vocational training and entrepreneurship."
+    },
+    "environment": {
+      "title": "Environmental Conservation",
+      "desc": "Protecting Cameroon's exceptional fauna and flora through environmental education programs and active biodiversity conservation."
+    }
+  },
+  "impact": {
+    "badge": "Our Impact",
+    "title": "A Concrete, Measurable and Sustainable Impact",
+    "subtitle": "Every action counts. Every donation transforms lives. Here is what we have accomplished together.",
+    "stat1_label": "People Assisted",
+    "stat2_label": "Conservation Projects",
+    "stat3_label": "Families Accompanied",
+    "stat4_label": "On-the-ground Donations"
+  },
+  "featured_project": {
+    "badge": "Featured Project",
+    "title": "Tomorrow's Forest",
+    "desc1": "In the heart of Cameroon's forests, our flagship conservation and reforestation project combines biodiversity protection and local economic development. We train rural communities in sustainable agroforestry, creating a replicable model nationwide.",
+    "desc2": "This project has already reforested more than 50 hectares of degraded forest, trained 80 farmers and improved the incomes of 200 rural families. It aligns directly with the United Nations Sustainable Development Goals (SDG 13, 15).",
+    "metric1_label": "Reforested",
+    "metric2_label": "Trained farmers",
+    "metric3_label": "Beneficiary families",
+    "cta": "Learn more about this project",
+    "floating_badge": "of reforested forest in the East region",
+    "alt": "AMANCE Reforestation Project"
+  },
+  "help": {
+    "badge": "Act Together",
+    "title": "Join Us. Every Gesture Counts.",
+    "subtitle": "Whether you are an individual, a company or an institution, there is a way to contribute to our mission and amplify our impact.",
+    "donation": {
+      "title": "Make a Donation",
+      "desc": "Your financial support is vital. It allows us to plan our actions, respond to emergencies and guarantee the sustainability of our projects on the ground.",
+      "cta": "Donate Now"
+    },
+    "partner": {
+      "title": "Become a Partner",
+      "desc": "Institutions, companies, NGOs: let's join forces for a multiplied impact. Contact us to explore synergies and collaboration opportunities.",
+      "cta": "Become a Partner"
+    },
+    "volunteer": {
+      "title": "Become a Volunteer",
+      "desc": "Offer your time and skills. Join a passionate team and live an unforgettable human and professional experience on the ground in Cameroon.",
+      "cta": "Join our Volunteers"
+    }
+  },
+  "news": {
+    "badge": "News",
+    "title": "Our Latest News",
+    "all_news": "All news",
+    "categories": {
+      "terrain": "Field",
+      "conservation": "Conservation",
+      "community": "Community"
+    },
+    "item1": {
+      "date": "March 15, 2026",
+      "title": "Emergency food distribution in the North-West region",
+      "excerpt": "The AMANCE team organized a food aid distribution for more than 200 displaced families in the North-West region of Cameroon."
+    },
+    "item2": {
+      "date": "March 8, 2026",
+      "title": "Launch of the reforestation program in Buea",
+      "excerpt": "In partnership with local authorities, AMANCE is launching an ambitious reforestation program aiming to restore 50 hectares of degraded forest."
+    },
+    "item3": {
+      "date": "March 1, 2026",
+      "title": "Agroforestry training for 80 farmers",
+      "excerpt": "AMANCE has trained 80 farmers from rural communities in sustainable agroforestry techniques, combining food production and environmental protection."
+    }
+  },
+  "testimonials": {
+    "badge": "Testimonials",
+    "quote": "\"Thanks to AMANCE, I was able to follow a training in sustainable agriculture. Today, I feed my family and sell my harvests at the local market. They haven't just changed my life — they have given hope back to our entire village.\"",
+    "name": "Marie Ngono",
+    "role": "Beneficiary — Community development program, Center Region"
+  },
+  "final_cta": {
+    "title": "Together, we can make a difference.",
+    "subtitle": "Join AMANCE and contribute to building a fairer, healthier and greener Cameroon. Every contribution, big or small, has a real impact on real lives.",
+    "cta_donate": "Donate Now",
+    "cta_contact": "Contact Us"
+  }
+}

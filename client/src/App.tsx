@@ -13,6 +13,10 @@ import Contact from "./pages/Contact";
 import SImpliquer from "./pages/SImpliquer";
 import FaireUnDon from "./pages/FaireUnDon";
 import Transparence from "./pages/Transparence";
+import ProjetDetail from "./pages/ProjetDetail";
+import ActualiteDetail from "./pages/ActualiteDetail";
+import MentionsLegales from "./pages/MentionsLegales";
+import PolitiqueConfidentialite from "./pages/PolitiqueConfidentialite";
 
 function Router() {
   return (
@@ -26,6 +30,10 @@ function Router() {
       <Route path="/s-impliquer" component={SImpliquer} />
       <Route path="/faire-un-don" component={FaireUnDon} />
       <Route path="/transparence" component={Transparence} />
+      <Route path="/projets/:slug" component={ProjetDetail} />
+      <Route path="/actualites/:slug" component={ActualiteDetail} />
+      <Route path="/mentions-legales" component={MentionsLegales} />
+      <Route path="/politique-de-confidentialite" component={PolitiqueConfidentialite} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>

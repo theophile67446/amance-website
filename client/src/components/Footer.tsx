@@ -5,19 +5,16 @@ const LOGO_URL = "https://d2xsxph8kpxj0f.cloudfront.net/310519663349492546/QAH5o
 
 export default function Footer() {
   return (
-    <footer style={{ backgroundColor: "var(--amance-blue-dark)" }} className="text-white">
+    <footer className="bg-amance-blue-dark text-white">
       {/* Newsletter Banner */}
-      <div style={{ backgroundColor: "var(--amance-green)" }} className="py-10">
+      <div className="bg-white/5 border-b border-white/10 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div>
-              <h3
-                className="text-xl font-bold text-white mb-1"
-                style={{ fontFamily: "Montserrat, sans-serif" }}
-              >
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
+            <div className="text-center lg:text-left">
+              <h3 className="text-2xl font-bold font-heading text-white mb-2">
                 Restez informé de nos actions
               </h3>
-              <p className="text-green-100 text-sm">
+              <p className="text-gray-300 text-sm font-sans max-w-lg mx-auto lg:mx-0">
                 Recevez nos actualités, rapports d'impact et appels à l'action directement dans votre boîte mail.
               </p>
             </div>
@@ -28,13 +25,11 @@ export default function Footer() {
               <input
                 type="email"
                 placeholder="Votre adresse e-mail"
-                className="flex-1 md:w-72 px-4 py-3 rounded-full text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white"
-                style={{ fontFamily: "Open Sans, sans-serif" }}
+                className="flex-1 md:w-80 px-5 py-3.5 rounded-full font-sans text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-amance-green shadow-inner"
               />
               <button
                 type="submit"
-                className="flex items-center gap-2 px-5 py-3 rounded-full font-semibold text-sm text-white transition-all duration-300 hover:opacity-90 flex-shrink-0"
-                style={{ backgroundColor: "var(--amance-blue)", fontFamily: "Montserrat, sans-serif" }}
+                className="btn-primary"
               >
                 S'inscrire <ArrowRight size={16} />
               </button>
@@ -44,24 +39,21 @@ export default function Footer() {
       </div>
 
       {/* Main Footer */}
-      <div className="py-16">
+      <div className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8">
             {/* Brand Column */}
-            <div className="lg:col-span-1">
+            <div className="lg:col-span-4 lg:pr-8">
               <div className="flex items-center gap-3 mb-5">
                 <img src={LOGO_URL} alt="AMANCE Logo" className="h-16 w-16 object-contain" />
                 <div>
-                  <div
-                    className="text-xl font-extrabold text-white"
-                    style={{ fontFamily: "Montserrat, sans-serif" }}
-                  >
+                  <div className="text-xl font-extrabold font-heading text-white">
                     AMANCE
                   </div>
                   <div className="text-xs text-gray-400">Cameroun</div>
                 </div>
               </div>
-              <p className="text-gray-300 text-sm leading-relaxed mb-5" style={{ fontFamily: "Open Sans, sans-serif" }}>
+              <p className="text-gray-300 text-sm font-sans leading-relaxed mb-5">
                 <em>"Speak up for those who cannot speak for themselves"</em>
                 <br />
                 <span className="text-xs text-gray-400">— Proverbes 31:8</span>
@@ -77,14 +69,7 @@ export default function Footer() {
                     key={label}
                     href={href}
                     aria-label={label}
-                    className="w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
-                    style={{ backgroundColor: "rgba(255,255,255,0.1)" }}
-                    onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLElement).style.backgroundColor = "var(--amance-green)";
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(255,255,255,0.1)";
-                    }}
+                    className="w-9 h-9 rounded-full flex items-center justify-center bg-white/10 hover:bg-amance-green transition-all duration-200 hover:scale-110"
                   >
                     <Icon size={16} />
                   </a>
@@ -93,11 +78,8 @@ export default function Footer() {
             </div>
 
             {/* Quick Links */}
-            <div>
-              <h4
-                className="text-sm font-bold uppercase tracking-wider mb-5"
-                style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-green-light)" }}
-              >
+            <div className="lg:col-span-2">
+              <h4 className="text-xs font-bold font-heading uppercase tracking-widest text-amance-green-light mb-6">
                 Navigation
               </h4>
               <ul className="space-y-3">
@@ -112,13 +94,9 @@ export default function Footer() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-gray-300 hover:text-white text-sm transition-colors duration-200 flex items-center gap-2 group"
-                      style={{ fontFamily: "Open Sans, sans-serif" }}
+                      className="text-gray-300 hover:text-white text-sm font-sans transition-colors duration-200 flex items-center gap-2 group"
                     >
-                      <span
-                        className="w-1.5 h-1.5 rounded-full flex-shrink-0 transition-colors"
-                        style={{ backgroundColor: "var(--amance-green)" }}
-                      />
+                      <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 bg-amance-green transition-colors" />
                       {link.label}
                     </Link>
                   </li>
@@ -127,11 +105,8 @@ export default function Footer() {
             </div>
 
             {/* Actions */}
-            <div>
-              <h4
-                className="text-sm font-bold uppercase tracking-wider mb-5"
-                style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-green-light)" }}
-              >
+            <div className="lg:col-span-3">
+              <h4 className="text-xs font-bold font-heading uppercase tracking-widest text-amance-green-light mb-6">
                 Nos Domaines
               </h4>
               <ul className="space-y-3">
@@ -146,13 +121,9 @@ export default function Footer() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-gray-300 hover:text-white text-sm transition-colors duration-200 flex items-center gap-2"
-                      style={{ fontFamily: "Open Sans, sans-serif" }}
+                      className="text-gray-300 hover:text-white text-sm font-sans transition-colors duration-200 flex items-center gap-2"
                     >
-                      <span
-                        className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                        style={{ backgroundColor: "var(--amance-green)" }}
-                      />
+                      <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 bg-amance-green" />
                       {link.label}
                     </Link>
                   </li>
@@ -161,59 +132,52 @@ export default function Footer() {
             </div>
 
             {/* Contact */}
-            <div>
-              <h4
-                className="text-sm font-bold uppercase tracking-wider mb-5"
-                style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-green-light)" }}
-              >
+            <div className="lg:col-span-3">
+              <h4 className="text-xs font-bold font-heading uppercase tracking-widest text-amance-green-light mb-6">
                 Contact
               </h4>
               <ul className="space-y-4">
                 <li className="flex items-start gap-3">
-                  <MapPin size={16} className="flex-shrink-0 mt-0.5" style={{ color: "var(--amance-green-light)" }} />
-                  <span className="text-gray-300 text-sm" style={{ fontFamily: "Open Sans, sans-serif" }}>
+                  <MapPin size={16} className="flex-shrink-0 mt-0.5 text-amance-green-light" />
+                  <span className="text-gray-300 text-sm font-sans">
                     Buea, Division du Fako<br />
                     Région du Sud-Ouest<br />
                     Cameroun
                   </span>
                 </li>
                 <li className="flex items-center gap-3">
-                  <Phone size={16} className="flex-shrink-0" style={{ color: "var(--amance-green-light)" }} />
+                  <Phone size={16} className="flex-shrink-0 text-amance-green-light" />
                   <a
                     href="tel:+237674943368"
-                    className="text-gray-300 hover:text-white text-sm transition-colors"
-                    style={{ fontFamily: "Open Sans, sans-serif" }}
+                    className="text-gray-300 font-sans hover:text-white text-sm transition-colors"
                   >
                     +237 674 943 368
                   </a>
                 </li>
                 <li className="flex items-center gap-3">
-                  <Phone size={16} className="flex-shrink-0" style={{ color: "var(--amance-green-light)" }} />
+                  <Phone size={16} className="flex-shrink-0 text-amance-green-light" />
                   <a
                     href="tel:+237689314418"
-                    className="text-gray-300 hover:text-white text-sm transition-colors"
-                    style={{ fontFamily: "Open Sans, sans-serif" }}
+                    className="text-gray-300 font-sans hover:text-white text-sm transition-colors"
                   >
                     +237 689 314 418
                   </a>
                 </li>
                 <li className="flex items-center gap-3">
-                  <Mail size={16} className="flex-shrink-0" style={{ color: "var(--amance-green-light)" }} />
+                  <Mail size={16} className="flex-shrink-0 text-amance-green-light" />
                   <a
                     href="mailto:infos@amance.org"
-                    className="text-gray-300 hover:text-white text-sm transition-colors"
-                    style={{ fontFamily: "Open Sans, sans-serif" }}
+                    className="text-gray-300 font-sans hover:text-white text-sm transition-colors"
                   >
                     infos@amance.org
                   </a>
                 </li>
               </ul>
 
-              <div className="mt-6">
+              <div className="mt-8">
                 <Link
                   href="/faire-un-don"
-                  className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-full text-sm font-bold text-white transition-all duration-300 hover:opacity-90"
-                  style={{ backgroundColor: "var(--amance-green)", fontFamily: "Montserrat, sans-serif" }}
+                  className="btn-primary w-full"
                 >
                   <Heart size={16} fill="white" />
                   Faire un Don
@@ -225,10 +189,10 @@ export default function Footer() {
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t py-6" style={{ borderColor: "rgba(255,255,255,0.1)" }}>
+      <div className="border-t border-white/10 py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-gray-400 text-xs" style={{ fontFamily: "Open Sans, sans-serif" }}>
+            <p className="text-gray-400 font-sans text-xs">
               © {new Date().getFullYear()} AMANCE — Angel Mary Association for the Needy and Conservation Education. Tous droits réservés.
             </p>
             <div className="flex items-center gap-4">
@@ -238,8 +202,8 @@ export default function Footer() {
               <Link href="/politique-de-confidentialite" className="text-gray-400 hover:text-white text-xs transition-colors">
                 Confidentialité
               </Link>
-              <span className="text-gray-500 text-xs flex items-center gap-1">
-                Fait avec <Heart size={10} fill="currentColor" style={{ color: "var(--amance-green-light)" }} /> au Cameroun
+              <span className="text-gray-500 font-sans text-xs flex items-center gap-1">
+                Fait avec <Heart size={10} fill="currentColor" className="text-amance-green-light" /> au Cameroun
               </span>
             </div>
           </div>

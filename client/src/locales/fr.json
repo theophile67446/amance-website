@@ -1,0 +1,139 @@
+{
+  "common": {
+    "learn_more": "En savoir plus",
+    "read_more": "Lire la suite"
+  },
+  "nav": {
+    "home": "Accueil",
+    "about": "À Propos",
+    "mission": "Mission & Vision",
+    "team": "Notre Équipe",
+    "transparency": "Transparence",
+    "actions": "Nos Actions",
+    "humanitarian": "Aide Humanitaire",
+    "health": "Santé & Bien-être",
+    "community": "Développement Communautaire",
+    "environment": "Conservation Environnementale",
+    "projects": "Projets",
+    "news": "Actualités",
+    "getInvolved": "S'impliquer",
+    "volunteer": "Devenir Bénévole",
+    "partner": "Devenir Partenaire",
+    "contact": "Contact",
+    "donate": "Faire un Don"
+  },
+  "hero": {
+    "badge": "ONG Camerounaise — Buea, Sud-Ouest",
+    "title1": "Agir pour l'Humain",
+    "title2": "et la Nature",
+    "title3": "au Cameroun.",
+    "subtitle": "AMANCE s'engage à soulager les souffrances des plus vulnérables et à préserver la biodiversité unique du Cameroun. Ensemble, construisons un avenir durable et digne pour tous.",
+    "cta_donate": "Soutenir notre mission",
+    "cta_discover": "Découvrir nos actions",
+    "stat1_val": "10 000+",
+    "stat1_label": "Personnes aidées",
+    "stat2_val": "50+ ha",
+    "stat2_label": "Forêt protégée",
+    "stat3_val": "100%",
+    "stat3_label": "D'engagement"
+  },
+  "domains": {
+    "badge": "Nos Domaines d'Action",
+    "title": "Notre Engagement sur le Terrain",
+    "subtitle": "Quatre piliers d'action complémentaires pour un impact global, durable et mesurable sur les communautés camerounaises.",
+    "humanitarian": {
+      "title": "Aide Humanitaire & Sociale",
+      "desc": "Nous apportons une assistance directe aux personnes en situation de précarité : nourriture, abri, soutien psychosocial et aide matérielle d'urgence."
+    },
+    "health": {
+      "title": "Santé & Bien-être",
+      "desc": "Faciliter l'accès aux soins de santé de base, à l'éducation à l'hygiène et au bien-être pour les communautés rurales et les populations vulnérables."
+    },
+    "community": {
+      "title": "Développement Communautaire",
+      "desc": "Renforcer l'autonomie des communautés locales par des projets de développement durable, l'éducation, la formation professionnelle et l'entrepreneuriat."
+    },
+    "environment": {
+      "title": "Conservation Environnementale",
+      "desc": "Protéger la faune et la flore exceptionnelles du Cameroun à travers des programmes d'éducation environnementale et de conservation active de la biodiversité."
+    }
+  },
+  "impact": {
+    "badge": "Notre Impact",
+    "title": "Un Impact Concret, Mesurable et Durable",
+    "subtitle": "Chaque action compte. Chaque don transforme des vies. Voici ce que nous avons accompli ensemble.",
+    "stat1_label": "Personnes Aidées",
+    "stat2_label": "Projets de Conservation",
+    "stat3_label": "Familles Accompagnées",
+    "stat4_label": "Dons Alloués au Terrain"
+  },
+  "featured_project": {
+    "badge": "Projet à la Une",
+    "title": "La Forêt de Demain",
+    "desc1": "Au cœur des forêts camerounaises, notre projet phare de conservation et de reboisement combine protection de la biodiversité et développement économique local. Nous formons les communautés rurales à l'agroforesterie durable, créant ainsi un modèle réplicable à l'échelle nationale.",
+    "desc2": "Ce projet a déjà permis de reboiser plus de 50 hectares de forêt dégradée, de former 80 agriculteurs et d'améliorer les revenus de 200 familles rurales. Il s'inscrit directement dans les Objectifs de Développement Durable (ODD 13, 15) des Nations Unies.",
+    "metric1_label": "Reboisés",
+    "metric2_label": "Agriculteurs formés",
+    "metric3_label": "Familles bénéficiaires",
+    "cta": "En savoir plus sur ce projet",
+    "floating_badge": "de forêt reboisée dans la région de l'Est",
+    "alt": "Projet de reboisement AMANCE"
+  },
+  "help": {
+    "badge": "Agir Ensemble",
+    "title": "Rejoignez-nous. Chaque Geste Compte.",
+    "subtitle": "Que vous soyez un particulier, une entreprise ou une institution, il existe un moyen de contribuer à notre mission et d'amplifier notre impact.",
+    "donation": {
+      "title": "Faire un Don",
+      "desc": "Votre soutien financier est vital. Il nous permet de planifier nos actions, de répondre aux urgences et de garantir la pérennité de nos projets sur le terrain.",
+      "cta": "Je Donne Maintenant"
+    },
+    "partner": {
+      "title": "Devenir Partenaire",
+      "desc": "Institutions, entreprises, ONG : unissons nos forces pour un impact démultiplié. Contactez-nous pour explorer les synergies et opportunités de collaboration.",
+      "cta": "Devenir Partenaire"
+    },
+    "volunteer": {
+      "title": "Devenir Bénévole",
+      "desc": "Offrez votre temps et vos compétences. Rejoignez une équipe passionnée et vivez une expérience humaine et professionnelle inoubliable sur le terrain au Cameroun.",
+      "cta": "Rejoindre nos Bénévoles"
+    }
+  },
+  "news": {
+    "badge": "Actualités",
+    "title": "Nos Dernières Actualités",
+    "all_news": "Toutes les actualités",
+    "categories": {
+      "terrain": "Terrain",
+      "conservation": "Conservation",
+      "community": "Communauté"
+    },
+    "item1": {
+      "date": "15 Mars 2026",
+      "title": "Distribution alimentaire d'urgence dans la région du Nord-Ouest",
+      "excerpt": "L'équipe AMANCE a organisé une distribution d'aide alimentaire pour plus de 200 familles déplacées dans la région du Nord-Ouest du Cameroun."
+    },
+    "item2": {
+      "date": "8 Mars 2026",
+      "title": "Lancement du programme de reboisement à Buea",
+      "excerpt": "En partenariat avec les autorités locales, AMANCE lance un programme ambitieux de reboisement visant à restaurer 50 hectares de forêt dégradée."
+    },
+    "item3": {
+      "date": "1 Mars 2026",
+      "title": "Formation en agroforesterie pour 80 agriculteurs",
+      "excerpt": "AMANCE a formé 80 agriculteurs des communautés rurales aux techniques d'agroforesterie durable, combinant production alimentaire et protection de l'environnement."
+    }
+  },
+  "testimonials": {
+    "badge": "Témoignages",
+    "quote": "\"Grâce à AMANCE, j'ai pu suivre une formation en agriculture durable. Aujourd'hui, je nourris ma famille et vends mes récoltes au marché local. Ils n'ont pas seulement changé ma vie — ils ont redonné espoir à tout notre village.\"",
+    "name": "Marie Ngono",
+    "role": "Bénéficiaire — Programme de développement communautaire, Région du Centre"
+  },
+  "final_cta": {
+    "title": "Ensemble, nous pouvons faire la différence.",
+    "subtitle": "Rejoignez AMANCE et contribuez à construire un Cameroun plus juste, plus sain et plus vert. Chaque contribution, grande ou petite, a un impact réel sur des vies réelles.",
+    "cta_donate": "Faire un Don Maintenant",
+    "cta_contact": "Nous Contacter"
+  }
+}
