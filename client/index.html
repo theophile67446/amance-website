@@ -1,29 +1,45 @@
 <!doctype html>
 <html lang="en">
 
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-    <title>AMANCE - Angel Mary Association for the Needy and Conservation Education</title>    
-    <meta name="description" content="AMANCE - Angel Mary Association for the Needy and Conservation Education. ONG camerounaise engagée dans l'aide sociale, la santé, le développement communautaire et la conservation de la biodiversité." />
-    <meta name="keywords" content="AMANCE, ONG Cameroun, aide sociale, conservation, biodiversité, développement communautaire, Buea" />
-    <meta property="og:title" content="AMANCE - ONG Cameroun" />
-    <meta property="og:description" content="Agir pour l'Humain et la Nature au Cameroun" />
-    <meta property="og:type" content="website" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <title>AMANCE - Angel Mary Association for the Needy and Conservation Education</title>
+  <meta name="description"
+    content="AMANCE - Angel Mary Association for the Needy and Conservation Education. ONG camerounaise engagée dans l'aide sociale, la santé, le développement communautaire et la conservation de la biodiversité." />
+  <meta name="keywords"
+    content="AMANCE, ONG Cameroun, aide sociale, conservation, biodiversité, développement communautaire, Buea" />
+  <meta property="og:title" content="AMANCE - ONG Cameroun" />
+  <meta property="og:description" content="Agir pour l'Humain et la Nature au Cameroun" />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+    rel="stylesheet" />
+</head>
 
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-    <script
-      defer
-      src="%VITE_ANALYTICS_ENDPOINT%/umami"
-      data-website-id="%VITE_ANALYTICS_WEBSITE_ID%"></script>
-  </body>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+
+  <!-- Analytics - only load if configured -->
+  <script>
+    (function () {
+      const endpoint = "%VITE_ANALYTICS_ENDPOINT%";
+      const websiteId = "%VITE_ANALYTICS_WEBSITE_ID%";
+
+      // Only load analytics if both variables are defined and not empty
+      if (endpoint && endpoint !== "%VITE_ANALYTICS_ENDPOINT%" &&
+        websiteId && websiteId !== "%VITE_ANALYTICS_WEBSITE_ID%") {
+        const script = document.createElement('script');
+        script.defer = true;
+        script.src = endpoint + '/umami';
+        script.setAttribute('data-website-id', websiteId);
+        document.body.appendChild(script);
+      }
+    })();
+  </script>
+</body>
 
 </html>
