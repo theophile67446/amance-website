@@ -9,6 +9,9 @@ import {
   MapPin,
   ArrowRight,
   Loader,
+  Leaf,
+  Calendar,
+  Heart,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 
@@ -22,9 +25,28 @@ const categoryConfig = {
 };
 
 const statusConfig = {
-  en_cours: { label: "En cours", color: "var(--amance-green)" },
-  termine: { label: "Terminé", color: "var(--amance-blue)" },
-  planifie: { label: "Planifié", color: "#f59e0b" },
+  en_cours: { label: "En cours", color: "var(--amance-green)", bg: "rgba(42, 100, 60, 0.2)" },
+  termine: { label: "Terminé", color: "var(--amance-blue)", bg: "rgba(22, 36, 71, 0.2)" },
+  planifie: { label: "Planifié", color: "#f59e0b", bg: "rgba(245, 158, 11, 0.2)" },
+};
+
+const getCategoryIcon = (category: string) => {
+  const icons: Record<string, typeof TreePine> = {
+    conservation: TreePine,
+    humanitaire: HandHeart,
+    sante: Stethoscope,
+    communautaire: HomeIcon,
+  };
+  return icons[category] || HomeIcon;
+};
+
+const getStatusIcon = (status: string) => {
+  const icons: Record<string, typeof TreePine> = {
+    en_cours: TreePine,
+    termine: TreePine,
+    planifie: TreePine,
+  };
+  return icons[status] || TreePine;
 };
 
 const filters = [
@@ -126,7 +148,10 @@ export default function Projets() {
                           className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold text-white"
                           style={{ backgroundColor: cat.color }}
                         >
-                          <CatIcon size={12} />
+                          {(() => {
+                            const Icon = getCategoryIcon(project.category);
+                            return <Icon size={12} />;
+                          })()}
                           {cat.label}
                         </div>
                       </div>
@@ -134,7 +159,10 @@ export default function Projets() {
                         className="absolute top-3 right-3 flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold"
                         style={{ backgroundColor: status.bg, color: status.color }}
                       >
-                        <StatusIcon size={12} />
+                        {(() => {
+                          const Icon = getStatusIcon(project.status);
+                          return <Icon size={12} />;
+                        })()}
                         {status.label}
                       </div>
                       {project.featured && (
@@ -208,6 +236,11 @@ export default function Projets() {
                 );
               })}
             </div>
+          ) : (
+            <div className="text-center py-16">
+              <p className="text-lg text-gray-600">Aucun projet trouvé dans cette catégorie.</p>
+            </div>
+          )}
         </div>
       </section>
 
