@@ -3,6 +3,7 @@ import { useLocation } from "wouter";
 import Layout from "@/components/Layout";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
+import LocalLogin from "@/components/LocalLogin";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,18 +19,7 @@ export default function Admin() {
 
   // Vérifier que l'utilisateur est admin
   if (!user || user.role !== "admin") {
-    return (
-      <Layout>
-        <div className="max-w-7xl mx-auto px-4 py-16 text-center">
-          <Alert>
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>
-              Accès refusé. Seuls les administrateurs peuvent accéder à cette page.
-            </AlertDescription>
-          </Alert>
-        </div>
-      </Layout>
-    );
+    return <LocalLogin />;
   }
 
   return (

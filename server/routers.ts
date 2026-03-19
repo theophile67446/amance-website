@@ -2,9 +2,10 @@ import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router, adminProcedure, protectedProcedure } from "./_core/trpc";
+import { sdk } from "./_core/sdk";
 import { z } from "zod";
 import { getDb } from "./db";
-import { contacts, registrations, articles, projects } from "../drizzle/schema";
+import { contacts, registrations, articles, projects, users } from "../drizzle/schema";
 import { notifyOwner } from "./_core/notification";
 import { eq, desc } from "drizzle-orm";
 
@@ -17,6 +18,50 @@ export const appRouter = router({
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
       return { success: true } as const;
     }),
+    // Local login for development
+    localLogin: publicProcedure
+      .input(z.object({ email: z.string().email() }))
+      .mutation(async ({ input, ctx }) => {
+        const db = await getDb();
+        if (!db) throw new Error("Database not available");
+
+        // Find user by email
+        let user = await db
+          .select()
+          .from(users)
+          .where(eq(users.email, input.email))
+          .limit(1);
+
+        // If user doesn't exist, create it as admin
+        if (user.length === 0) {
+          const openId = "local-" + input.email.replace("@", "-").replace(".", "-");
+          await db.insert(users).values({
+            openId,
+            name: "Admin AMANCE",
+            email: input.email,
+            loginMethod: "local",
+            role: "admin",
+          });
+          user = await db
+            .select()
+            .from(users)
+            .where(eq(users.email, input.email))
+            .limit(1);
+        }
+
+        if (user.length === 0) {
+          throw new Error("Failed to create or find user");
+        }
+
+        const sessionToken = await sdk.createSessionToken(user[0].openId, {
+          name: user[0].name || user[0].email || "Admin AMANCE",
+        });
+        const cookieOptions = getSessionCookieOptions(ctx.req);
+
+        ctx.res.cookie(COOKIE_NAME, sessionToken, cookieOptions);
+
+        return { success: true, user: user[0] };
+      }),
   }),
 
   contact: router({
