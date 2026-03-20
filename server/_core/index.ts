@@ -30,6 +30,37 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 async function startServer() {
   const app = express();
   const server = createServer(app);
+  // CORS — allow the static frontend domain to call this API
+  const allowedOrigins = (process.env.ALLOWED_ORIGINS ?? "")
+    .split(",")
+    .map(o => o.trim())
+    .filter(Boolean);
+
+  app.use((req, res, next) => {
+    const origin = req.headers.origin;
+    const isAllowed = !origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin);
+
+    if (isAllowed && origin) {
+      res.header("Access-Control-Allow-Origin", origin);
+      res.header("Vary", "Origin");
+      res.header("Access-Control-Allow-Credentials", "true");
+      res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+      res.header("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
+    }
+
+    if (req.method === "OPTIONS") {
+      res.sendStatus(isAllowed ? 204 : 403);
+      return;
+    }
+
+    if (!isAllowed) {
+      res.status(403).json({ error: `CORS: origin ${origin} not allowed` });
+      return;
+    }
+
+    next();
+  });
+
   // Configure body parser with larger size limit for file uploads
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
