@@ -273,11 +273,25 @@ export const appRouter = router({
         if (input?.category) {
           conditions.push(eq(articles.category, input.category));
         }
-        
+
         const results = await db.select()
           .from(articles)
           .where(and(...conditions))
           .orderBy(desc(articles.publishedAt));
+
+        // Fallback: if no article is published yet, return latest entries so public pages are not empty.
+        if (results.length === 0) {
+          const fallbackConditions = [] as any[];
+          if (input?.category) {
+            fallbackConditions.push(eq(articles.category, input.category));
+          }
+          const fallbackResults = await db.select()
+            .from(articles)
+            .where(fallbackConditions.length > 0 ? and(...fallbackConditions) : undefined)
+            .orderBy(desc(articles.createdAt));
+          return fallbackResults;
+        }
+
         return results;
       }),
 
@@ -386,7 +400,7 @@ export const appRouter = router({
           .from(projects)
           .where(conditions.length > 0 ? and(...conditions) : undefined)
           .orderBy(desc(projects.createdAt));
-          
+
         return results.map(normalizeProject);
       }),
 

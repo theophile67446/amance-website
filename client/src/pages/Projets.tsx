@@ -135,8 +135,15 @@ export default function Projets() {
           ) : projects.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {projects.map((project) => {
-                const cat = categoryConfig[project.category as keyof typeof categoryConfig];
-                const status = statusConfig[project.status as keyof typeof statusConfig];
+                const cat = categoryConfig[project.category as keyof typeof categoryConfig] ?? {
+                  label: project.category || "Projet",
+                  color: "var(--amance-blue)",
+                };
+                const status = statusConfig[project.status as keyof typeof statusConfig] ?? {
+                  label: project.status || "Statut",
+                  color: "var(--amance-blue)",
+                  bg: "rgba(22, 36, 71, 0.2)",
+                };
 
                 return (
                   <div
