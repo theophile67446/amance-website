@@ -9,7 +9,7 @@ http://localhost:5173/admin
 
 ### **En production (après Vercel):**
 ```
-https://amance-website.vercel.app/admin
+https://amance.org/admin
 ```
 
 ---
