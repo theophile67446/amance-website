@@ -3,38 +3,121 @@ import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import LocalLogin from "@/components/LocalLogin";
 import AdminLayout from "@/components/AdminLayout";
+import AdminWorkspace from "@/components/admin/AdminWorkspace";
 import { formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Plus, Edit2, Trash2, FileText, Briefcase, Eye, EyeOff, Calendar, MapPin, Mail, Users, CheckCircle, Clock, ArrowUp, ArrowDown, Search, List, LayoutGrid } from "lucide-react";
+import { Edit2, Trash2, FileText, Briefcase, Eye, EyeOff, MapPin, Mail, Users, ArrowUp, ArrowDown, Search, List, LayoutGrid, Phone, Globe, Building2, Clock } from "lucide-react";
 
 import { useTranslation } from "react-i18next";
+
+type AdminTab = "dashboard" | "articles" | "projets" | "contacts" | "registrations" | "equipe";
+type AdminEditorMode = "browse" | "create" | "edit" | "view";
+type SyncAdminSearch = (mutator: (params: URLSearchParams) => void, options?: { replace?: boolean }) => void;
+
+const ADMIN_TABS: AdminTab[] = ["dashboard", "articles", "projets", "contacts", "registrations", "equipe"];
+
+function getAdminSearchParams(search: string) {
+  return new URLSearchParams(search);
+}
+
+function getAdminTabFromSearch(search: string): AdminTab {
+  const tab = getAdminSearchParams(search).get("tab");
+  return ADMIN_TABS.includes(tab as AdminTab) ? (tab as AdminTab) : "dashboard";
+}
+
+function getAdminModeFromSearch(search: string): AdminEditorMode {
+  const mode = getAdminSearchParams(search).get("mode");
+  return ["browse", "create", "edit", "view"].includes(mode || "") ? (mode as AdminEditorMode) : "browse";
+}
+
+function getAdminIdFromSearch(search: string): number | null {
+  const value = getAdminSearchParams(search).get("id");
+  if (!value) return null;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+}
 
 export default function Admin() {
   const { user } = useAuth();
   const { t } = useTranslation();
+  const [adminSearch, setAdminSearch] = useState(() => window.location.search);
+
+  const activeTab = useMemo(() => getAdminTabFromSearch(adminSearch), [adminSearch]);
+
+  const syncAdminSearch: SyncAdminSearch = (mutator, options) => {
+    const url = new URL(window.location.href);
+    const params = new URLSearchParams(url.search);
+    mutator(params);
+
+    const nextSearch = params.toString();
+    const nextUrl = `${url.pathname}${nextSearch ? `?${nextSearch}` : ""}`;
+
+    if (options?.replace) {
+      window.history.replaceState({}, "", nextUrl);
+    } else {
+      window.history.pushState({}, "", nextUrl);
+    }
+
+    setAdminSearch(nextSearch ? `?${nextSearch}` : "");
+  };
+
+  const handleTabChange = (tab: string) => {
+    if (!ADMIN_TABS.includes(tab as AdminTab)) return;
+
+    syncAdminSearch((params) => {
+      params.set("tab", tab);
+      params.delete("mode");
+      params.delete("id");
+    });
+  };
+
+  useEffect(() => {
+    const onPopState = () => setAdminSearch(window.location.search);
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
+
+  useEffect(() => {
+    const params = getAdminSearchParams(adminSearch);
+    if (!params.get("tab")) {
+      syncAdminSearch((nextParams) => {
+        nextParams.set("tab", "dashboard");
+      }, { replace: true });
+    }
+  }, [adminSearch]);
 
   if (!user || user.role !== "admin") {
     return <LocalLogin />;
   }
 
   return (
-    <AdminLayout>
-      {(activeTab, setActiveTab) => <AdminContent activeTab={activeTab} setActiveTab={setActiveTab} />}
+    <AdminLayout activeTab={activeTab} onTabChange={handleTabChange}>
+      <AdminContent activeTab={activeTab} setActiveTab={handleTabChange} adminSearch={adminSearch} syncAdminSearch={syncAdminSearch} />
     </AdminLayout>
   );
 }
 
-function AdminContent({ activeTab, setActiveTab }: { activeTab: string; setActiveTab: (tab: string) => void }) {
+function AdminContent({
+  activeTab,
+  setActiveTab,
+  adminSearch,
+  syncAdminSearch,
+}: {
+  activeTab: AdminTab;
+  setActiveTab: (tab: string) => void;
+  adminSearch: string;
+  syncAdminSearch: SyncAdminSearch;
+}) {
   const { t } = useTranslation();
   const [message, setMessage] = useState("");
 
   const TAB_LABELS: Record<string, string> = {
     dashboard: t("admin.sidebar.dashboard"),
     articles: t("admin.sidebar.articles"),
-    projets: t("admin.sidebar.projets"),
+    projets: t("admin.sidebar.projects"),
     contacts: t("admin.sidebar.contacts"),
     registrations: t("admin.sidebar.registrations"),
     equipe: t("admin.sidebar.team"),
@@ -43,11 +126,11 @@ function AdminContent({ activeTab, setActiveTab }: { activeTab: string; setActiv
   const renderTab = () => {
     switch (activeTab) {
       case "dashboard": return <DashboardTab setActiveTab={setActiveTab} />;
-      case "articles": return <ArticlesTab setMessage={setMessage} />;
-      case "projets": return <ProjetsTab setMessage={setMessage} />;
-      case "contacts": return <ContactsTab setMessage={setMessage} />;
-      case "registrations": return <RegistrationsTab setMessage={setMessage} />;
-      case "equipe": return <TeamTab setMessage={setMessage} />;
+      case "articles": return <ArticlesTab setMessage={setMessage} adminSearch={adminSearch} syncAdminSearch={syncAdminSearch} />;
+      case "projets": return <ProjetsTab setMessage={setMessage} adminSearch={adminSearch} syncAdminSearch={syncAdminSearch} />;
+      case "contacts": return <ContactsTab setMessage={setMessage} adminSearch={adminSearch} syncAdminSearch={syncAdminSearch} />;
+      case "registrations": return <RegistrationsTab setMessage={setMessage} adminSearch={adminSearch} syncAdminSearch={syncAdminSearch} />;
+      case "equipe": return <TeamTab setMessage={setMessage} adminSearch={adminSearch} syncAdminSearch={syncAdminSearch} />;
       default: return <DashboardTab setActiveTab={setActiveTab} />;
     }
   };
@@ -61,19 +144,15 @@ function AdminContent({ activeTab, setActiveTab }: { activeTab: string; setActiv
         </h1>
       </div>
 
-      <div className="px-4 md:px-8 py-8">
-        <Card className="shadow-sm border border-gray-100 rounded-2xl overflow-hidden">
-          <div className="p-6 md:p-8 bg-white">
-            {message && (
-              <Alert className="mb-6 bg-green-50 text-green-800 border-green-200">
-                <AlertDescription className="font-medium flex items-center">
-                  <span className="mr-2">✨</span> {message}
-                </AlertDescription>
-              </Alert>
-            )}
-            {renderTab()}
-          </div>
-        </Card>
+      <div className="px-4 py-8 md:px-8">
+        {message && (
+          <Alert className="mb-6 border-green-200 bg-green-50 text-green-800">
+            <AlertDescription className="flex items-center font-medium">
+              <span className="mr-2">✨</span> {message}
+            </AlertDescription>
+          </Alert>
+        )}
+        {renderTab()}
       </div>
     </div>
   );
@@ -197,7 +276,15 @@ function DashboardTab({ setActiveTab }: { setActiveTab: (tab: string) => void })
   );
 }
 
-function ArticlesTab({ setMessage }: { setMessage: (msg: string) => void }) {
+function ArticlesTab({
+  setMessage,
+  adminSearch,
+  syncAdminSearch,
+}: {
+  setMessage: (msg: string) => void;
+  adminSearch: string;
+  syncAdminSearch: SyncAdminSearch;
+}) {
   const { t } = useTranslation();
   const utils = trpc.useContext();
   const { data: articles = [], isLoading } = trpc.articles.adminList.useQuery();
@@ -206,6 +293,7 @@ function ArticlesTab({ setMessage }: { setMessage: (msg: string) => void }) {
   const deleteMutation = trpc.articles.delete.useMutation();
 
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [screenMode, setScreenMode] = useState<AdminEditorMode>("browse");
   const [searchTerm, setSearchTerm] = useState("");
   const [articlesView, setArticlesView] = useState<"list" | "grid">("list");
   const [articleStatusFilter, setArticleStatusFilter] = useState<"all" | "published" | "draft">("all");
@@ -231,6 +319,11 @@ function ArticlesTab({ setMessage }: { setMessage: (msg: string) => void }) {
   };
 
   const [form, setForm] = useState(defaultForm);
+
+  const selectedArticle = useMemo(
+    () => articles.find((article: any) => article.id === editingId) || null,
+    [articles, editingId],
+  );
 
   const filteredArticles = useMemo(
     () => articles.filter((article: any) => {
@@ -353,13 +446,19 @@ function ArticlesTab({ setMessage }: { setMessage: (msg: string) => void }) {
       }
       setForm(defaultForm);
       setEditingId(null);
-      utils.articles.adminList.invalidate();
-    } catch (error) {
+      setScreenMode("browse");
+      syncAdminSearch((params) => {
+        params.set("tab", "articles");
+        params.delete("mode");
+        params.delete("id");
+      }, { replace: true });
+      await utils.articles.adminList.invalidate();
+    } catch {
       setMessage(t("admin.articles.error_save"));
     }
   };
 
-  const handleEdit = (article: any) => {
+  const loadArticle = (article: any) => {
     setEditingId(article.id);
     setForm({
       title: article.title,
@@ -374,23 +473,89 @@ function ArticlesTab({ setMessage }: { setMessage: (msg: string) => void }) {
       author: article.author || "",
       published: article.published,
     });
+  };
+
+  useEffect(() => {
+    const mode = getAdminModeFromSearch(adminSearch);
+    const id = getAdminIdFromSearch(adminSearch);
+
+    if (mode === "create") {
+      setEditingId(null);
+      setForm(defaultForm);
+      setScreenMode("create");
+      return;
+    }
+
+    if (mode === "edit" && id !== null) {
+      const article = articles.find((item: any) => item.id === id);
+      if (article) {
+        loadArticle(article);
+        setScreenMode("edit");
+        return;
+      }
+    }
+
+    setEditingId(null);
+    setForm(defaultForm);
+    setScreenMode("browse");
+  }, [adminSearch, articles]);
+
+  const handleCreate = () => {
+    setEditingId(null);
+    setForm(defaultForm);
+    setScreenMode("create");
+    syncAdminSearch((params) => {
+      params.set("tab", "articles");
+      params.set("mode", "create");
+      params.delete("id");
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleEdit = (article: any) => {
+    loadArticle(article);
+    setScreenMode("edit");
+    syncAdminSearch((params) => {
+      params.set("tab", "articles");
+      params.set("mode", "edit");
+      params.set("id", String(article.id));
+    });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const cancelEdit = () => {
     setEditingId(null);
     setForm(defaultForm);
+    setScreenMode("browse");
+    syncAdminSearch((params) => {
+      params.set("tab", "articles");
+      params.delete("mode");
+      params.delete("id");
+    });
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-      {/* Formulaire */}
-      <div className="lg:col-span-8">
+    <AdminWorkspace
+      mode={screenMode}
+      title={t("admin.sidebar.articles")}
+      collectionLabel={t("admin.workspace.collection_label")}
+      description={t("admin.articles.collection_description")}
+      count={articles.length}
+      createLabel={t("admin.articles.form_title_create")}
+      createDisabled={createMutation.isPending || updateMutation.isPending}
+      onCreate={handleCreate}
+      backLabel={t("admin.workspace.back_to_collection")}
+      onBack={cancelEdit}
+      editorBadge={screenMode === "edit" ? t("admin.workspace.mode_edit") : t("admin.workspace.mode_create")}
+      editorTitle={screenMode === "edit" ? (selectedArticle?.title || t("admin.articles.form_title_edit")) : t("admin.articles.form_title_create")}
+      editorDescription={screenMode === "edit" ? (form.slug ? `/${form.slug}` : undefined) : t("admin.articles.editor_description")}
+      accentClassName="bg-[radial-gradient(circle_at_top_left,_rgba(245,177,0,0.18),_transparent_42%),linear-gradient(180deg,#ffffff_0%,#fffaf0_100%)]"
+      editorContent={(
         <Card className="border border-gray-100 shadow-sm">
-          <CardHeader className="bg-gray-50/50 border-b border-gray-100 pb-4">
-            <CardTitle className="text-xl flex items-center text-[#1A361D]">
-              <Edit2 className="w-5 h-5 mr-3 text-[#F5B100]" />
-              {editingId ? t("admin.articles.form_title_edit") : t("admin.articles.form_title_create")}
+          <CardHeader className="border-b border-gray-100 bg-gray-50/50 pb-4">
+            <CardTitle className="flex items-center text-xl text-[#1A361D]">
+              <Edit2 className="mr-3 h-5 w-5 text-[#F5B100]" />
+              {screenMode === "edit" ? t("admin.articles.form_title_edit") : t("admin.articles.form_title_create")}
             </CardTitle>
           </CardHeader>
           <CardContent className="pt-6">
@@ -533,22 +698,18 @@ function ArticlesTab({ setMessage }: { setMessage: (msg: string) => void }) {
                   className="bg-[#1A361D] hover:bg-[#152e18] text-white flex-1 h-12 text-lg"
                   disabled={createMutation.isPending || updateMutation.isPending}
                 >
-                  {(createMutation.isPending || updateMutation.isPending) ? t("common.saving") : (editingId ? t("common.update") : t("common.create_draft"))}
+                  {(createMutation.isPending || updateMutation.isPending) ? t("common.saving") : (screenMode === "edit" ? t("common.update") : t("common.create_draft"))}
                 </Button>
-                {editingId && (
-                  <Button type="button" variant="outline" onClick={cancelEdit} className="h-12 px-8">
-                    {t("common.cancel")}
-                  </Button>
-                )}
+                <Button type="button" variant="outline" onClick={cancelEdit} className="h-12 px-8">
+                  {t("common.cancel")}
+                </Button>
               </div>
             </form>
           </CardContent>
         </Card>
-      </div>
-
-      {/* Liste */}
-      <div className="lg:col-span-4">
-        <Card className="border border-gray-100 shadow-sm sticky top-6">
+      )}
+      collectionContent={(
+        <Card className="overflow-hidden border border-gray-100 shadow-sm">
           <CardHeader className="bg-gray-50/50 border-b border-gray-100 pb-4">
             <CardTitle className="text-xl text-[#1A361D]">{t("admin.sidebar.articles")} {articles.length > 0 && `(${articles.length})`}</CardTitle>
             <div className="flex flex-wrap items-center gap-2 mt-3">
@@ -634,7 +795,7 @@ function ArticlesTab({ setMessage }: { setMessage: (msg: string) => void }) {
             {isLoading ? (
               <div className="p-6 text-center text-gray-500">{t("admin.projects.loading")}</div>
             ) : (
-              <div className="max-h-[800px] overflow-y-auto">
+              <div>
                 <div className="p-3 border-b bg-gray-50/70 flex items-center justify-between gap-2 flex-wrap">
                   <p className="text-xs text-gray-600">
                     {selectedIds.length > 0 ? t("admin.projects.selection_count", { count: selectedIds.length }) : t("admin.projects.no_selection")}
@@ -771,12 +932,20 @@ function ArticlesTab({ setMessage }: { setMessage: (msg: string) => void }) {
             )}
           </CardContent>
         </Card>
-      </div>
-    </div>
+      )}
+    />
   );
 }
 
-function ProjetsTab({ setMessage }: { setMessage: (msg: string) => void }) {
+function ProjetsTab({
+  setMessage,
+  adminSearch,
+  syncAdminSearch,
+}: {
+  setMessage: (msg: string) => void;
+  adminSearch: string;
+  syncAdminSearch: SyncAdminSearch;
+}) {
   const { t } = useTranslation();
   const utils = trpc.useContext();
   const { data: projects = [], isLoading } = trpc.projects.adminList.useQuery();
@@ -785,6 +954,7 @@ function ProjetsTab({ setMessage }: { setMessage: (msg: string) => void }) {
   const deleteMutation = trpc.projects.delete.useMutation();
 
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [screenMode, setScreenMode] = useState<AdminEditorMode>("browse");
   const [projectSearch, setProjectSearch] = useState("");
   const [projectsView, setProjectsView] = useState<"list" | "grid">("list");
   const [projectStatusFilter, setProjectStatusFilter] = useState<"all" | "en_cours" | "termine" | "planifie">("all");
@@ -812,6 +982,11 @@ function ProjetsTab({ setMessage }: { setMessage: (msg: string) => void }) {
   };
 
   const [form, setForm] = useState(defaultForm);
+
+  const selectedProject = useMemo(
+    () => projects.find((project: any) => project.id === editingId) || null,
+    [projects, editingId],
+  );
 
   const filteredProjects = useMemo(
     () => projects.filter((project: any) => {
@@ -933,13 +1108,19 @@ function ProjetsTab({ setMessage }: { setMessage: (msg: string) => void }) {
       }
       setForm(defaultForm);
       setEditingId(null);
-      utils.projects.adminList.invalidate();
-    } catch (error) {
+      setScreenMode("browse");
+      syncAdminSearch((params) => {
+        params.set("tab", "projets");
+        params.delete("mode");
+        params.delete("id");
+      }, { replace: true });
+      await utils.projects.adminList.invalidate();
+    } catch {
       setMessage(t("admin.projects.error_save"));
     }
   };
 
-  const handleEdit = (project: any) => {
+  const loadProject = (project: any) => {
     setEditingId(project.id);
     setForm({
       title: project.title,
@@ -954,7 +1135,54 @@ function ProjetsTab({ setMessage }: { setMessage: (msg: string) => void }) {
       location: project.location || "",
       status: project.status || "en_cours",
       beneficiaries: project.beneficiaries || 0,
-      featured: project.featured || false
+      featured: project.featured || false,
+    });
+  };
+
+  useEffect(() => {
+    const mode = getAdminModeFromSearch(adminSearch);
+    const id = getAdminIdFromSearch(adminSearch);
+
+    if (mode === "create") {
+      setEditingId(null);
+      setForm(defaultForm);
+      setScreenMode("create");
+      return;
+    }
+
+    if (mode === "edit" && id !== null) {
+      const project = projects.find((item: any) => item.id === id);
+      if (project) {
+        loadProject(project);
+        setScreenMode("edit");
+        return;
+      }
+    }
+
+    setEditingId(null);
+    setForm(defaultForm);
+    setScreenMode("browse");
+  }, [adminSearch, projects]);
+
+  const handleCreate = () => {
+    setEditingId(null);
+    setForm(defaultForm);
+    setScreenMode("create");
+    syncAdminSearch((params) => {
+      params.set("tab", "projets");
+      params.set("mode", "create");
+      params.delete("id");
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleEdit = (project: any) => {
+    loadProject(project);
+    setScreenMode("edit");
+    syncAdminSearch((params) => {
+      params.set("tab", "projets");
+      params.set("mode", "edit");
+      params.set("id", String(project.id));
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -962,17 +1190,36 @@ function ProjetsTab({ setMessage }: { setMessage: (msg: string) => void }) {
   const cancelEdit = () => {
     setEditingId(null);
     setForm(defaultForm);
+    setScreenMode("browse");
+    syncAdminSearch((params) => {
+      params.set("tab", "projets");
+      params.delete("mode");
+      params.delete("id");
+    });
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-      {/* Formulaire */}
-      <div className="lg:col-span-8">
+    <AdminWorkspace
+      mode={screenMode}
+      title={t("admin.sidebar.projects")}
+      collectionLabel={t("admin.workspace.collection_label")}
+      description={t("admin.projects.collection_description")}
+      count={projects.length}
+      createLabel={t("admin.projects.form_title_create")}
+      createDisabled={createMutation.isPending || updateMutation.isPending}
+      onCreate={handleCreate}
+      backLabel={t("admin.workspace.back_to_collection")}
+      onBack={cancelEdit}
+      editorBadge={screenMode === "edit" ? t("admin.workspace.mode_edit") : t("admin.workspace.mode_create")}
+      editorTitle={screenMode === "edit" ? (selectedProject?.title || t("admin.projects.form_title_edit")) : t("admin.projects.form_title_create")}
+      editorDescription={screenMode === "edit" ? (form.slug ? `/${form.slug}` : undefined) : t("admin.projects.editor_description")}
+      accentClassName="bg-[radial-gradient(circle_at_top_left,_rgba(30,93,42,0.16),_transparent_45%),linear-gradient(180deg,#ffffff_0%,#f5fbf6_100%)]"
+      editorContent={(
         <Card className="border border-gray-100 shadow-sm">
           <CardHeader className="bg-gray-50/50 border-b border-gray-100 pb-4">
             <CardTitle className="text-xl flex items-center text-[#1A361D]">
               <Edit2 className="w-5 h-5 mr-3 text-[#1E5D2A]" />
-              {editingId ? "Modifier le projet" : "Créer un nouveau projet"}
+              {screenMode === "edit" ? t("admin.projects.form_title_edit") : t("admin.projects.form_title_create")}
             </CardTitle>
           </CardHeader>
           <CardContent className="pt-6">
@@ -1132,22 +1379,18 @@ function ProjetsTab({ setMessage }: { setMessage: (msg: string) => void }) {
                   className="bg-[#1A361D] hover:bg-[#152e18] text-white flex-1 h-12 text-lg"
                   disabled={createMutation.isPending || updateMutation.isPending}
                 >
-                  {(createMutation.isPending || updateMutation.isPending) ? "Enregistrement..." : (editingId ? "Mettre à jour" : "Créer le projet")}
+                  {(createMutation.isPending || updateMutation.isPending) ? t("common.saving") : (screenMode === "edit" ? t("common.update") : t("admin.projects.form_title_create"))}
                 </Button>
-                {editingId && (
-                  <Button type="button" variant="outline" onClick={cancelEdit} className="h-12 px-8">
-                    Annuler
-                  </Button>
-                )}
+                <Button type="button" variant="outline" onClick={cancelEdit} className="h-12 px-8">
+                  {t("common.cancel")}
+                </Button>
               </div>
             </form>
           </CardContent>
         </Card>
-      </div>
-
-      {/* Liste */}
-      <div className="lg:col-span-4">
-        <Card className="border border-gray-100 shadow-sm sticky top-6">
+      )}
+      collectionContent={(
+        <Card className="overflow-hidden border border-gray-100 shadow-sm">
           <CardHeader className="bg-gray-50/50 border-b border-gray-100 pb-4">
             <CardTitle className="text-xl text-[#1A361D]">Projets {projects.length > 0 && `(${projects.length})`}</CardTitle>
             <div className="flex flex-wrap items-center gap-2 mt-3">
@@ -1240,7 +1483,7 @@ function ProjetsTab({ setMessage }: { setMessage: (msg: string) => void }) {
             {isLoading ? (
               <div className="p-6 text-center text-gray-500">{t("admin.projects.loading")}</div>
             ) : (
-              <div className="max-h-[800px] overflow-y-auto">
+              <div>
                 <div className="p-3 border-b bg-gray-50/70 flex items-center justify-between gap-2 flex-wrap">
                   <p className="text-xs text-gray-600">
                     {selectedProjectIds.length > 0 ? t("admin.projects.selection_count", { count: selectedProjectIds.length }) : t("admin.projects.no_selection")}
@@ -1380,12 +1623,20 @@ function ProjetsTab({ setMessage }: { setMessage: (msg: string) => void }) {
             )}
           </CardContent>
         </Card>
-      </div>
-    </div>
+      )}
+    />
   );
 }
 
-function TeamTab({ setMessage }: { setMessage: (msg: string) => void }) {
+function TeamTab({
+  setMessage,
+  adminSearch,
+  syncAdminSearch,
+}: {
+  setMessage: (msg: string) => void;
+  adminSearch: string;
+  syncAdminSearch: SyncAdminSearch;
+}) {
   const { t } = useTranslation();
   const utils = trpc.useContext();
   const { data: members = [], isLoading } = trpc.team.adminList.useQuery();
@@ -1395,8 +1646,8 @@ function TeamTab({ setMessage }: { setMessage: (msg: string) => void }) {
   const reorderMutation = trpc.team.reorder.useMutation();
 
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [screenMode, setScreenMode] = useState<AdminEditorMode>("browse");
   const [memberSearch, setMemberSearch] = useState("");
-  const [initialEditReady, setInitialEditReady] = useState(false);
 
   const defaultForm = {
     name: "",
@@ -1429,22 +1680,28 @@ function TeamTab({ setMessage }: { setMessage: (msg: string) => void }) {
     try {
       if (editingId) {
         await updateMutation.mutateAsync({ id: editingId, ...form });
-        setMessage("✅ Membre mis à jour avec succès!");
+        setMessage(t("admin.team.update_success"));
       } else {
         await createMutation.mutateAsync(form);
-        setMessage("✅ Membre ajouté avec succès!");
+        setMessage(t("admin.team.create_success"));
       }
 
       setForm(defaultForm);
       setEditingId(null);
-      utils.team.adminList.invalidate();
-      utils.team.list.invalidate();
-    } catch (error) {
-      setMessage("❌ Erreur lors de l'enregistrement du membre");
+      setScreenMode("browse");
+      syncAdminSearch((params) => {
+        params.set("tab", "equipe");
+        params.delete("mode");
+        params.delete("id");
+      }, { replace: true });
+      await utils.team.adminList.invalidate();
+      await utils.team.list.invalidate();
+    } catch {
+      setMessage(t("admin.team.error_save"));
     }
   };
 
-  const handleEdit = (member: any) => {
+  const loadMember = (member: any) => {
     setEditingId(member.id);
     setForm({
       name: member.name,
@@ -1455,29 +1712,66 @@ function TeamTab({ setMessage }: { setMessage: (msg: string) => void }) {
       bio: member.bio || "",
       active: member.active,
     });
+  };
+
+  useEffect(() => {
+    const mode = getAdminModeFromSearch(adminSearch);
+    const id = getAdminIdFromSearch(adminSearch);
+
+    if (mode === "create") {
+      setEditingId(null);
+      setForm(defaultForm);
+      setScreenMode("create");
+      return;
+    }
+
+    if (mode === "edit" && id !== null) {
+      const member = members.find((item: any) => item.id === id);
+      if (member) {
+        loadMember(member);
+        setScreenMode("edit");
+        return;
+      }
+    }
+
+    setEditingId(null);
+    setForm(defaultForm);
+    setScreenMode("browse");
+  }, [adminSearch, members]);
+
+  const handleCreate = () => {
+    setEditingId(null);
+    setForm(defaultForm);
+    setScreenMode("create");
+    syncAdminSearch((params) => {
+      params.set("tab", "equipe");
+      params.set("mode", "create");
+      params.delete("id");
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleEdit = (member: any) => {
+    loadMember(member);
+    setScreenMode("edit");
+    syncAdminSearch((params) => {
+      params.set("tab", "equipe");
+      params.set("mode", "edit");
+      params.set("id", String(member.id));
+    });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const cancelEdit = () => {
     setEditingId(null);
     setForm(defaultForm);
-  };
-
-  useEffect(() => {
-    if (initialEditReady || members.length === 0) return;
-    const firstMember = members[0];
-    setEditingId(firstMember.id);
-    setForm({
-      name: firstMember.name,
-      role: firstMember.role,
-      title: firstMember.title || "",
-      location: firstMember.location || "",
-      image: firstMember.image || "",
-      bio: firstMember.bio || "",
-      active: firstMember.active,
+    setScreenMode("browse");
+    syncAdminSearch((params) => {
+      params.set("tab", "equipe");
+      params.delete("mode");
+      params.delete("id");
     });
-    setInitialEditReady(true);
-  }, [initialEditReady, members]);
+  };
 
   const moveMember = async (id: number, direction: "up" | "down") => {
     const currentIndex = members.findIndex((member: any) => member.id === id);
@@ -1500,55 +1794,34 @@ function TeamTab({ setMessage }: { setMessage: (msg: string) => void }) {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-      <div className="lg:col-span-8">
+    <AdminWorkspace
+      mode={screenMode}
+      title={t("admin.sidebar.team")}
+      collectionLabel={t("admin.workspace.collection_label")}
+      description={t("admin.team.desc")}
+      count={members.length}
+      createLabel={t("admin.team.form_title_add")}
+      createDisabled={createMutation.isPending || updateMutation.isPending}
+      onCreate={handleCreate}
+      backLabel={t("admin.workspace.back_to_collection")}
+      onBack={cancelEdit}
+      editorBadge={screenMode === "edit" ? t("admin.workspace.mode_edit") : t("admin.workspace.mode_create")}
+      editorTitle={screenMode === "edit" ? (selectedMember?.name || t("admin.team.form_title_edit")) : t("admin.team.form_title_add")}
+      editorDescription={screenMode === "edit" ? selectedMember?.role : t("admin.team.editor_description")}
+      accentClassName="bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.14),_transparent_42%),linear-gradient(180deg,#ffffff_0%,#f3fbf7_100%)]"
+      editorContent={(
         <Card className="border border-gray-100 shadow-sm">
           <CardHeader className="bg-gray-50/50 border-b border-gray-100 pb-4">
-            <div className="flex items-center justify-between gap-3">
-              <CardTitle className="text-xl flex items-center text-[#1A361D]">
-                <Edit2 className="w-5 h-5 mr-3 text-[#1E5D2A]" />
-                {editingId ? t("admin.team.form_title_edit") : t("admin.team.form_title_add")}
-              </CardTitle>
-              <Button type="button" variant="outline" size="sm" onClick={cancelEdit}>
-                {t("admin.team.btn_new")}
-              </Button>
-            </div>
+            <CardTitle className="text-xl flex items-center text-[#1A361D]">
+              <Edit2 className="w-5 h-5 mr-3 text-[#1E5D2A]" />
+              {screenMode === "edit" ? t("admin.team.form_title_edit") : t("admin.team.form_title_add")}
+            </CardTitle>
             <CardDescription>
               {t("admin.team.desc")}
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
             <form onSubmit={handleSubmit} className="space-y-6">
-              {members.length > 0 && (
-                <div className="p-4 border rounded-lg bg-gray-50/70 space-y-3">
-                  <p className="text-sm font-semibold text-gray-700">{t("admin.team.edit_existing")}</p>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <select
-                      value={editingId ? String(editingId) : ""}
-                      onChange={(e) => {
-                        if (!e.target.value) {
-                          cancelEdit();
-                          return;
-                        }
-                        const picked = members.find((member: any) => member.id === Number(e.target.value));
-                        if (picked) {
-                          handleEdit(picked);
-                        }
-                      }}
-                      className="w-full h-11 px-3 border border-gray-200 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-[#1E5D2A]"
-                    >
-                      <option value="">{t("admin.team.btn_new")}</option>
-                      {members.map((member: any) => (
-                        <option key={member.id} value={member.id}>{member.name} - {member.role}</option>
-                      ))}
-                    </select>
-                    <Button type="button" variant="outline" onClick={cancelEdit} className="h-11">
-                      {t("admin.team.btn_new")}
-                    </Button>
-                  </div>
-                </div>
-              )}
-
               {selectedMember && (
                 <div className="p-4 border rounded-lg bg-emerald-50/40 flex flex-wrap items-center gap-2 text-sm">
                   <span className="font-semibold text-emerald-800">{t("admin.team.editing_now")}</span>
@@ -1648,21 +1921,18 @@ function TeamTab({ setMessage }: { setMessage: (msg: string) => void }) {
                 >
                   {(createMutation.isPending || updateMutation.isPending)
                     ? t("common.saving")
-                    : (editingId ? t("common.update") : t("admin.team.form_title_add"))}
+                    : (screenMode === "edit" ? t("common.update") : t("admin.team.form_title_add"))}
                 </Button>
-                {editingId && (
-                  <Button type="button" variant="outline" onClick={cancelEdit} className="h-12 px-8">
-                    Annuler
-                  </Button>
-                )}
+                <Button type="button" variant="outline" onClick={cancelEdit} className="h-12 px-8">
+                  {t("common.cancel")}
+                </Button>
               </div>
             </form>
           </CardContent>
         </Card>
-      </div>
-
-      <div className="lg:col-span-4">
-        <Card className="border border-gray-100 shadow-sm sticky top-6">
+      )}
+      collectionContent={(
+        <Card className="overflow-hidden border border-gray-100 shadow-sm">
           <CardHeader className="bg-gray-50/50 border-b border-gray-100 pb-4">
             <CardTitle className="text-xl text-[#1A361D]">{t("admin.sidebar.team")} ({members.length})</CardTitle>
             <CardDescription>
@@ -1682,7 +1952,7 @@ function TeamTab({ setMessage }: { setMessage: (msg: string) => void }) {
             {isLoading ? (
               <div className="p-6 text-center text-gray-500">{t("admin.projects.loading")}</div>
             ) : (
-              <div className="max-h-[800px] overflow-y-auto divide-y divide-gray-100">
+              <div className="divide-y divide-gray-100">
                 {filteredMembers.map((member: any) => {
                   const index = members.findIndex((candidate: any) => candidate.id === member.id);
                   return (
@@ -1764,17 +2034,32 @@ function TeamTab({ setMessage }: { setMessage: (msg: string) => void }) {
             )}
           </CardContent>
         </Card>
-      </div>
-    </div>
+      )}
+    />
   );
 }
 
-function ContactsTab({ setMessage }: { setMessage: (msg: string) => void }) {
+function ContactsTab({
+  setMessage,
+  adminSearch,
+  syncAdminSearch,
+}: {
+  setMessage: (msg: string) => void;
+  adminSearch: string;
+  syncAdminSearch: SyncAdminSearch;
+}) {
   const { t } = useTranslation();
   const utils = trpc.useContext();
   const { data: contacts = [], isLoading } = trpc.contact.adminList.useQuery();
   const updateStatus = trpc.contact.updateStatus.useMutation();
+  const [screenMode, setScreenMode] = useState<AdminEditorMode>("browse");
+  const [selectedContactId, setSelectedContactId] = useState<number | null>(null);
   const [contactSearch, setContactSearch] = useState("");
+
+  const selectedContact = useMemo(
+    () => contacts.find((contact: any) => contact.id === selectedContactId) || null,
+    [contacts, selectedContactId],
+  );
 
   const filteredContacts = useMemo(
     () => contacts.filter((contact: any) => {
@@ -1791,72 +2076,191 @@ function ContactsTab({ setMessage }: { setMessage: (msg: string) => void }) {
   const handleStatusChange = async (id: number, status: "nouveau" | "lu" | "traite") => {
     try {
       await updateStatus.mutateAsync({ id, status });
-      utils.contact.adminList.invalidate();
-    } catch (error) {
+      await utils.contact.adminList.invalidate();
+    } catch {
       setMessage(t("common.error_generic"));
     }
   };
 
+  useEffect(() => {
+    const mode = getAdminModeFromSearch(adminSearch);
+    const id = getAdminIdFromSearch(adminSearch);
+
+    if (mode === "view" && id !== null) {
+      const contact = contacts.find((item: any) => item.id === id);
+      if (contact) {
+        setSelectedContactId(contact.id);
+        setScreenMode("view");
+        return;
+      }
+    }
+
+    setSelectedContactId(null);
+    setScreenMode("browse");
+  }, [adminSearch, contacts]);
+
+  const openContact = (contact: any) => {
+    setSelectedContactId(contact.id);
+    setScreenMode("view");
+    syncAdminSearch((params) => {
+      params.set("tab", "contacts");
+      params.set("mode", "view");
+      params.set("id", String(contact.id));
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const closeContact = () => {
+    setSelectedContactId(null);
+    setScreenMode("browse");
+    syncAdminSearch((params) => {
+      params.set("tab", "contacts");
+      params.delete("mode");
+      params.delete("id");
+    });
+  };
+
   return (
-    <Card className="border border-gray-100 shadow-sm">
-      <CardHeader className="bg-gray-50/50 border-b border-gray-100 pb-4">
-        <CardTitle className="text-xl text-[#1A361D]">{t("admin.sidebar.contacts")} ({contacts.length})</CardTitle>
-        <div className="relative mt-3 max-w-md">
-          <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
-          <Input
-            value={contactSearch}
-            onChange={(e) => setContactSearch(e.target.value)}
-            placeholder={t("admin.contacts.search_placeholder")}
-            className="pl-9 h-10 bg-white"
-          />
-        </div>
-      </CardHeader>
-      <CardContent className="p-0">
-        {isLoading ? (
-          <div className="p-6 text-center text-gray-500">{t("admin.projects.loading")}</div>
-        ) : (
-          <div className="divide-y divide-gray-100">
-            {filteredContacts.map((contact: any) => (
-              <div key={contact.id} className={`p-6 hover:bg-gray-50 ${contact.status === 'nouveau' ? 'bg-blue-50/30' : ''}`}>
-                <div className="flex justify-between items-start mb-2">
-                  <div>
-                    <h4 className={`text-lg hover:underline cursor-pointer ${contact.status === 'nouveau' ? 'font-bold text-blue-900' : 'font-semibold text-gray-800'}`}>
-                      {contact.subject}
-                    </h4>
-                    <p className="text-sm text-gray-500 font-medium">{t("admin.contacts.label_from")}: {contact.firstName} {contact.lastName} ({contact.email})</p>
-                  </div>
-                  <select
-                    value={contact.status}
-                    onChange={(e) => handleStatusChange(contact.id, e.target.value as any)}
-                    className={`text-sm rounded-full px-3 py-1 font-medium border ${contact.status === 'nouveau' ? 'bg-blue-100 text-blue-800 border-blue-200' :
-                      contact.status === 'traite' ? 'bg-green-100 text-green-800 border-green-200' :
-                        'bg-gray-100 text-gray-800 border-gray-200'
-                       }`}
-                  >
-                    <option value="nouveau">{t("admin.contacts.status.nouveau")}</option>
-                    <option value="lu">{t("admin.contacts.status.lu")}</option>
-                    <option value="traite">{t("admin.contacts.status.traite")}</option>
-                  </select>
-                </div>
-                <div className="mt-4 p-4 bg-white border rounded-lg text-gray-700 whitespace-pre-wrap text-sm">
-                  {contact.message}
-                </div>
+    <AdminWorkspace
+      mode={screenMode}
+      title={t("admin.sidebar.contacts")}
+      collectionLabel={t("admin.workspace.collection_label")}
+      description={t("admin.contacts.collection_description")}
+      count={contacts.length}
+      backLabel={t("admin.workspace.back_to_collection")}
+      onBack={closeContact}
+      editorBadge={t("admin.workspace.mode_view")}
+      editorTitle={selectedContact?.subject || t("admin.contacts.title")}
+      editorDescription={selectedContact ? `${selectedContact.firstName} ${selectedContact.lastName}` : t("admin.contacts.editor_description")}
+      accentClassName="bg-[radial-gradient(circle_at_top_left,_rgba(59,130,246,0.14),_transparent_42%),linear-gradient(180deg,#ffffff_0%,#f5f9ff_100%)]"
+      editorContent={selectedContact ? (
+        <Card className="border border-gray-100 shadow-sm">
+          <CardHeader className="border-b border-gray-100 bg-gray-50/50 pb-4">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+              <div>
+                <CardTitle className="text-xl text-[#1A361D]">{selectedContact.subject}</CardTitle>
+                <CardDescription className="mt-2 text-sm text-gray-600">
+                  {t("admin.contacts.label_from")}: {selectedContact.firstName} {selectedContact.lastName}
+                </CardDescription>
               </div>
-            ))}
-            {filteredContacts.length === 0 && <div className="p-8 text-center text-gray-500">{t("admin.contacts.empty")}</div>}
-          </div>
-        )}
-      </CardContent>
-    </Card>
+              <select
+                value={selectedContact.status}
+                onChange={(e) => handleStatusChange(selectedContact.id, e.target.value as any)}
+                className="h-11 rounded-xl border border-gray-200 bg-white px-4 text-sm font-medium"
+              >
+                <option value="nouveau">{t("admin.contacts.status.nouveau")}</option>
+                <option value="lu">{t("admin.contacts.status.lu")}</option>
+                <option value="traite">{t("admin.contacts.status.traite")}</option>
+              </select>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-6 pt-6">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+              <div className="rounded-2xl border border-gray-200 bg-white p-4">
+                <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-gray-400"><Mail className="h-4 w-4" /> {t("admin.contacts.label_email")}</p>
+                <p className="mt-3 text-sm font-semibold text-gray-800 break-all">{selectedContact.email}</p>
+              </div>
+              <div className="rounded-2xl border border-gray-200 bg-white p-4">
+                <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-gray-400"><Phone className="h-4 w-4" /> {t("admin.contacts.label_phone")}</p>
+                <p className="mt-3 text-sm font-semibold text-gray-800">{selectedContact.phone || "-"}</p>
+              </div>
+              <div className="rounded-2xl border border-gray-200 bg-white p-4">
+                <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-gray-400"><Clock className="h-4 w-4" /> {t("admin.contacts.label_date")}</p>
+                <p className="mt-3 text-sm font-semibold text-gray-800">{formatDate(selectedContact.createdAt)}</p>
+              </div>
+              <div className="rounded-2xl border border-gray-200 bg-white p-4">
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-gray-400">{t("admin.contacts.table_status")}</p>
+                <p className="mt-3 text-sm font-semibold text-gray-800">{t(`admin.contacts.status.${selectedContact.status}`)}</p>
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-gray-200 bg-white p-6">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-gray-400">{t("admin.contacts.label_message")}</p>
+              <div className="mt-4 whitespace-pre-wrap text-sm leading-7 text-gray-700">{selectedContact.message}</div>
+            </div>
+          </CardContent>
+        </Card>
+      ) : <div />}
+      collectionContent={(
+        <Card className="overflow-hidden border border-gray-100 shadow-sm">
+          <CardHeader className="bg-gray-50/50 border-b border-gray-100 pb-4">
+            <CardTitle className="text-xl text-[#1A361D]">{t("admin.sidebar.contacts")} ({contacts.length})</CardTitle>
+            <div className="relative mt-3 max-w-md">
+              <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Input
+                value={contactSearch}
+                onChange={(e) => setContactSearch(e.target.value)}
+                placeholder={t("admin.contacts.search_placeholder")}
+                className="pl-9 h-10 bg-white"
+              />
+            </div>
+          </CardHeader>
+          <CardContent className="p-0">
+            {isLoading ? (
+              <div className="p-6 text-center text-gray-500">{t("admin.projects.loading")}</div>
+            ) : (
+              <div className="divide-y divide-gray-100">
+                {filteredContacts.map((contact: any) => (
+                  <div key={contact.id} className={`p-6 hover:bg-gray-50 ${contact.status === 'nouveau' ? 'bg-blue-50/30' : ''}`}>
+                    <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                      <div className="min-w-0 flex-1">
+                        <button type="button" className={`text-left text-lg hover:underline ${contact.status === 'nouveau' ? 'font-bold text-blue-900' : 'font-semibold text-gray-800'}`} onClick={() => openContact(contact)}>
+                          {contact.subject}
+                        </button>
+                        <p className="mt-1 text-sm font-medium text-gray-500">{t("admin.contacts.label_from")}: {contact.firstName} {contact.lastName} ({contact.email})</p>
+                        <p className="mt-4 line-clamp-3 text-sm text-gray-700">{contact.message}</p>
+                      </div>
+                      <div className="flex flex-col items-start gap-3 lg:items-end">
+                        <select
+                          value={contact.status}
+                          onChange={(e) => handleStatusChange(contact.id, e.target.value as any)}
+                          className={`text-sm rounded-full px-3 py-1 font-medium border ${contact.status === 'nouveau' ? 'bg-blue-100 text-blue-800 border-blue-200' :
+                            contact.status === 'traite' ? 'bg-green-100 text-green-800 border-green-200' :
+                              'bg-gray-100 text-gray-800 border-gray-200'
+                            }`}
+                        >
+                          <option value="nouveau">{t("admin.contacts.status.nouveau")}</option>
+                          <option value="lu">{t("admin.contacts.status.lu")}</option>
+                          <option value="traite">{t("admin.contacts.status.traite")}</option>
+                        </select>
+                        <Button type="button" variant="outline" size="sm" onClick={() => openContact(contact)}>
+                          {t("admin.contacts.open_details")}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                {filteredContacts.length === 0 && <div className="p-8 text-center text-gray-500">{t("admin.contacts.empty")}</div>}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+    />
   );
 }
 
-function RegistrationsTab({ setMessage }: { setMessage: (msg: string) => void }) {
+function RegistrationsTab({
+  setMessage,
+  adminSearch,
+  syncAdminSearch,
+}: {
+  setMessage: (msg: string) => void;
+  adminSearch: string;
+  syncAdminSearch: SyncAdminSearch;
+}) {
   const { t } = useTranslation();
   const utils = trpc.useContext();
   const { data: registrations = [], isLoading } = trpc.registration.adminList.useQuery();
   const updateStatus = trpc.registration.updateStatus.useMutation();
+  const [screenMode, setScreenMode] = useState<AdminEditorMode>("browse");
+  const [selectedRegistrationId, setSelectedRegistrationId] = useState<number | null>(null);
   const [registrationSearch, setRegistrationSearch] = useState("");
+
+  const selectedRegistration = useMemo(
+    () => registrations.find((registration: any) => registration.id === selectedRegistrationId) || null,
+    [registrations, selectedRegistrationId],
+  );
 
   const filteredRegistrations = useMemo(
     () => registrations.filter((reg: any) => {
@@ -1874,79 +2278,214 @@ function RegistrationsTab({ setMessage }: { setMessage: (msg: string) => void })
   const handleStatusChange = async (id: number, status: "nouveau" | "contacte" | "actif" | "inactif") => {
     try {
       await updateStatus.mutateAsync({ id, status });
-      utils.registration.adminList.invalidate();
-    } catch (error) {
+      await utils.registration.adminList.invalidate();
+    } catch {
       setMessage(t("common.error_generic"));
     }
   };
 
+  useEffect(() => {
+    const mode = getAdminModeFromSearch(adminSearch);
+    const id = getAdminIdFromSearch(adminSearch);
+
+    if (mode === "view" && id !== null) {
+      const registration = registrations.find((item: any) => item.id === id);
+      if (registration) {
+        setSelectedRegistrationId(registration.id);
+        setScreenMode("view");
+        return;
+      }
+    }
+
+    setSelectedRegistrationId(null);
+    setScreenMode("browse");
+  }, [adminSearch, registrations]);
+
+  const openRegistration = (registration: any) => {
+    setSelectedRegistrationId(registration.id);
+    setScreenMode("view");
+    syncAdminSearch((params) => {
+      params.set("tab", "registrations");
+      params.set("mode", "view");
+      params.set("id", String(registration.id));
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const closeRegistration = () => {
+    setSelectedRegistrationId(null);
+    setScreenMode("browse");
+    syncAdminSearch((params) => {
+      params.set("tab", "registrations");
+      params.delete("mode");
+      params.delete("id");
+    });
+  };
+
   return (
-    <Card className="border border-gray-100 shadow-sm">
-      <CardHeader className="bg-gray-50/50 border-b border-gray-100 pb-4">
-        <CardTitle className="text-xl text-[#1A361D]">{t("admin.sidebar.registrations")} ({registrations.length})</CardTitle>
-        <div className="relative mt-3 max-w-md">
-          <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
-          <Input
-            value={registrationSearch}
-            onChange={(e) => setRegistrationSearch(e.target.value)}
-            placeholder={t("admin.registrations.search_placeholder")}
-            className="pl-9 h-10 bg-white"
-          />
-        </div>
-      </CardHeader>
-      <CardContent className="p-0">
-        {isLoading ? (
-          <div className="p-6 text-center text-gray-500">{t("admin.projects.loading")}</div>
-        ) : (
-          <div className="divide-y divide-gray-100">
-            {filteredRegistrations.map((reg: any) => (
-              <div key={reg.id} className={`p-6 hover:bg-gray-50 ${reg.status === 'nouveau' ? 'bg-purple-50/30' : ''}`}>
-                <div className="flex justify-between items-start mb-2">
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className={`text-xs px-2 py-0.5 rounded-full font-bold uppercase ${reg.type === 'benevole' ? 'bg-orange-100 text-orange-800' : 'bg-teal-100 text-teal-800'}`}>
-                        {t(`admin.registrations.type.${reg.type}`)}
-                      </span>
-                      <h4 className="text-lg font-bold text-gray-800">
-                        {reg.firstName} {reg.lastName} {reg.organization ? `(${reg.organization})` : ''}
-                      </h4>
-                    </div>
-                    <p className="text-sm text-gray-500 font-medium">{t("admin.registrations.label_contact")}: {reg.email} {reg.phone ? `| ${reg.phone}` : ''} | {t("admin.registrations.label_location")}: {reg.city}, {reg.country}</p>
-                  </div>
-                  <select
-                    value={reg.status}
-                    onChange={(e) => handleStatusChange(reg.id, e.target.value as any)}
-                    className={`text-sm rounded-full px-3 py-1 font-medium border ${reg.status === 'nouveau' ? 'bg-purple-100 text-purple-800 border-purple-200' :
-                      reg.status === 'actif' ? 'bg-green-100 text-green-800 border-green-200' :
-                        'bg-gray-100 text-gray-800 border-gray-200'
-                       }`}
-                  >
-                    <option value="nouveau">{t("admin.registrations.status.nouveau")}</option>
-                    <option value="contacte">{t("admin.registrations.status.contacte")}</option>
-                    <option value="actif">{t("admin.registrations.status.actif")}</option>
-                    <option value="inactif">{t("admin.registrations.status.inactif")}</option>
-                  </select>
+    <AdminWorkspace
+      mode={screenMode}
+      title={t("admin.sidebar.registrations")}
+      collectionLabel={t("admin.workspace.collection_label")}
+      description={t("admin.registrations.collection_description")}
+      count={registrations.length}
+      backLabel={t("admin.workspace.back_to_collection")}
+      onBack={closeRegistration}
+      editorBadge={t("admin.workspace.mode_view")}
+      editorTitle={selectedRegistration ? `${selectedRegistration.firstName} ${selectedRegistration.lastName}` : t("admin.registrations.title")}
+      editorDescription={selectedRegistration ? t(`admin.registrations.type.${selectedRegistration.type}`) : t("admin.registrations.editor_description")}
+      accentClassName="bg-[radial-gradient(circle_at_top_left,_rgba(168,85,247,0.14),_transparent_42%),linear-gradient(180deg,#ffffff_0%,#fbf7ff_100%)]"
+      editorContent={selectedRegistration ? (
+        <Card className="border border-gray-100 shadow-sm">
+          <CardHeader className="border-b border-gray-100 bg-gray-50/50 pb-4">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+              <div>
+                <CardTitle className="text-xl text-[#1A361D]">{selectedRegistration.firstName} {selectedRegistration.lastName}</CardTitle>
+                <CardDescription className="mt-2 text-sm text-gray-600">
+                  {selectedRegistration.organization || t(`admin.registrations.type.${selectedRegistration.type}`)}
+                </CardDescription>
+              </div>
+              <select
+                value={selectedRegistration.status}
+                onChange={(e) => handleStatusChange(selectedRegistration.id, e.target.value as any)}
+                className="h-11 rounded-xl border border-gray-200 bg-white px-4 text-sm font-medium"
+              >
+                <option value="nouveau">{t("admin.registrations.status.nouveau")}</option>
+                <option value="contacte">{t("admin.registrations.status.contacte")}</option>
+                <option value="actif">{t("admin.registrations.status.actif")}</option>
+                <option value="inactif">{t("admin.registrations.status.inactif")}</option>
+              </select>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-6 pt-6">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+              <div className="rounded-2xl border border-gray-200 bg-white p-4">
+                <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-gray-400"><Mail className="h-4 w-4" /> {t("admin.registrations.label_email")}</p>
+                <p className="mt-3 text-sm font-semibold text-gray-800 break-all">{selectedRegistration.email}</p>
+              </div>
+              <div className="rounded-2xl border border-gray-200 bg-white p-4">
+                <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-gray-400"><Phone className="h-4 w-4" /> {t("admin.registrations.label_phone")}</p>
+                <p className="mt-3 text-sm font-semibold text-gray-800">{selectedRegistration.phone || "-"}</p>
+              </div>
+              <div className="rounded-2xl border border-gray-200 bg-white p-4">
+                <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-gray-400"><MapPin className="h-4 w-4" /> {t("admin.registrations.label_location")}</p>
+                <p className="mt-3 text-sm font-semibold text-gray-800">{selectedRegistration.city || "-"}, {selectedRegistration.country || "-"}</p>
+              </div>
+              <div className="rounded-2xl border border-gray-200 bg-white p-4">
+                <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-gray-400"><Clock className="h-4 w-4" /> {t("admin.registrations.label_date")}</p>
+                <p className="mt-3 text-sm font-semibold text-gray-800">{formatDate(selectedRegistration.createdAt)}</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+              <div className="rounded-2xl border border-gray-200 bg-white p-4">
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-gray-400">{t("admin.registrations.label_type")}</p>
+                <p className="mt-3 text-sm font-semibold text-gray-800">{t(`admin.registrations.type.${selectedRegistration.type}`)}</p>
+              </div>
+              <div className="rounded-2xl border border-gray-200 bg-white p-4">
+                <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-gray-400"><Building2 className="h-4 w-4" /> {t("admin.registrations.label_organization")}</p>
+                <p className="mt-3 text-sm font-semibold text-gray-800">{selectedRegistration.organization || "-"}</p>
+              </div>
+              <div className="rounded-2xl border border-gray-200 bg-white p-4">
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-gray-400">{t("admin.registrations.label_availability")}</p>
+                <p className="mt-3 text-sm font-semibold text-gray-800">{selectedRegistration.availability || "-"}</p>
+              </div>
+              <div className="rounded-2xl border border-gray-200 bg-white p-4">
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-gray-400">{t("admin.registrations.table_status")}</p>
+                <p className="mt-3 text-sm font-semibold text-gray-800">{t(`admin.registrations.status.${selectedRegistration.status}`)}</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <div className="rounded-2xl border border-gray-200 bg-white p-6">
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-gray-400">{t("admin.registrations.label_motivation")}</p>
+                <p className="mt-4 text-sm leading-7 text-gray-700">{selectedRegistration.motivation || "-"}</p>
+              </div>
+              <div className="rounded-2xl border border-gray-200 bg-white p-6">
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-gray-400">{t("admin.registrations.label_skills")}</p>
+                <p className="mt-4 text-sm leading-7 text-gray-700">{selectedRegistration.skills || "-"}</p>
+              </div>
+            </div>
+
+            {(selectedRegistration.partnerType || selectedRegistration.website) && (
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div className="rounded-2xl border border-gray-200 bg-white p-6">
+                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-gray-400">{t("admin.registrations.label_partner_type")}</p>
+                  <p className="mt-4 text-sm leading-7 text-gray-700">{selectedRegistration.partnerType || "-"}</p>
                 </div>
-                <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {reg.motivation && (
-                    <div className="p-4 bg-white border rounded-lg">
-                      <p className="text-xs font-bold text-gray-400 mb-1 uppercase tracking-wider">{t("admin.registrations.label_motivation")}</p>
-                      <p className="text-sm text-gray-700">{reg.motivation}</p>
-                    </div>
-                  )}
-                  {reg.skills && (
-                    <div className="p-4 bg-white border rounded-lg">
-                      <p className="text-xs font-bold text-gray-400 mb-1 uppercase tracking-wider">{t("admin.registrations.label_skills")}</p>
-                      <p className="text-sm text-gray-700">{reg.skills}</p>
-                    </div>
-                  )}
+                <div className="rounded-2xl border border-gray-200 bg-white p-6">
+                  <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-gray-400"><Globe className="h-4 w-4" /> {t("admin.registrations.label_website")}</p>
+                  <p className="mt-4 break-all text-sm leading-7 text-gray-700">{selectedRegistration.website || "-"}</p>
                 </div>
               </div>
-            ))}
-            {filteredRegistrations.length === 0 && <div className="p-8 text-center text-gray-500">{t("admin.registrations.empty")}</div>}
-          </div>
-        )}
-      </CardContent>
-    </Card>
+            )}
+          </CardContent>
+        </Card>
+      ) : <div />}
+      collectionContent={(
+        <Card className="overflow-hidden border border-gray-100 shadow-sm">
+          <CardHeader className="bg-gray-50/50 border-b border-gray-100 pb-4">
+            <CardTitle className="text-xl text-[#1A361D]">{t("admin.sidebar.registrations")} ({registrations.length})</CardTitle>
+            <div className="relative mt-3 max-w-md">
+              <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Input
+                value={registrationSearch}
+                onChange={(e) => setRegistrationSearch(e.target.value)}
+                placeholder={t("admin.registrations.search_placeholder")}
+                className="pl-9 h-10 bg-white"
+              />
+            </div>
+          </CardHeader>
+          <CardContent className="p-0">
+            {isLoading ? (
+              <div className="p-6 text-center text-gray-500">{t("admin.projects.loading")}</div>
+            ) : (
+              <div className="divide-y divide-gray-100">
+                {filteredRegistrations.map((reg: any) => (
+                  <div key={reg.id} className={`p-6 hover:bg-gray-50 ${reg.status === 'nouveau' ? 'bg-purple-50/30' : ''}`}>
+                    <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2 mb-1">
+                          <span className={`text-xs px-2 py-0.5 rounded-full font-bold uppercase ${reg.type === 'benevole' ? 'bg-orange-100 text-orange-800' : 'bg-teal-100 text-teal-800'}`}>
+                            {t(`admin.registrations.type.${reg.type}`)}
+                          </span>
+                          <button type="button" className="text-left text-lg font-bold text-gray-800 hover:underline" onClick={() => openRegistration(reg)}>
+                            {reg.firstName} {reg.lastName} {reg.organization ? `(${reg.organization})` : ""}
+                          </button>
+                        </div>
+                        <p className="text-sm font-medium text-gray-500">{t("admin.registrations.label_contact")}: {reg.email} {reg.phone ? `| ${reg.phone}` : ""} | {t("admin.registrations.label_location")}: {reg.city}, {reg.country}</p>
+                        <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
+                          {reg.motivation && <p className="line-clamp-3 text-sm text-gray-700">{reg.motivation}</p>}
+                          {reg.skills && <p className="line-clamp-3 text-sm text-gray-700">{reg.skills}</p>}
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-start gap-3 lg:items-end">
+                        <select
+                          value={reg.status}
+                          onChange={(e) => handleStatusChange(reg.id, e.target.value as any)}
+                          className={`text-sm rounded-full px-3 py-1 font-medium border ${reg.status === 'nouveau' ? 'bg-purple-100 text-purple-800 border-purple-200' :
+                            reg.status === 'actif' ? 'bg-green-100 text-green-800 border-green-200' :
+                              'bg-gray-100 text-gray-800 border-gray-200'
+                            }`}
+                        >
+                          <option value="nouveau">{t("admin.registrations.status.nouveau")}</option>
+                          <option value="contacte">{t("admin.registrations.status.contacte")}</option>
+                          <option value="actif">{t("admin.registrations.status.actif")}</option>
+                          <option value="inactif">{t("admin.registrations.status.inactif")}</option>
+                        </select>
+                        <Button type="button" variant="outline" size="sm" onClick={() => openRegistration(reg)}>
+                          {t("admin.registrations.open_details")}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                {filteredRegistrations.length === 0 && <div className="p-8 text-center text-gray-500">{t("admin.registrations.empty")}</div>}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+    />
   );
 }

@@ -616,12 +616,30 @@
       "title": "What Does Your Donation Represent?",
       "subtitle": "Each amount has a concrete and measurable impact on the ground. Here are examples of what your generosity allows us to achieve.",
       "items": [
-        { "amount": "10,000 FCFA", "desc": "School supplies for 2 children for one term" },
-        { "amount": "25,000 FCFA", "desc": "Emergency food kit for a family of 5" },
-        { "amount": "50,000 FCFA", "desc": "Medical consultation and medicine for 10 people" },
-        { "amount": "100,000 FCFA", "desc": "Planting of 50 trees as part of reforestation" },
-        { "amount": "250,000 FCFA", "desc": "Training of a farmer in sustainable agroforestry" },
-        { "amount": "500,000 FCFA", "desc": "Full support for an orphan for 6 months" }
+        {
+          "amount": "10,000 FCFA",
+          "desc": "School supplies for 2 children for one term"
+        },
+        {
+          "amount": "25,000 FCFA",
+          "desc": "Emergency food kit for a family of 5"
+        },
+        {
+          "amount": "50,000 FCFA",
+          "desc": "Medical consultation and medicine for 10 people"
+        },
+        {
+          "amount": "100,000 FCFA",
+          "desc": "Planting of 50 trees as part of reforestation"
+        },
+        {
+          "amount": "250,000 FCFA",
+          "desc": "Training of a farmer in sustainable agroforestry"
+        },
+        {
+          "amount": "500,000 FCFA",
+          "desc": "Full support for an orphan for 6 months"
+        }
       ]
     },
     "methods": {
@@ -778,6 +796,14 @@
     "button": "Go Home"
   },
   "admin": {
+    "workspace": {
+      "collection_label": "Content",
+      "back_to_collection": "Back to full list",
+      "mode_edit": "Editing Mode",
+      "mode_create": "New Content",
+      "mode_view": "Consultation",
+      "last_updated": "Last updated on"
+    },
     "toolbar": {
       "brand": "AMANCE Admin",
       "dashboard": "Dashboard",
@@ -797,13 +823,30 @@
     },
     "dashboard": {
       "title": "Dashboard",
-      "articles": { "title": "Articles", "unit": "published" },
-      "projects": { "title": "Projects", "unit": "ongoing" },
-      "messages": { "title": "Messages", "unit": "unread" },
-      "registrations": { "title": "Registrations", "unit": "new" },
-      "team": { "title": "Team", "unit": "active" }
+      "articles": {
+        "title": "Articles",
+        "unit": "published"
+      },
+      "projects": {
+        "title": "Projects",
+        "unit": "ongoing"
+      },
+      "messages": {
+        "title": "Messages",
+        "unit": "unread"
+      },
+      "registrations": {
+        "title": "Registrations",
+        "unit": "new"
+      },
+      "team": {
+        "title": "Team",
+        "unit": "active"
+      }
     },
     "articles": {
+      "collection_description": "Browse, filter, and manage your news library. Open a dedicated record to create or edit an article in a focused workspace.",
+      "editor_description": "Write the draft in a dedicated screen, then return to the library when the update is complete.",
       "form_title_edit": "Edit article",
       "form_title_create": "Create new article",
       "label_title_fr": "Title (FR)",
@@ -845,6 +888,8 @@
       }
     },
     "projects": {
+      "collection_description": "Keep all projects in a wide overview, then open a dedicated record to edit content, status, and operational details.",
+      "editor_description": "Update the project in a full-screen workspace without competing list clutter.",
       "form_title_edit": "Edit project",
       "form_title_create": "Create new project",
       "label_title_fr": "Project name (FR)",
@@ -904,6 +949,7 @@
       }
     },
     "team": {
+      "editor_description": "Complete the team profile in a dedicated screen before returning to the team ordering view.",
       "form_title_edit": "Edit member",
       "form_title_add": "Add member",
       "btn_new": "New member",
@@ -929,10 +975,18 @@
     },
     "contacts": {
       "title": "Contact Messages",
+      "collection_description": "Work through the inbox in a wide overview, then open each message in a dedicated record to process it without distraction.",
+      "editor_description": "Review the message in a dedicated screen with its full context.",
       "empty": "No messages received.",
+      "open_details": "Open record",
       "search_placeholder": "Search subject, name or email...",
       "label_from": "From",
       "label_subject": "Subject",
+      "label_email": "Email",
+      "label_phone": "Phone",
+      "label_date": "Received on",
+      "label_message": "Message",
+      "table_status": "Status",
       "status": {
         "nouveau": "New",
         "lu": "Read",
@@ -946,10 +1000,22 @@
     },
     "registrations": {
       "title": "Volunteer & Partner Registrations",
+      "collection_description": "Browse registrations in a wide overview, then open a dedicated record to qualify each request with its full context.",
+      "editor_description": "Review each registration in a dedicated screen before updating its status.",
       "empty": "No registrations received.",
+      "open_details": "Open record",
       "search_placeholder": "Search name, email, org, city...",
       "label_contact": "Contact",
       "label_location": "Location",
+      "label_email": "Email",
+      "label_phone": "Phone",
+      "label_date": "Received on",
+      "label_type": "Type",
+      "label_organization": "Organization",
+      "label_availability": "Availability",
+      "label_partner_type": "Partner type",
+      "label_website": "Website",
+      "table_status": "Status",
       "label_motivation": "Motivation / Description",
       "label_skills": "Skills / Objectives",
       "type": {

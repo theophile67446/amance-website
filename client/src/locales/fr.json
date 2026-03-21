@@ -616,12 +616,30 @@
       "title": "Que Représente Votre Don ?",
       "subtitle": "Chaque montant a un impact concret et mesurable sur le terrain. Voici des exemples de ce que votre générosité permet de réaliser.",
       "items": [
-        { "amount": "10 000 FCFA", "desc": "Fournitures scolaires pour 2 enfants pendant un trimestre" },
-        { "amount": "25 000 FCFA", "desc": "Kit alimentaire d'urgence pour une famille de 5 personnes" },
-        { "amount": "50 000 FCFA", "desc": "Consultation médicale et médicaments pour 10 personnes" },
-        { "amount": "100 000 FCFA", "desc": "Plantation de 50 arbres dans le cadre du reboisement" },
-        { "amount": "250 000 FCFA", "desc": "Formation d'un agriculteur en agroforesterie durable" },
-        { "amount": "500 000 FCFA", "desc": "Soutien complet d'un orphelin pendant 6 mois" }
+        {
+          "amount": "10 000 FCFA",
+          "desc": "Fournitures scolaires pour 2 enfants pendant un trimestre"
+        },
+        {
+          "amount": "25 000 FCFA",
+          "desc": "Kit alimentaire d'urgence pour une famille de 5 personnes"
+        },
+        {
+          "amount": "50 000 FCFA",
+          "desc": "Consultation médicale et médicaments pour 10 personnes"
+        },
+        {
+          "amount": "100 000 FCFA",
+          "desc": "Plantation de 50 arbres dans le cadre du reboisement"
+        },
+        {
+          "amount": "250 000 FCFA",
+          "desc": "Formation d'un agriculteur en agroforesterie durable"
+        },
+        {
+          "amount": "500 000 FCFA",
+          "desc": "Soutien complet d'un orphelin pendant 6 mois"
+        }
       ]
     },
     "methods": {
@@ -778,6 +796,22 @@
     "button": "Retour à l'accueil"
   },
   "admin": {
+    "workspace": {
+      "collection_label": "Contenus",
+      "back_to_collection": "Retour à la liste complète",
+      "mode_edit": "Mode Édition",
+      "mode_create": "Nouveau Contenu",
+      "mode_view": "Consultation",
+      "last_updated": "Dernière modification le"
+    },
+    "dashboard": {
+      "title": "Tableau de bord",
+      "articles": { "title": "Articles & Actu", "unit": "publiés" },
+      "projects": { "title": "Projets Terrain", "unit": "en cours" },
+      "messages": { "title": "Messages Reçus", "unit": "nouveaux" },
+      "registrations": { "title": "Candidatures", "unit": "nouvelles" },
+      "team": { "title": "Équipe Amance", "unit": "actifs" }
+    },
     "toolbar": {
       "brand": "AMANCE Admin",
       "dashboard": "Tableau de bord",
@@ -795,15 +829,9 @@
       "admin_label": "Administration",
       "role_admin": "Administrateur"
     },
-    "dashboard": {
-      "title": "Tableau de bord",
-      "articles": { "title": "Articles", "unit": "publiés" },
-      "projects": { "title": "Projets", "unit": "en cours" },
-      "messages": { "title": "Messages", "unit": "non lus" },
-      "registrations": { "title": "Inscriptions", "unit": "nouvelles" },
-      "team": { "title": "Équipe", "unit": "actifs" }
-    },
     "articles": {
+      "collection_description": "Parcourez, filtrez et gérez vos actualités. Ouvrez une fiche dédiée pour créer ou modifier un article dans un espace de travail complet.",
+      "editor_description": "Rédigez le brouillon dans une page dédiée, puis revenez à la liste une fois la mise à jour terminée.",
       "form_title_edit": "Modifier l'article",
       "form_title_create": "Créer un nouvel article",
       "label_title_fr": "Titre (FR)",
@@ -845,6 +873,8 @@
       }
     },
     "projects": {
+      "collection_description": "Centralisez tous les projets dans une vue large, puis ouvrez une fiche dédiée pour éditer le contenu, le statut et les informations clés.",
+      "editor_description": "Mettez à jour le projet dans un écran complet sans concurrence visuelle avec la liste.",
       "form_title_edit": "Modifier le projet",
       "form_title_create": "Créer un nouveau projet",
       "label_title_fr": "Nom du projet (FR)",
@@ -904,6 +934,7 @@
       }
     },
     "team": {
+      "editor_description": "Complétez le profil du membre dans une fiche dédiée avant de revenir à l'organisation de l'équipe.",
       "form_title_edit": "Modifier un membre",
       "form_title_add": "Ajouter un membre",
       "btn_new": "Nouveau membre",
@@ -929,10 +960,18 @@
     },
     "contacts": {
       "title": "Messages de contact",
+      "collection_description": "Consultez la boîte de réception de l'association dans une vue large, puis ouvrez chaque message dans une fiche dédiée pour le traiter sereinement.",
+      "editor_description": "Traitez le message dans une page dédiée avec tout son contexte.",
       "empty": "Aucun message reçu.",
+      "open_details": "Ouvrir la fiche",
       "search_placeholder": "Rechercher sujet, nom ou email...",
       "label_from": "De",
       "label_subject": "Sujet",
+      "label_email": "E-mail",
+      "label_phone": "Téléphone",
+      "label_date": "Reçu le",
+      "label_message": "Message",
+      "table_status": "Statut",
       "status": {
         "nouveau": "Nouveau",
         "lu": "Lu",
@@ -946,10 +985,22 @@
     },
     "registrations": {
       "title": "Inscriptions Bénévoles & Partenaires",
+      "collection_description": "Parcourez les inscriptions dans une vue large, puis ouvrez une fiche dédiée pour qualifier chaque demande avec son contexte complet.",
+      "editor_description": "Consultez chaque inscription dans un écran dédié avant de mettre à jour son statut.",
       "empty": "Aucune inscription reçue.",
+      "open_details": "Ouvrir la fiche",
       "search_placeholder": "Rechercher nom, email, org, ville...",
       "label_contact": "Contact",
       "label_location": "Localisation",
+      "label_email": "E-mail",
+      "label_phone": "Téléphone",
+      "label_date": "Reçu le",
+      "label_type": "Type",
+      "label_organization": "Organisation",
+      "label_availability": "Disponibilité",
+      "label_partner_type": "Type de partenaire",
+      "label_website": "Site web",
+      "table_status": "Statut",
       "label_motivation": "Motivation / Description",
       "label_skills": "Compétences / Objectifs",
       "type": {

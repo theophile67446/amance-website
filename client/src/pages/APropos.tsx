@@ -18,11 +18,19 @@ import {
 const TEAM_IMAGE = "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=80";
 const ABOUT_HERO = "https://images.unsplash.com/photo-1509099836639-18ba1795216d?w=1920&q=80";
 
+type TeamMemberCard = {
+  name: string;
+  role: string;
+  title?: string | null;
+  location?: string | null;
+  image?: string | null;
+};
+
 export default function APropos() {
   const { t } = useTranslation();
   const { data: teamMembersData = [] } = trpc.team.list.useQuery();
 
-  const defaultTeamMembers = [
+  const defaultTeamMembers: TeamMemberCard[] = [
     {
       name: "Fule Ndiba Juliette",
       role: t("about.team.roles.president"),
@@ -94,7 +102,7 @@ export default function APropos() {
     { num: 17, label: "Partenariats" },
   ];
 
-  const displayedTeamMembers = teamMembersData.length > 0 ? teamMembersData : defaultTeamMembers;
+  const displayedTeamMembers: TeamMemberCard[] = teamMembersData.length > 0 ? teamMembersData : defaultTeamMembers;
 
   return (
     <Layout>

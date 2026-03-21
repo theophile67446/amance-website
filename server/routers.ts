@@ -680,11 +680,23 @@ export const appRouter = router({
         const db = await getDb();
         if (!db) return [];
 
-        return await db
-          .select()
-          .from(teamMembers)
-          .where(eq(teamMembers.active, true))
-          .orderBy(asc(teamMembers.displayOrder), asc(teamMembers.id));
+        try {
+          return await db
+            .select()
+            .from(teamMembers)
+            .where(eq(teamMembers.active, true))
+            .orderBy(asc(teamMembers.displayOrder), asc(teamMembers.id));
+        } catch (error) {
+          console.error("[Team Router] Drizzle select error, using fallback SQL:", error);
+          const query = `
+            SELECT id, name, role, title, location, image, bio, displayOrder, active, createdAt, updatedAt
+            FROM team_members
+            WHERE active = true
+            ORDER BY displayOrder ASC, id ASC
+          `;
+          const raw = await db.execute(query as any);
+          return (raw as any[])[0] ?? [];
+        }
       }),
 
     adminList: adminProcedure
@@ -692,10 +704,21 @@ export const appRouter = router({
         const db = await getDb();
         if (!db) return [];
 
-        return await db
-          .select()
-          .from(teamMembers)
-          .orderBy(asc(teamMembers.displayOrder), asc(teamMembers.id));
+        try {
+          return await db
+            .select()
+            .from(teamMembers)
+            .orderBy(asc(teamMembers.displayOrder), asc(teamMembers.id));
+        } catch (error) {
+          console.error("[Team Router] Drizzle adminList error, using fallback SQL:", error);
+          const query = `
+            SELECT id, name, role, title, location, image, bio, displayOrder, active, createdAt, updatedAt
+            FROM team_members
+            ORDER BY displayOrder ASC, id ASC
+          `;
+          const raw = await db.execute(query as any);
+          return (raw as any[])[0] ?? [];
+        }
       }),
 
     create: adminProcedure
