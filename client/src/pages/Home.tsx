@@ -168,7 +168,7 @@ export default function Home() {
   return (
     <Layout>
       {/* ===== SECTION 1: HERO ===== */}
-      <section className="relative pt-32 pb-48 lg:pt-48 lg:pb-64 overflow-hidden bg-gray-900">
+      <section className="relative pt-24 pb-10 md:pt-32 md:pb-48 lg:pt-48 lg:pb-64 overflow-hidden bg-gray-900">
         {/* Background Image */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60"
@@ -210,20 +210,20 @@ export default function Home() {
           </p>
 
           <div
-            className={`flex flex-wrap justify-center gap-5 transition-all duration-700 delay-300 ${
+            className={`flex flex-col sm:flex-row w-full sm:w-auto justify-center items-center gap-4 sm:gap-5 transition-all duration-700 delay-300 ${
               heroLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             }`}
           >
             <Link
               href="/faire-un-don"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-bold text-white transition-all duration-300 shadow-[0_8px_30px_rgb(5,150,105,0.4)] hover:shadow-[0_8px_30px_rgb(5,150,105,0.6)] bg-amance-green hover:bg-amance-green-dark hover:-translate-y-1"
+              className="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-8 py-4 rounded-full font-bold text-white transition-all duration-300 shadow-[0_8px_30px_rgb(5,150,105,0.4)] hover:shadow-[0_8px_30px_rgb(5,150,105,0.6)] bg-amance-green hover:bg-amance-green-dark hover:-translate-y-1"
             >
               <Heart size={18} fill="white" />
               {t("hero.cta_donate")}
             </Link>
             <Link
               href="/nos-actions"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-bold text-white transition-all duration-300 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 hover:-translate-y-1"
+              className="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-8 py-4 rounded-full font-bold text-white transition-all duration-300 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 hover:-translate-y-1"
             >
               {t("hero.cta_discover")}
               <ArrowRight size={18} />
@@ -232,19 +232,19 @@ export default function Home() {
         </div>
 
         {/* Bottom Bar: Stats */}
-        <div className="absolute bottom-0 left-0 w-full border-t border-white/10 bg-black/30 backdrop-blur-md">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div className="flex flex-wrap items-center justify-center gap-12 md:gap-32">
+        <div className="relative mt-8 md:mt-0 md:absolute md:bottom-0 left-0 w-full border-t border-white/10 bg-black/30 backdrop-blur-md">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
+            <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-12 md:gap-32">
               {[
                 { value: t("hero.stat1_val"), label: t("hero.stat1_label") },
                 { value: t("hero.stat2_val"), label: t("hero.stat2_label") },
                 { value: t("hero.stat3_val"), label: t("hero.stat3_label") },
               ].map((stat, idx) => (
                 <div key={idx} className="flex flex-col items-center text-center">
-                  <div className="text-3xl md:text-4xl font-extrabold font-heading text-amance-green-light mb-3">
+                  <div className="text-2xl sm:text-3xl md:text-4xl font-extrabold font-heading text-amance-green-light mb-2 sm:mb-3">
                     {stat.value}
                   </div>
-                  <div className="text-sm font-sans text-gray-300 uppercase tracking-widest font-semibold">
+                  <div className="text-[11px] sm:text-sm font-sans text-gray-300 uppercase tracking-[0.18em] sm:tracking-widest font-semibold">
                     {stat.label}
                   </div>
                 </div>
