@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AMANCE - Maintenance en cours</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <style>
+    :root {
+      --green: #36a852;
+      --green-dark: #1f7e3a;
+      --blue: #123f66;
+      --blue-dark: #0b2741;
+      --text: #f6fbff;
+      --muted: #b8cbdb;
+      --card: rgba(10, 29, 49, 0.62);
+      --border: rgba(255, 255, 255, 0.18);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      font-family: "Open Sans", "Segoe UI", Tahoma, sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at 15% 20%, #1a7fb0 0%, #0f5f86 28%, var(--blue) 54%, var(--blue-dark) 100%);
+    }
+
+    .bg-shape {
+      position: fixed;
+      border-radius: 999px;
+      filter: blur(18px);
+      opacity: 0.25;
+      pointer-events: none;
+      z-index: 0;
+      animation: float 14s ease-in-out infinite;
+    }
+
+    .shape-1 {
+      width: 280px;
+      height: 280px;
+      left: -80px;
+      top: 18%;
+      background: #3fd46f;
+    }
+
+    .shape-2 {
+      width: 360px;
+      height: 360px;
+      right: -90px;
+      top: -40px;
+      background: #1ea9d9;
+      animation-delay: -4s;
+    }
+
+    .shape-3 {
+      width: 260px;
+      height: 260px;
+      right: 24%;
+      bottom: -90px;
+      background: #2d8dd2;
+      animation-delay: -8s;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .card {
+      width: min(980px, 100%);
+      background: linear-gradient(145deg, rgba(14, 39, 64, 0.72), rgba(10, 29, 49, 0.82));
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: 0 22px 80px rgba(0, 0, 0, 0.38);
+      backdrop-filter: blur(8px);
+      overflow: hidden;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 0;
+    }
+
+    .left,
+    .right {
+      padding: 34px;
+    }
+
+    .right {
+      background: rgba(0, 0, 0, 0.14);
+      border-left: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .topline {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      object-fit: contain;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 6px;
+    }
+
+    .org {
+      margin: 0;
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-family: "Montserrat", "Segoe UI", sans-serif;
+      font-size: clamp(30px, 5vw, 44px);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #d4ffe1;
+      background: rgba(54, 168, 82, 0.2);
+      border: 1px solid rgba(116, 230, 145, 0.45);
+      border-radius: 999px;
+      padding: 8px 12px;
+      margin-bottom: 14px;
+    }
+
+    .desc {
+      margin: 0;
+      max-width: 65ch;
+      color: #d6e5f1;
+      line-height: 1.7;
+      font-size: 16px;
+    }
+
+    .list {
+      margin: 18px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 8px;
+      color: #d6e5f1;
+      font-size: 14px;
+    }
+
+    .list li {
+      position: relative;
+      padding-left: 22px;
+    }
+
+    .list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 8px;
+      width: 10px;
+      height: 10px;
+      border-radius: 99px;
+      background: linear-gradient(180deg, #7ff2a0, var(--green));
+      box-shadow: 0 0 0 2px rgba(89, 219, 126, 0.25);
+    }
+
+    .meta {
+      margin-top: 22px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .chip {
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #d8e7f2;
+      border-radius: 999px;
+      padding: 7px 11px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      color: #d2ffe0;
+      font-weight: 700;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: #54de7e;
+      box-shadow: 0 0 0 0 rgba(84, 222, 126, 0.8);
+      animation: pulse 2s infinite;
+    }
+
+    .side-title {
+      margin: 10px 0 10px;
+      font-size: 15px;
+      color: #f2f7fc;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+
+    .side-copy {
+      margin: 0;
+      color: #c0d4e4;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .contact {
+      margin-top: 18px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .contact a,
+    .contact span {
+      display: block;
+      text-decoration: none;
+      color: #f7fdff;
+      font-size: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .contact a:hover {
+      border-color: rgba(127, 242, 160, 0.55);
+      background: rgba(64, 174, 96, 0.15);
+    }
+
+    .footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 14px 22px;
+      font-size: 12px;
+      color: #b9cedf;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.12);
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(84, 222, 126, 0.75);
+      }
+
+      70% {
+        box-shadow: 0 0 0 9px rgba(84, 222, 126, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(84, 222, 126, 0);
+      }
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-18px);
+      }
+    }
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .right {
+        border-left: 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-shape shape-1"></div>
+  <div class="bg-shape shape-2"></div>
+  <div class="bg-shape shape-3"></div>
+
+  <main class="wrap">
+    <section class="card" aria-label="Maintenance AMANCE">
+      <div class="grid">
+        <div class="left">
+          <div class="topline">
+            <img class="logo" src="/logo.png" alt="Logo AMANCE" onerror="this.style.display='none'" />
+            <p class="org">AMANCE · Maintenance planifiée</p>
+          </div>
+
+          <span class="badge">Intervention technique en cours</span>
+          <h1>Nous revenons très vite.</h1>
+          <p class="desc">
+            Notre équipe effectue une mise à jour pour améliorer les performances, la sécurité et la stabilité du site.
+            Merci pour votre patience.
+          </p>
+
+          <ul class="list">
+            <li>Optimisation des performances et du chargement</li>
+            <li>Renforcement de la sécurité de la plateforme</li>
+            <li>Améliorations de l'expérience utilisateur</li>
+          </ul>
+
+          <div class="meta">
+            <span class="chip">Organisation: AMANCE</span>
+            <span class="chip">Zone: Cameroun & International</span>
+            <span class="chip">Statut: intervention active</span>
+          </div>
+        </div>
+
+        <aside class="right">
+          <div class="status">
+            <span class="status-dot"></span>
+            Équipe technique mobilisée
+          </div>
+
+          <h2 class="side-title">Besoin d'une assistance urgente ?</h2>
+          <p class="side-copy">
+            Pour toute situation prioritaire, utilisez nos canaux de contact directs.
+          </p>
+
+          <div class="contact">
+            <a href="mailto:infos@amance.org">infos@amance.org</a>
+            <span>+237 674 943 368 / +237 689 314 418</span>
+          </div>
+        </aside>
+      </div>
+
+      <footer class="footer">
+        © AMANCE - Angel Mary Association for the Needy and Conservation Education
+      </footer>
+    </section>
+  </main>
+</body>
+
+</html>

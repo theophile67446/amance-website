@@ -7,6 +7,9 @@ export const ENV = {
   localAdminEmail: process.env.LOCAL_ADMIN_EMAIL ?? "",
   localAdminPassword: process.env.LOCAL_ADMIN_PASSWORD ?? "",
   isProduction: process.env.NODE_ENV === "production",
+  maintenanceMode: ["1", "true", "yes", "on"].includes(
+    (process.env.MAINTENANCE_MODE ?? "").toLowerCase()
+  ),
   forgeApiUrl: process.env.BUILT_IN_FORGE_API_URL ?? "",
   forgeApiKey: process.env.BUILT_IN_FORGE_API_KEY ?? "",
 };

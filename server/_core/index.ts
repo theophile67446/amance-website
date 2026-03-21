@@ -2,10 +2,12 @@ import "dotenv/config";
 import express from "express";
 import { createServer } from "http";
 import net from "net";
+import path from "path";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { registerOAuthRoutes } from "./oauth";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
+import { ENV } from "./env";
 import { serveStatic, setupVite } from "./vite";
 
 function isPortAvailable(port: number): Promise<boolean> {
@@ -30,6 +32,8 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 async function startServer() {
   const app = express();
   const server = createServer(app);
+
+  const maintenancePagePath = path.resolve(process.cwd(), "client", "public", "maintenance.html");
   // CORS — allow the static frontend domain to call this API
   const allowedOrigins = (process.env.ALLOWED_ORIGINS ?? "")
     .split(",")
@@ -60,6 +64,25 @@ async function startServer() {
 
     next();
   });
+
+  if (ENV.maintenanceMode) {
+    app.use((req, res, next) => {
+      if (req.path.startsWith("/api/")) {
+        res.status(503).json({
+          error: "Service temporarily unavailable",
+          maintenance: true,
+        });
+        return;
+      }
+
+      if (req.method === "GET" || req.method === "HEAD") {
+        res.status(503).sendFile(maintenancePagePath);
+        return;
+      }
+
+      res.status(503).send("Service temporarily unavailable");
+    });
+  }
 
   // Configure body parser with larger size limit for file uploads
   app.use(express.json({ limit: "50mb" }));
