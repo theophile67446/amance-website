@@ -10,8 +10,6 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Plus, Edit2, Trash2, FileText, Briefcase, Eye, EyeOff, LayoutDashboard, Calendar, MapPin, Mail, Users, CheckCircle, Clock } from "lucide-react";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
 
 export default function Admin() {
   const [, navigate] = useLocation();
@@ -152,7 +150,7 @@ function DashboardTab({ setActiveTab }: { setActiveTab: (tab: string) => void })
           </div>
         </CardContent>
       </Card>
-      
+
       <Card
         className="cursor-pointer hover:shadow-lg transition-shadow border-l-4 border-l-blue-500"
         onClick={() => setActiveTab("contacts")}
@@ -172,7 +170,7 @@ function DashboardTab({ setActiveTab }: { setActiveTab: (tab: string) => void })
           </div>
         </CardContent>
       </Card>
-      
+
       <Card
         className="cursor-pointer hover:shadow-lg transition-shadow border-l-4 border-l-purple-500"
         onClick={() => setActiveTab("registrations")}
@@ -195,16 +193,6 @@ function DashboardTab({ setActiveTab }: { setActiveTab: (tab: string) => void })
     </div>
   );
 }
-
-const QUILL_MODULES = {
-  toolbar: [
-    [{ 'header': [1, 2, 3, false] }],
-    ['bold', 'italic', 'underline', 'strike'],
-    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-    ['link'],
-    ['clean']
-  ],
-};
 
 function ArticlesTab({ setMessage }: { setMessage: (msg: string) => void }) {
   const utils = trpc.useContext();
@@ -318,7 +306,7 @@ function ArticlesTab({ setMessage }: { setMessage: (msg: string) => void }) {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-               <div>
+                <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Catégorie</label>
                   <select
                     value={form.category}
@@ -383,37 +371,32 @@ function ArticlesTab({ setMessage }: { setMessage: (msg: string) => void }) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-8">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Contenu complet (FR)</label>
-                  <div className="rounded-md border border-gray-200 overflow-hidden bg-white">
-                    <ReactQuill 
-                      theme="snow" 
-                      value={form.content} 
-                      onChange={(val) => setForm({ ...form, content: val })} 
-                      modules={QUILL_MODULES}
-                      className="h-64"
-                    />
-                  </div>
+                  <textarea
+                    value={form.content}
+                    onChange={(e) => setForm({ ...form, content: e.target.value })}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-md h-64 resize-y focus:outline-none focus:ring-2 focus:ring-[#1E5D2A]"
+                    placeholder="Contenu complet en français..."
+                    required
+                  />
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Contenu complet (EN)</label>
-                  <div className="rounded-md border border-gray-200 overflow-hidden bg-white">
-                    <ReactQuill 
-                      theme="snow" 
-                      value={form.contentEn} 
-                      onChange={(val) => setForm({ ...form, contentEn: val })} 
-                      modules={QUILL_MODULES}
-                      className="h-64"
-                    />
-                  </div>
+                  <textarea
+                    value={form.contentEn}
+                    onChange={(e) => setForm({ ...form, contentEn: e.target.value })}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-md h-64 resize-y focus:outline-none focus:ring-2 focus:ring-[#1E5D2A]"
+                    placeholder="Full content in English..."
+                  />
                 </div>
               </div>
 
               {editingId && (
                 <div className="flex items-center space-x-3 bg-gray-50 p-4 rounded-lg border">
-                  <input 
-                    type="checkbox" 
-                    id="published" 
+                  <input
+                    type="checkbox"
+                    id="published"
                     checked={form.published}
-                    onChange={(e) => setForm({...form, published: e.target.checked})}
+                    onChange={(e) => setForm({ ...form, published: e.target.checked })}
                     className="w-5 h-5 text-[#1E5D2A] rounded border-gray-300 focus:ring-[#1E5D2A]"
                   />
                   <label htmlFor="published" className="font-medium text-gray-700 cursor-pointer">
@@ -423,9 +406,9 @@ function ArticlesTab({ setMessage }: { setMessage: (msg: string) => void }) {
               )}
 
               <div className="flex space-x-4 pt-4 border-t">
-                <Button 
-                  type="submit" 
-                  className="bg-[#1A361D] hover:bg-[#152e18] text-white flex-1 h-12 text-lg" 
+                <Button
+                  type="submit"
+                  className="bg-[#1A361D] hover:bg-[#152e18] text-white flex-1 h-12 text-lg"
                   disabled={createMutation.isPending || updateMutation.isPending}
                 >
                   {(createMutation.isPending || updateMutation.isPending) ? "Enregistrement..." : (editingId ? "Mettre à jour" : "Créer l'article (Brouillon)")}
@@ -476,18 +459,18 @@ function ArticlesTab({ setMessage }: { setMessage: (msg: string) => void }) {
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="flex justify-end space-x-2 mt-3 pt-3 border-t border-gray-50">
-                      <Button 
-                        size="sm" 
+                      <Button
+                        size="sm"
                         variant="secondary"
                         className="bg-gray-100 hover:bg-gray-200 text-gray-700 h-8"
                         onClick={() => handleEdit(article)}
                       >
                         <Edit2 className="w-3.5 h-3.5 mr-1.5" /> Modifier
                       </Button>
-                      <Button 
-                        size="sm" 
+                      <Button
+                        size="sm"
                         variant="destructive"
                         className="h-8"
                         onClick={() => {
@@ -549,7 +532,7 @@ function ProjetsTab({ setMessage }: { setMessage: (msg: string) => void }) {
         await updateMutation.mutateAsync({ id: editingId, ...form, beneficiaries: Number(form.beneficiaries) });
         setMessage("✅ Projet mis à jour avec succès!");
       } else {
-        await createMutation.mutateAsync({...form, beneficiaries: Number(form.beneficiaries)});
+        await createMutation.mutateAsync({ ...form, beneficiaries: Number(form.beneficiaries) });
         setMessage("✅ Projet créé avec succès!");
       }
       setForm(defaultForm);
@@ -630,7 +613,7 @@ function ProjetsTab({ setMessage }: { setMessage: (msg: string) => void }) {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-               <div>
+                <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Catégorie</label>
                   <select
                     value={form.category}
@@ -716,36 +699,30 @@ function ProjetsTab({ setMessage }: { setMessage: (msg: string) => void }) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-8">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Description complète (FR)</label>
-                  <div className="rounded-md border border-gray-200 overflow-hidden bg-white">
-                    <ReactQuill 
-                      theme="snow" 
-                      value={form.fullDescription} 
-                      onChange={(val) => setForm({ ...form, fullDescription: val })} 
-                      modules={QUILL_MODULES}
-                      className="h-64"
-                    />
-                  </div>
+                  <textarea
+                    value={form.fullDescription}
+                    onChange={(e) => setForm({ ...form, fullDescription: e.target.value })}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-md h-64 resize-y focus:outline-none focus:ring-2 focus:ring-[#1E5D2A]"
+                    placeholder="Description complète en français..."
+                  />
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Description complète (EN)</label>
-                  <div className="rounded-md border border-gray-200 overflow-hidden bg-white">
-                    <ReactQuill 
-                      theme="snow" 
-                      value={form.fullDescriptionEn} 
-                      onChange={(val) => setForm({ ...form, fullDescriptionEn: val })} 
-                      modules={QUILL_MODULES}
-                      className="h-64"
-                    />
-                  </div>
+                  <textarea
+                    value={form.fullDescriptionEn}
+                    onChange={(e) => setForm({ ...form, fullDescriptionEn: e.target.value })}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-md h-64 resize-y focus:outline-none focus:ring-2 focus:ring-[#1E5D2A]"
+                    placeholder="Full description in English..."
+                  />
                 </div>
               </div>
 
               <div className="flex items-center space-x-3 bg-gray-50 p-4 rounded-lg border">
-                <input 
-                  type="checkbox" 
-                  id="featuredProject" 
+                <input
+                  type="checkbox"
+                  id="featuredProject"
                   checked={form.featured}
-                  onChange={(e) => setForm({...form, featured: e.target.checked})}
+                  onChange={(e) => setForm({ ...form, featured: e.target.checked })}
                   className="w-5 h-5 text-[#1E5D2A] rounded border-gray-300 focus:ring-[#1E5D2A]"
                 />
                 <label htmlFor="featuredProject" className="font-medium text-gray-700 cursor-pointer">
@@ -754,9 +731,9 @@ function ProjetsTab({ setMessage }: { setMessage: (msg: string) => void }) {
               </div>
 
               <div className="flex space-x-4 pt-4 border-t">
-                <Button 
-                  type="submit" 
-                  className="bg-[#1A361D] hover:bg-[#152e18] text-white flex-1 h-12 text-lg" 
+                <Button
+                  type="submit"
+                  className="bg-[#1A361D] hover:bg-[#152e18] text-white flex-1 h-12 text-lg"
                   disabled={createMutation.isPending || updateMutation.isPending}
                 >
                   {(createMutation.isPending || updateMutation.isPending) ? "Enregistrement..." : (editingId ? "Mettre à jour" : "Créer le projet")}
@@ -793,30 +770,29 @@ function ProjetsTab({ setMessage }: { setMessage: (msg: string) => void }) {
                         <p className="font-bold text-gray-800 line-clamp-2 leading-tight">{project.title}</p>
                         <div className="flex items-center space-x-2 mt-2">
                           <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded font-medium capitalize flex items-center">
-                             <MapPin className="w-3 h-3 mr-1" /> {project.location || "N/A"}
+                            <MapPin className="w-3 h-3 mr-1" /> {project.location || "N/A"}
                           </span>
-                          <span className={`text-xs px-2 py-1 rounded font-medium capitalize ${
-                            project.status === 'en_cours' ? 'bg-blue-50 text-blue-700' :
-                            project.status === 'termine' ? 'bg-green-50 text-green-700' :
-                            'bg-orange-50 text-orange-700'
-                          }`}>
+                          <span className={`text-xs px-2 py-1 rounded font-medium capitalize ${project.status === 'en_cours' ? 'bg-blue-50 text-blue-700' :
+                              project.status === 'termine' ? 'bg-green-50 text-green-700' :
+                                'bg-orange-50 text-orange-700'
+                            }`}>
                             {project.status.replace("_", " ")}
                           </span>
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="flex justify-end space-x-2 mt-3 pt-3 border-t border-gray-50">
-                      <Button 
-                        size="sm" 
+                      <Button
+                        size="sm"
                         variant="secondary"
                         className="bg-gray-100 hover:bg-gray-200 text-gray-700 h-8"
                         onClick={() => handleEdit(project)}
                       >
                         <Edit2 className="w-3.5 h-3.5 mr-1.5" /> Modifier
                       </Button>
-                      <Button 
-                        size="sm" 
+                      <Button
+                        size="sm"
                         variant="destructive"
                         className="h-8"
                         onClick={() => {
@@ -877,14 +853,13 @@ function ContactsTab({ setMessage }: { setMessage: (msg: string) => void }) {
                     </h4>
                     <p className="text-sm text-gray-500 font-medium">De: {contact.firstName} {contact.lastName} ({contact.email})</p>
                   </div>
-                  <select 
+                  <select
                     value={contact.status}
                     onChange={(e) => handleStatusChange(contact.id, e.target.value as any)}
-                    className={`text-sm rounded-full px-3 py-1 font-medium border ${
-                      contact.status === 'nouveau' ? 'bg-blue-100 text-blue-800 border-blue-200' : 
-                      contact.status === 'traite' ? 'bg-green-100 text-green-800 border-green-200' : 
-                      'bg-gray-100 text-gray-800 border-gray-200'
-                    }`}
+                    className={`text-sm rounded-full px-3 py-1 font-medium border ${contact.status === 'nouveau' ? 'bg-blue-100 text-blue-800 border-blue-200' :
+                        contact.status === 'traite' ? 'bg-green-100 text-green-800 border-green-200' :
+                          'bg-gray-100 text-gray-800 border-gray-200'
+                      }`}
                   >
                     <option value="nouveau">Nouveau</option>
                     <option value="lu">Lu</option>
@@ -942,14 +917,13 @@ function RegistrationsTab({ setMessage }: { setMessage: (msg: string) => void })
                     </div>
                     <p className="text-sm text-gray-500 font-medium">Contact: {reg.email} {reg.phone ? `| ${reg.phone}` : ''} | Localisation: {reg.city}, {reg.country}</p>
                   </div>
-                  <select 
+                  <select
                     value={reg.status}
                     onChange={(e) => handleStatusChange(reg.id, e.target.value as any)}
-                    className={`text-sm rounded-full px-3 py-1 font-medium border ${
-                      reg.status === 'nouveau' ? 'bg-purple-100 text-purple-800 border-purple-200' : 
-                      reg.status === 'actif' ? 'bg-green-100 text-green-800 border-green-200' : 
-                      'bg-gray-100 text-gray-800 border-gray-200'
-                    }`}
+                    className={`text-sm rounded-full px-3 py-1 font-medium border ${reg.status === 'nouveau' ? 'bg-purple-100 text-purple-800 border-purple-200' :
+                        reg.status === 'actif' ? 'bg-green-100 text-green-800 border-green-200' :
+                          'bg-gray-100 text-gray-800 border-gray-200'
+                      }`}
                   >
                     <option value="nouveau">Nouveau</option>
                     <option value="contacte">Contacté</option>
