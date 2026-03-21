@@ -74,15 +74,15 @@ export default function ProjetDetail() {
         image={project.coverImage || undefined}
       />
       {/* Hero */}
-      <section className="relative h-screen overflow-hidden">
+      <section className="relative overflow-hidden">
         <img
           src={project.coverImage || "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=1920&q=80"}
           alt={displayTitle || ""}
-          className="w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 p-8">
-          <div className="max-w-6xl mx-auto">
+        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 sm:pt-32 md:pt-40 pb-14 sm:pb-20 min-h-[72vh] md:min-h-[84vh] flex flex-col justify-end">
+          <div>
             <Link
               href="/projets"
               className="inline-flex items-center gap-2 text-white hover:text-gray-300 mb-6"
@@ -99,20 +99,20 @@ export default function ProjetDetail() {
                   {cat.label}
                 </div>
                 <h1
-                  className="text-5xl xl:text-6xl font-extrabold text-white mb-4"
+                  className="text-4xl sm:text-5xl xl:text-6xl font-extrabold text-white mb-4 leading-tight"
                   style={{ fontFamily: "Montserrat, sans-serif" }}
                 >
                   {displayTitle}
                 </h1>
               </div>
             </div>
-            <p className="text-xl text-gray-300 max-w-2xl">{displayDesc}</p>
+            <p className="text-lg sm:text-xl text-gray-300 max-w-3xl">{displayDesc}</p>
           </div>
         </div>
       </section>
 
       {/* Info Cards */}
-      <section className="bg-white py-12 -mt-20 relative z-10">
+      <section className="bg-white py-12 -mt-10 md:-mt-20 relative z-10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {/* Location */}
