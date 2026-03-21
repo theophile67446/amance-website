@@ -10,7 +10,7 @@ export default function ActualiteDetail() {
   const slug = params?.slug;
 
   const { data: article, isLoading } = trpc.articles.getBySlug.useQuery(
-    { slug: slug! },
+    slug!,
     { enabled: !!slug }
   );
 

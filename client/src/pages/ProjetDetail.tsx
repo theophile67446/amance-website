@@ -9,7 +9,7 @@ export default function ProjetDetail() {
   const slug = params?.slug;
 
   const { data: project, isLoading } = trpc.projects.getBySlug.useQuery(
-    { slug: slug! },
+    slug!,
     { enabled: !!slug }
   );
 
