@@ -197,7 +197,7 @@ export default function Projets() {
 
                       {/* Impact */}
                       <div className="grid grid-cols-3 gap-2 mb-5 p-3 rounded-xl" style={{ backgroundColor: "oklch(0.97 0.005 240)" }}>
-                        {project.impact.map((stat, j) => (
+                        {(Array.isArray(project.impact) ? project.impact : []).map((stat, j) => (
                           <div key={j} className="text-center">
                             <div
                               className="text-base font-extrabold"
@@ -213,7 +213,7 @@ export default function Projets() {
                       {/* SDGs */}
                       <div className="flex items-center gap-2 mb-5">
                         <span className="text-xs text-gray-400">ODD :</span>
-                        {project.sdgs.map((sdg) => (
+                        {(Array.isArray(project.sdgs) ? project.sdgs : []).map((sdg) => (
                           <span
                             key={sdg}
                             className="text-xs font-bold px-2 py-0.5 rounded-full text-white"

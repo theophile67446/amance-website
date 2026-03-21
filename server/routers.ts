@@ -9,6 +9,34 @@ import { contacts, registrations, articles, projects, users } from "../drizzle/s
 import { notifyOwner } from "./_core/notification";
 import { eq, desc } from "drizzle-orm";
 
+type ProjectImpactStat = {
+  value: string;
+  label: string;
+};
+
+const parseJsonArray = <T>(value: unknown): T[] => {
+  if (Array.isArray(value)) {
+    return value as T[];
+  }
+
+  if (typeof value !== "string" || value.trim() === "") {
+    return [];
+  }
+
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? (parsed as T[]) : [];
+  } catch {
+    return [];
+  }
+};
+
+const normalizeProject = <T extends { impact?: unknown; sdgs?: unknown }>(project: T) => ({
+  ...project,
+  impact: parseJsonArray<ProjectImpactStat>(project.impact),
+  sdgs: parseJsonArray<string>(project.sdgs),
+});
+
 export const appRouter = router({
   system: systemRouter,
   auth: router({
@@ -246,7 +274,7 @@ export const appRouter = router({
           query = query.where(eq(projects.featured, true)) as any;
         }
         const results = await query.orderBy(desc(projects.createdAt));
-        return results;
+        return results.map(normalizeProject);
       }),
 
     getBySlug: publicProcedure
@@ -255,7 +283,7 @@ export const appRouter = router({
         const db = await getDb();
         if (!db) return null;
         const result = await db.select().from(projects).where(eq(projects.slug, input));
-        return result[0] || null;
+        return result[0] ? normalizeProject(result[0]) : null;
       }),
 
     create: adminProcedure
