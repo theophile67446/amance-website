@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu, X, Heart, ChevronDown, Globe, LayoutDashboard, LogOut } from "lucide-react";
+import { Menu, X, Heart, ChevronDown, Globe } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/_core/hooks/useAuth";
 
@@ -13,9 +13,9 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
-  const [location, setLocation] = useLocation();
+  const [location] = useLocation();
   const { t, i18n } = useTranslation();
-  const { user, logout, loading } = useAuth();
+  const { user } = useAuth();
 
   const isAdmin = user?.role === "admin";
 
@@ -84,22 +84,12 @@ export default function Navbar() {
     setMobileExpanded((prev) => (prev === label ? null : label));
   };
 
-  const handleLogout = async () => {
-    try {
-      await logout();
-      setIsOpen(false);
-      setLocation("/");
-    } catch {
-      // Keep UX non-blocking even if logout endpoint is temporarily unavailable.
-      setLocation("/");
-    }
-  };
-
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
-        ? "bg-white/98 backdrop-blur-md shadow-md border-b border-gray-100"
-        : "bg-white/90 backdrop-blur-sm shadow-sm"
+      className={`fixed left-0 right-0 z-50 transition-all duration-300 ${isAdmin ? "top-9" : "top-0"
+        } ${scrolled
+          ? "bg-white/98 backdrop-blur-md shadow-md border-b border-gray-100"
+          : "bg-white/90 backdrop-blur-sm shadow-sm"
         }`}
     >
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
@@ -170,24 +160,6 @@ export default function Navbar() {
               <Globe size={15} />
               <span>{nextLangLabel}</span>
             </button>
-            {isAdmin && !loading && (
-              <>
-                <Link
-                  href="/admin"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-bold text-amance-blue border border-gray-200 hover:border-amance-blue hover:bg-amance-blue hover:text-white transition-colors"
-                >
-                  <LayoutDashboard size={15} />
-                  Tableau de bord
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-bold text-red-600 border border-red-200 hover:bg-red-50 transition-colors"
-                >
-                  <LogOut size={15} />
-                  Déconnexion
-                </button>
-              </>
-            )}
             <Link
               href="/faire-un-don"
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-white text-sm bg-amance-green hover:bg-amance-green-dark transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 whitespace-nowrap"
@@ -273,24 +245,6 @@ export default function Navbar() {
             ))}
 
             <div className="pt-3 pb-2 border-t border-gray-100 mt-2">
-              {isAdmin && !loading && (
-                <div className="space-y-2 mb-3">
-                  <Link
-                    href="/admin"
-                    className="flex items-center justify-center gap-2 w-full px-6 py-3 rounded-full font-bold text-sm text-amance-blue border border-amance-blue/30 hover:bg-amance-blue hover:text-white transition-all duration-300"
-                  >
-                    <LayoutDashboard size={16} />
-                    Tableau de bord
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="flex items-center justify-center gap-2 w-full px-6 py-3 rounded-full font-bold text-sm text-red-600 border border-red-200 hover:bg-red-50 transition-all duration-300"
-                  >
-                    <LogOut size={16} />
-                    Déconnexion
-                  </button>
-                </div>
-              )}
               <Link
                 href="/faire-un-don"
                 className="flex items-center justify-center gap-2 w-full px-6 py-3.5 rounded-full font-bold text-white bg-amance-green hover:bg-amance-green-dark transition-all duration-300 shadow-md"

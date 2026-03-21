@@ -1,100 +1,76 @@
-import { useState, useEffect } from "react";
-import { useLocation } from "wouter";
-import Layout from "@/components/Layout";
+import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import LocalLogin from "@/components/LocalLogin";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import AdminLayout from "@/components/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Plus, Edit2, Trash2, FileText, Briefcase, Eye, EyeOff, LayoutDashboard, Calendar, MapPin, Mail, Users, CheckCircle, Clock } from "lucide-react";
+import { Plus, Edit2, Trash2, FileText, Briefcase, Eye, EyeOff, Calendar, MapPin, Mail, Users, CheckCircle, Clock, ArrowUp, ArrowDown } from "lucide-react";
+
+const TAB_LABELS: Record<string, string> = {
+  dashboard: "Vue d'ensemble",
+  articles: "Actualités & Articles",
+  projets: "Projets & Missions",
+  contacts: "Messages",
+  registrations: "Bénévoles & Partenaires",
+  equipe: "Équipe",
+};
 
 export default function Admin() {
-  const [, navigate] = useLocation();
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState("dashboard");
-  const [message, setMessage] = useState("");
 
   if (!user || user.role !== "admin") {
     return <LocalLogin />;
   }
 
   return (
-    <Layout>
-      <div className="bg-gray-50 min-h-screen pb-12">
-        <div className="bg-[#1A361D] text-white py-12 px-6">
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between">
-            <div>
-              <h1 className="text-4xl font-extrabold mb-2 font-display" style={{ fontFamily: "Montserrat, sans-serif" }}>
-                Panel Administratif
-              </h1>
-              <p className="text-[#F5B100] opacity-90 text-lg">Gérez vos contenus de manière centralisée et sécurisée</p>
-            </div>
-          </div>
-        </div>
+    <AdminLayout>
+      {(activeTab, setActiveTab) => <AdminContent activeTab={activeTab} setActiveTab={setActiveTab} />}
+    </AdminLayout>
+  );
+}
 
-        <div className="max-w-7xl mx-auto px-4 -mt-8 relative z-10">
-          <Card className="shadow-2xl border-0 overflow-hidden rounded-2xl">
-            <div className="p-6 md:p-8 bg-white">
-              {message && (
-                <Alert className="mb-6 bg-green-50 text-green-800 border-green-200">
-                  <AlertDescription className="font-medium flex items-center">
-                    <span className="mr-2">✨</span> {message}
-                  </AlertDescription>
-                </Alert>
-              )}
+function AdminContent({ activeTab, setActiveTab }: { activeTab: string; setActiveTab: (tab: string) => void }) {
+  const [message, setMessage] = useState("");
 
-              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="mb-8 p-1 bg-gray-100 rounded-xl inline-flex w-full overflow-x-auto justify-start md:w-auto h-auto">
-                  <TabsTrigger value="dashboard" className="rounded-lg px-6 py-3 data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-[#1A361D] transition-all">
-                    <LayoutDashboard className="w-5 h-5 mr-2" />
-                    Vue d'ensemble
-                  </TabsTrigger>
-                  <TabsTrigger value="articles" className="rounded-lg px-6 py-3 data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-[#1A361D] transition-all">
-                    <FileText className="w-5 h-5 mr-2" />
-                    Actualités & Articles
-                  </TabsTrigger>
-                  <TabsTrigger value="projets" className="rounded-lg px-6 py-3 data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-[#1A361D] transition-all">
-                    <Briefcase className="w-5 h-5 mr-2" />
-                    Projets & Missions
-                  </TabsTrigger>
-                  <TabsTrigger value="contacts" className="rounded-lg px-6 py-3 data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-[#1A361D] transition-all">
-                    <Mail className="w-5 h-5 mr-2" />
-                    Messages
-                  </TabsTrigger>
-                  <TabsTrigger value="registrations" className="rounded-lg px-6 py-3 data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-[#1A361D] transition-all">
-                    <Users className="w-5 h-5 mr-2" />
-                    Bénévoles & Partenaires
-                  </TabsTrigger>
-                </TabsList>
+  const renderTab = () => {
+    switch (activeTab) {
+      case "dashboard": return <DashboardTab setActiveTab={setActiveTab} />;
+      case "articles": return <ArticlesTab setMessage={setMessage} />;
+      case "projets": return <ProjetsTab setMessage={setMessage} />;
+      case "contacts": return <ContactsTab setMessage={setMessage} />;
+      case "registrations": return <RegistrationsTab setMessage={setMessage} />;
+      case "equipe": return <TeamTab setMessage={setMessage} />;
+      default: return <DashboardTab setActiveTab={setActiveTab} />;
+    }
+  };
 
-                <TabsContent value="dashboard" className="mt-0 outline-none">
-                  <DashboardTab setActiveTab={setActiveTab} />
-                </TabsContent>
-
-                <TabsContent value="articles" className="mt-0 outline-none">
-                  <ArticlesTab setMessage={setMessage} />
-                </TabsContent>
-
-                <TabsContent value="projets" className="mt-0 outline-none">
-                  <ProjetsTab setMessage={setMessage} />
-                </TabsContent>
-
-                <TabsContent value="contacts" className="mt-0 outline-none">
-                  <ContactsTab setMessage={setMessage} />
-                </TabsContent>
-
-                <TabsContent value="registrations" className="mt-0 outline-none">
-                  <RegistrationsTab setMessage={setMessage} />
-                </TabsContent>
-              </Tabs>
-            </div>
-          </Card>
-        </div>
+  return (
+    <div className="min-h-screen pb-12 pl-14 lg:pl-0">
+      {/* Page header */}
+      <div className="bg-white border-b border-gray-200 px-6 py-5 sticky top-0 z-30">
+        <h1 className="text-xl font-bold text-[#1A361D] font-heading">
+          {TAB_LABELS[activeTab] ?? "Administration"}
+        </h1>
       </div>
-    </Layout>
+
+      <div className="px-4 md:px-8 py-8">
+        <Card className="shadow-sm border border-gray-100 rounded-2xl overflow-hidden">
+          <div className="p-6 md:p-8 bg-white">
+            {message && (
+              <Alert className="mb-6 bg-green-50 text-green-800 border-green-200">
+                <AlertDescription className="font-medium flex items-center">
+                  <span className="mr-2">✨</span> {message}
+                </AlertDescription>
+              </Alert>
+            )}
+            {renderTab()}
+          </div>
+        </Card>
+      </div>
+    </div>
   );
 }
 
@@ -103,14 +79,15 @@ function DashboardTab({ setActiveTab }: { setActiveTab: (tab: string) => void })
   const { data: projects = [] } = trpc.projects.adminList.useQuery();
   const { data: contacts = [] } = trpc.contact.adminList.useQuery();
   const { data: registrations = [] } = trpc.registration.adminList.useQuery();
+  const { data: teamMembers = [] } = trpc.team.adminList.useQuery();
 
-  const publishedArticles = articles.filter(a => a.published).length;
-  const draftArticles = articles.length - publishedArticles;
-  const unreadMessages = contacts.filter(c => c.status === 'nouveau').length;
-  const newRegistrations = registrations.filter(r => r.status === 'nouveau').length;
+  const publishedArticles = articles.filter((a: any) => a.published).length;
+  const unreadMessages = contacts.filter((c: any) => c.status === 'nouveau').length;
+  const newRegistrations = registrations.filter((r: any) => r.status === 'nouveau').length;
+  const activeMembers = teamMembers.filter((member: any) => member.active).length;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pb-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 pb-6">
       <Card
         className="cursor-pointer hover:shadow-lg transition-shadow border-l-4 border-l-[#F5B100]"
         onClick={() => setActiveTab("articles")}
@@ -187,6 +164,26 @@ function DashboardTab({ setActiveTab }: { setActiveTab: (tab: string) => void })
           </div>
           <div className="mt-4 flex space-x-2 text-sm">
             <span className={`${newRegistrations > 0 ? 'text-purple-600 font-bold' : 'text-gray-500'}`}>{newRegistrations} nouvelles</span>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card
+        className="cursor-pointer hover:shadow-lg transition-shadow border-l-4 border-l-emerald-500"
+        onClick={() => setActiveTab("equipe")}
+      >
+        <CardContent className="p-6">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-gray-500 font-medium mb-1">Équipe</p>
+              <h3 className="text-3xl font-bold text-[#1A361D]">{teamMembers.length}</h3>
+            </div>
+            <div className="p-3 bg-emerald-50 rounded-full text-emerald-500">
+              <Users className="w-6 h-6" />
+            </div>
+          </div>
+          <div className="mt-4 flex space-x-2 text-sm">
+            <span className="text-emerald-700 font-medium">{activeMembers} actifs</span>
           </div>
         </CardContent>
       </Card>
@@ -773,8 +770,8 @@ function ProjetsTab({ setMessage }: { setMessage: (msg: string) => void }) {
                             <MapPin className="w-3 h-3 mr-1" /> {project.location || "N/A"}
                           </span>
                           <span className={`text-xs px-2 py-1 rounded font-medium capitalize ${project.status === 'en_cours' ? 'bg-blue-50 text-blue-700' :
-                              project.status === 'termine' ? 'bg-green-50 text-green-700' :
-                                'bg-orange-50 text-orange-700'
+                            project.status === 'termine' ? 'bg-green-50 text-green-700' :
+                              'bg-orange-50 text-orange-700'
                             }`}>
                             {project.status.replace("_", " ")}
                           </span>
@@ -810,6 +807,300 @@ function ProjetsTab({ setMessage }: { setMessage: (msg: string) => void }) {
                 ))}
                 {projects.length === 0 && (
                   <div className="p-8 text-center text-gray-500">Aucun projet trouvé.</div>
+                )}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+function TeamTab({ setMessage }: { setMessage: (msg: string) => void }) {
+  const utils = trpc.useContext();
+  const { data: members = [], isLoading } = trpc.team.adminList.useQuery();
+  const createMutation = trpc.team.create.useMutation();
+  const updateMutation = trpc.team.update.useMutation();
+  const deleteMutation = trpc.team.delete.useMutation();
+  const reorderMutation = trpc.team.reorder.useMutation();
+
+  const [editingId, setEditingId] = useState<number | null>(null);
+
+  const defaultForm = {
+    name: "",
+    role: "",
+    title: "",
+    location: "",
+    image: "",
+    bio: "",
+    active: true,
+  };
+
+  const [form, setForm] = useState(defaultForm);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      if (editingId) {
+        await updateMutation.mutateAsync({ id: editingId, ...form });
+        setMessage("✅ Membre mis à jour avec succès!");
+      } else {
+        await createMutation.mutateAsync(form);
+        setMessage("✅ Membre ajouté avec succès!");
+      }
+
+      setForm(defaultForm);
+      setEditingId(null);
+      utils.team.adminList.invalidate();
+      utils.team.list.invalidate();
+    } catch (error) {
+      setMessage("❌ Erreur lors de l'enregistrement du membre");
+    }
+  };
+
+  const handleEdit = (member: any) => {
+    setEditingId(member.id);
+    setForm({
+      name: member.name,
+      role: member.role,
+      title: member.title || "",
+      location: member.location || "",
+      image: member.image || "",
+      bio: member.bio || "",
+      active: member.active,
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setForm(defaultForm);
+  };
+
+  const moveMember = async (id: number, direction: "up" | "down") => {
+    const currentIndex = members.findIndex((member: any) => member.id === id);
+    if (currentIndex === -1) return;
+
+    const targetIndex = direction === "up" ? currentIndex - 1 : currentIndex + 1;
+    if (targetIndex < 0 || targetIndex >= members.length) return;
+
+    const reordered = [...members];
+    const [moved] = reordered.splice(currentIndex, 1);
+    reordered.splice(targetIndex, 0, moved);
+
+    try {
+      await reorderMutation.mutateAsync({ orderedIds: reordered.map((member: any) => member.id) });
+      utils.team.adminList.invalidate();
+      utils.team.list.invalidate();
+    } catch (error) {
+      setMessage("❌ Erreur lors de la réorganisation");
+    }
+  };
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="lg:col-span-8">
+        <Card className="border border-gray-100 shadow-sm">
+          <CardHeader className="bg-gray-50/50 border-b border-gray-100 pb-4">
+            <CardTitle className="text-xl flex items-center text-[#1A361D]">
+              <Edit2 className="w-5 h-5 mr-3 text-[#1E5D2A]" />
+              {editingId ? "Modifier un membre" : "Ajouter un membre"}
+            </CardTitle>
+            <CardDescription>
+              Gérez l'équipe affichée sur la page À Propos avec photo, rôle et ordre d'affichage.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Nom complet</label>
+                  <Input
+                    className="h-12 border-gray-200"
+                    value={form.name}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Rôle</label>
+                  <Input
+                    className="h-12 border-gray-200"
+                    value={form.role}
+                    onChange={(e) => setForm({ ...form, role: e.target.value })}
+                    placeholder="Présidente, Secrétaire..."
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Titre / Fonction</label>
+                  <Input
+                    className="h-12 border-gray-200"
+                    value={form.title}
+                    onChange={(e) => setForm({ ...form, title: e.target.value })}
+                    placeholder="BSc Administration"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Localisation</label>
+                  <Input
+                    className="h-12 border-gray-200"
+                    value={form.location}
+                    onChange={(e) => setForm({ ...form, location: e.target.value })}
+                    placeholder="Buea"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Photo (URL)</label>
+                <div className="flex gap-4">
+                  <Input
+                    className="h-12 border-gray-200 flex-1"
+                    value={form.image}
+                    onChange={(e) => setForm({ ...form, image: e.target.value })}
+                    placeholder="https://..."
+                  />
+                  {form.image && (
+                    <div className="w-16 h-12 bg-gray-100 rounded-md overflow-hidden border">
+                      <img src={form.image} alt="Aperçu" className="w-full h-full object-cover" />
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Bio courte (optionnel)</label>
+                <textarea
+                  value={form.bio}
+                  onChange={(e) => setForm({ ...form, bio: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-200 rounded-md h-24 resize-none focus:outline-none focus:ring-2 focus:ring-[#1E5D2A]"
+                  placeholder="Présentation courte du membre"
+                />
+              </div>
+
+              <div className="flex items-center space-x-3 bg-gray-50 p-4 rounded-lg border">
+                <input
+                  type="checkbox"
+                  id="activeMember"
+                  checked={form.active}
+                  onChange={(e) => setForm({ ...form, active: e.target.checked })}
+                  className="w-5 h-5 text-[#1E5D2A] rounded border-gray-300 focus:ring-[#1E5D2A]"
+                />
+                <label htmlFor="activeMember" className="font-medium text-gray-700 cursor-pointer">
+                  Membre actif (visible sur la page publique)
+                </label>
+              </div>
+
+              <div className="flex space-x-4 pt-4 border-t">
+                <Button
+                  type="submit"
+                  className="bg-[#1A361D] hover:bg-[#152e18] text-white flex-1 h-12 text-lg"
+                  disabled={createMutation.isPending || updateMutation.isPending}
+                >
+                  {(createMutation.isPending || updateMutation.isPending)
+                    ? "Enregistrement..."
+                    : (editingId ? "Mettre à jour" : "Ajouter le membre")}
+                </Button>
+                {editingId && (
+                  <Button type="button" variant="outline" onClick={cancelEdit} className="h-12 px-8">
+                    Annuler
+                  </Button>
+                )}
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="lg:col-span-4">
+        <Card className="border border-gray-100 shadow-sm sticky top-6">
+          <CardHeader className="bg-gray-50/50 border-b border-gray-100 pb-4">
+            <CardTitle className="text-xl text-[#1A361D]">Membres ({members.length})</CardTitle>
+            <CardDescription>
+              Utilisez les flèches pour définir l'ordre d'affichage.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pt-0 p-0">
+            {isLoading ? (
+              <div className="p-6 text-center text-gray-500">Chargement...</div>
+            ) : (
+              <div className="max-h-[800px] overflow-y-auto divide-y divide-gray-100">
+                {members.map((member: any, index: number) => (
+                  <div key={member.id} className={`p-4 hover:bg-gray-50 transition-colors ${editingId === member.id ? "bg-emerald-50/40" : ""}`}>
+                    <div className="flex items-start gap-3">
+                      <img
+                        src={member.image || "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=200&q=80"}
+                        alt={member.name}
+                        className="w-12 h-12 rounded-full object-cover border"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <p className="font-bold text-gray-800 truncate">{member.name}</p>
+                        <p className="text-sm text-gray-600 truncate">{member.role}</p>
+                        <p className="text-xs text-gray-500 truncate">{member.location || "Sans localisation"}</p>
+                        <div className="mt-2">
+                          <span className={`text-xs px-2 py-1 rounded-full font-medium ${member.active ? "bg-emerald-100 text-emerald-700" : "bg-gray-200 text-gray-700"}`}>
+                            {member.active ? "Actif" : "Inactif"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
+                      <div className="flex gap-1">
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-8 w-8"
+                          onClick={() => moveMember(member.id, "up")}
+                          disabled={index === 0 || reorderMutation.isPending}
+                        >
+                          <ArrowUp className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-8 w-8"
+                          onClick={() => moveMember(member.id, "down")}
+                          disabled={index === members.length - 1 || reorderMutation.isPending}
+                        >
+                          <ArrowDown className="w-4 h-4" />
+                        </Button>
+                      </div>
+
+                      <div className="flex gap-2">
+                        <Button size="sm" variant="secondary" className="h-8" onClick={() => handleEdit(member)}>
+                          <Edit2 className="w-3.5 h-3.5 mr-1.5" /> Modifier
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          className="h-8"
+                          onClick={() => {
+                            if (window.confirm("Supprimer ce membre de l'équipe ?")) {
+                              deleteMutation.mutate(member.id, {
+                                onSuccess: () => {
+                                  setMessage("✅ Membre supprimé");
+                                  utils.team.adminList.invalidate();
+                                  utils.team.list.invalidate();
+                                },
+                              });
+                            }
+                          }}
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                {members.length === 0 && (
+                  <div className="p-8 text-center text-gray-500">Aucun membre enregistré.</div>
                 )}
               </div>
             )}
@@ -857,8 +1148,8 @@ function ContactsTab({ setMessage }: { setMessage: (msg: string) => void }) {
                     value={contact.status}
                     onChange={(e) => handleStatusChange(contact.id, e.target.value as any)}
                     className={`text-sm rounded-full px-3 py-1 font-medium border ${contact.status === 'nouveau' ? 'bg-blue-100 text-blue-800 border-blue-200' :
-                        contact.status === 'traite' ? 'bg-green-100 text-green-800 border-green-200' :
-                          'bg-gray-100 text-gray-800 border-gray-200'
+                      contact.status === 'traite' ? 'bg-green-100 text-green-800 border-green-200' :
+                        'bg-gray-100 text-gray-800 border-gray-200'
                       }`}
                   >
                     <option value="nouveau">Nouveau</option>
@@ -921,8 +1212,8 @@ function RegistrationsTab({ setMessage }: { setMessage: (msg: string) => void })
                     value={reg.status}
                     onChange={(e) => handleStatusChange(reg.id, e.target.value as any)}
                     className={`text-sm rounded-full px-3 py-1 font-medium border ${reg.status === 'nouveau' ? 'bg-purple-100 text-purple-800 border-purple-200' :
-                        reg.status === 'actif' ? 'bg-green-100 text-green-800 border-green-200' :
-                          'bg-gray-100 text-gray-800 border-gray-200'
+                      reg.status === 'actif' ? 'bg-green-100 text-green-800 border-green-200' :
+                        'bg-gray-100 text-gray-800 border-gray-200'
                       }`}
                   >
                     <option value="nouveau">Nouveau</option>

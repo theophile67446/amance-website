@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout";
+import { trpc } from "@/lib/trpc";
 import { Link } from "wouter";
 import {
   Target,
@@ -18,7 +19,7 @@ import {
 const TEAM_IMAGE = "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=80";
 const ABOUT_HERO = "https://images.unsplash.com/photo-1509099836639-18ba1795216d?w=1920&q=80";
 
-const teamMembers = [
+const defaultTeamMembers = [
   {
     name: "Fule Ndiba Juliette",
     role: "Présidente",
@@ -95,6 +96,9 @@ const sdgs = [
 ];
 
 export default function APropos() {
+  const { data: teamMembersData = [] } = trpc.team.list.useQuery();
+  const displayedTeamMembers = teamMembersData.length > 0 ? teamMembersData : defaultTeamMembers;
+
   return (
     <Layout>
       {/* Hero */}
@@ -325,14 +329,14 @@ export default function APropos() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-            {teamMembers.map((member, i) => (
+            {displayedTeamMembers.map((member, i) => (
               <div
-                key={i}
+                key={`${member.name}-${i}`}
                 className="bg-white rounded-2xl border border-gray-100 p-6 text-center hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
               >
                 <div className="relative mb-4">
                   <img
-                    src={member.image}
+                    src={member.image || TEAM_IMAGE}
                     alt={member.name}
                     className="w-20 h-20 rounded-full object-cover mx-auto border-4"
                     style={{ borderColor: "var(--amance-green)" }}

@@ -68,8 +68,8 @@ export default function ProjetDetail() {
 
   return (
     <Layout>
-      <SEO 
-        title={displayTitle || "Projet"} 
+      <SEO
+        title={displayTitle || "Projet"}
         description={displayDesc || undefined}
         image={project.coverImage || undefined}
       />
@@ -177,9 +177,9 @@ export default function ProjetDetail() {
           >
             <p>{displayDesc}</p>
             {displayFullDesc && (
-              <div 
+              <div
                 className="whitespace-pre-wrap"
-                dangerouslySetInnerHTML={{ __html: displayFullDesc }} 
+                dangerouslySetInnerHTML={{ __html: displayFullDesc }}
               />
             )}
           </div>
@@ -197,7 +197,7 @@ export default function ProjetDetail() {
                 className="grid grid-cols-1 md:grid-cols-3 gap-6 p-8 rounded-xl"
                 style={{ backgroundColor: "rgba(42, 100, 60, 0.1)" }}
               >
-                {project.impact.map((stat, idx) => (
+                {project.impact.map((stat: any, idx: number) => (
                   <div key={idx} className="text-center">
                     <div
                       className="text-4xl font-extrabold mb-2"
@@ -222,7 +222,7 @@ export default function ProjetDetail() {
                 Objectifs de Développement Durable
               </h3>
               <div className="flex flex-wrap gap-3">
-                {project.sdgs.map((sdg) => (
+                {project.sdgs.map((sdg: any) => (
                   <span
                     key={sdg}
                     className="px-4 py-2 rounded-full font-semibold text-white"

@@ -7,9 +7,9 @@ import { publicProcedure, router, adminProcedure, protectedProcedure } from "./_
 import { sdk } from "./_core/sdk";
 import { z } from "zod";
 import { getDb } from "./db";
-import { contacts, registrations, articles, projects, users } from "../drizzle/schema";
+import { contacts, registrations, articles, projects, users, teamMembers } from "../drizzle/schema";
 import { notifyOwner } from "./_core/notification";
-import { eq, desc, and } from "drizzle-orm";
+import { eq, desc, and, asc } from "drizzle-orm";
 
 type ProjectImpactStat = {
   value: string;
@@ -670,6 +670,112 @@ export const appRouter = router({
         if (!db) throw new Error("Database not available");
 
         await db.delete(projects).where(eq(projects.id, input));
+        return { success: true };
+      }),
+  }),
+
+  team: router({
+    list: publicProcedure
+      .query(async () => {
+        const db = await getDb();
+        if (!db) return [];
+
+        return await db
+          .select()
+          .from(teamMembers)
+          .where(eq(teamMembers.active, true))
+          .orderBy(asc(teamMembers.displayOrder), asc(teamMembers.id));
+      }),
+
+    adminList: adminProcedure
+      .query(async () => {
+        const db = await getDb();
+        if (!db) return [];
+
+        return await db
+          .select()
+          .from(teamMembers)
+          .orderBy(asc(teamMembers.displayOrder), asc(teamMembers.id));
+      }),
+
+    create: adminProcedure
+      .input(z.object({
+        name: z.string().min(1),
+        role: z.string().min(1),
+        title: z.string().optional(),
+        location: z.string().optional(),
+        image: z.string().optional(),
+        bio: z.string().optional(),
+        active: z.boolean().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const db = await getDb();
+        if (!db) throw new Error("Database not available");
+
+        const lastItem = await db
+          .select({ displayOrder: teamMembers.displayOrder })
+          .from(teamMembers)
+          .orderBy(desc(teamMembers.displayOrder))
+          .limit(1);
+
+        const nextOrder = (lastItem[0]?.displayOrder ?? -1) + 1;
+
+        await db.insert(teamMembers).values({
+          ...input,
+          displayOrder: nextOrder,
+          active: input.active ?? true,
+        });
+
+        return { success: true };
+      }),
+
+    update: adminProcedure
+      .input(z.object({
+        id: z.number(),
+        name: z.string().optional(),
+        role: z.string().optional(),
+        title: z.string().optional(),
+        location: z.string().optional(),
+        image: z.string().optional(),
+        bio: z.string().optional(),
+        active: z.boolean().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const db = await getDb();
+        if (!db) throw new Error("Database not available");
+
+        const { id, ...data } = input;
+        await db.update(teamMembers).set(data).where(eq(teamMembers.id, id));
+
+        return { success: true };
+      }),
+
+    delete: adminProcedure
+      .input(z.number())
+      .mutation(async ({ input }) => {
+        const db = await getDb();
+        if (!db) throw new Error("Database not available");
+
+        await db.delete(teamMembers).where(eq(teamMembers.id, input));
+        return { success: true };
+      }),
+
+    reorder: adminProcedure
+      .input(z.object({
+        orderedIds: z.array(z.number()).min(1),
+      }))
+      .mutation(async ({ input }) => {
+        const db = await getDb();
+        if (!db) throw new Error("Database not available");
+
+        for (let index = 0; index < input.orderedIds.length; index += 1) {
+          const id = input.orderedIds[index];
+          await db
+            .update(teamMembers)
+            .set({ displayOrder: index })
+            .where(eq(teamMembers.id, id));
+        }
+
         return { success: true };
       }),
   }),
