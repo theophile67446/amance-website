@@ -50,6 +50,74 @@ const safeEqual = (left: string, right: string) => {
   return timingSafeEqual(leftBuffer, rightBuffer);
 };
 
+const hasMissingColumnError = (error: unknown) => {
+  const message = error instanceof Error ? error.message : String(error);
+  return /unknown column/i.test(message);
+};
+
+const escapeSqlValue = (value: string) => value.replace(/'/g, "''");
+
+const selectLegacyArticles = async (db: Awaited<ReturnType<typeof getDb>>, category?: string) => {
+  if (!db) return [];
+  const categoryFilter = category ? ` AND category = '${escapeSqlValue(category)}'` : "";
+  const query = `
+    SELECT
+      id, slug, title,
+      NULL AS titleEn,
+      excerpt,
+      NULL AS excerptEn,
+      content,
+      NULL AS contentEn,
+      coverImage,
+      category,
+      published,
+      publishedAt,
+      author,
+      tags,
+      createdAt,
+      updatedAt
+    FROM articles
+    WHERE published = true${categoryFilter}
+    ORDER BY publishedAt DESC
+  `;
+  const result = await db.execute(query as any);
+  return (result as any[])[0] ?? [];
+};
+
+const selectLegacyProjects = async (db: Awaited<ReturnType<typeof getDb>>, options?: { category?: string; featured?: boolean }) => {
+  if (!db) return [];
+  const clauses: string[] = [];
+  if (options?.category) clauses.push(`category = '${escapeSqlValue(options.category)}'`);
+  if (options?.featured) clauses.push("featured = true");
+
+  const where = clauses.length > 0 ? `WHERE ${clauses.join(" AND ")}` : "";
+  const query = `
+    SELECT
+      id, slug, title,
+      NULL AS titleEn,
+      description,
+      NULL AS descriptionEn,
+      fullDescription,
+      NULL AS fullDescriptionEn,
+      coverImage,
+      category,
+      status,
+      location,
+      startDate,
+      endDate,
+      beneficiaries,
+      impact,
+      featured,
+      createdAt,
+      updatedAt
+    FROM projects
+    ${where}
+    ORDER BY createdAt DESC
+  `;
+  const result = await db.execute(query as any);
+  return (result as any[])[0] ?? [];
+};
+
 export const appRouter = router({
   system: systemRouter,
   auth: router({
@@ -269,15 +337,21 @@ export const appRouter = router({
         const db = await getDb();
         if (!db) return [];
 
-        const conditions = [eq(articles.published, true)];
-        if (input?.category) {
-          conditions.push(eq(articles.category, input.category));
-        }
+        let results: any[] = [];
+        try {
+          const conditions = [eq(articles.published, true)];
+          if (input?.category) {
+            conditions.push(eq(articles.category, input.category));
+          }
 
-        const results = await db.select()
-          .from(articles)
-          .where(and(...conditions))
-          .orderBy(desc(articles.publishedAt));
+          results = await db.select()
+            .from(articles)
+            .where(and(...conditions))
+            .orderBy(desc(articles.publishedAt));
+        } catch (error) {
+          if (!hasMissingColumnError(error)) throw error;
+          results = await selectLegacyArticles(db, input?.category);
+        }
 
         // Fallback: if no article is published yet, return latest entries so public pages are not empty.
         if (results.length === 0) {
@@ -285,10 +359,37 @@ export const appRouter = router({
           if (input?.category) {
             fallbackConditions.push(eq(articles.category, input.category));
           }
-          const fallbackResults = await db.select()
-            .from(articles)
-            .where(fallbackConditions.length > 0 ? and(...fallbackConditions) : undefined)
-            .orderBy(desc(articles.createdAt));
+          let fallbackResults: any[] = [];
+          try {
+            fallbackResults = await db.select()
+              .from(articles)
+              .where(fallbackConditions.length > 0 ? and(...fallbackConditions) : undefined)
+              .orderBy(desc(articles.createdAt));
+          } catch (error) {
+            if (!hasMissingColumnError(error)) throw error;
+            const categoryFilter = input?.category ? ` WHERE category = '${escapeSqlValue(input.category)}'` : "";
+            const query = `
+              SELECT
+                id, slug, title,
+                NULL AS titleEn,
+                excerpt,
+                NULL AS excerptEn,
+                content,
+                NULL AS contentEn,
+                coverImage,
+                category,
+                published,
+                publishedAt,
+                author,
+                tags,
+                createdAt,
+                updatedAt
+              FROM articles${categoryFilter}
+              ORDER BY createdAt DESC
+            `;
+            const raw = await db.execute(query as any);
+            fallbackResults = (raw as any[])[0] ?? [];
+          }
           return fallbackResults;
         }
 
@@ -300,15 +401,67 @@ export const appRouter = router({
       .query(async ({ input }) => {
         const db = await getDb();
         if (!db) return null;
-        const result = await db.select().from(articles).where(eq(articles.slug, input));
-        return result[0] || null;
+        try {
+          const result = await db.select().from(articles).where(eq(articles.slug, input));
+          return result[0] || null;
+        } catch (error) {
+          if (!hasMissingColumnError(error)) throw error;
+          const query = `
+            SELECT
+              id, slug, title,
+              NULL AS titleEn,
+              excerpt,
+              NULL AS excerptEn,
+              content,
+              NULL AS contentEn,
+              coverImage,
+              category,
+              published,
+              publishedAt,
+              author,
+              tags,
+              createdAt,
+              updatedAt
+            FROM articles
+            WHERE slug = '${escapeSqlValue(input)}'
+            LIMIT 1
+          `;
+          const raw = await db.execute(query as any);
+          const rows = (raw as any[])[0] ?? [];
+          return rows[0] ?? null;
+        }
       }),
 
     adminList: adminProcedure
       .query(async () => {
         const db = await getDb();
         if (!db) return [];
-        return await db.select().from(articles).orderBy(desc(articles.publishedAt));
+        try {
+          return await db.select().from(articles).orderBy(desc(articles.publishedAt));
+        } catch (error) {
+          if (!hasMissingColumnError(error)) throw error;
+          const query = `
+            SELECT
+              id, slug, title,
+              NULL AS titleEn,
+              excerpt,
+              NULL AS excerptEn,
+              content,
+              NULL AS contentEn,
+              coverImage,
+              category,
+              published,
+              publishedAt,
+              author,
+              tags,
+              createdAt,
+              updatedAt
+            FROM articles
+            ORDER BY publishedAt DESC
+          `;
+          const raw = await db.execute(query as any);
+          return (raw as any[])[0] ?? [];
+        }
       }),
 
     create: adminProcedure
@@ -388,18 +541,27 @@ export const appRouter = router({
         const db = await getDb();
         if (!db) return [];
 
-        const conditions = [];
-        if (input?.category) {
-          conditions.push(eq(projects.category, input.category));
-        }
-        if (input?.featured) {
-          conditions.push(eq(projects.featured, true));
-        }
+        let results: any[] = [];
+        try {
+          const conditions = [];
+          if (input?.category) {
+            conditions.push(eq(projects.category, input.category));
+          }
+          if (input?.featured) {
+            conditions.push(eq(projects.featured, true));
+          }
 
-        const results = await db.select()
-          .from(projects)
-          .where(conditions.length > 0 ? and(...conditions) : undefined)
-          .orderBy(desc(projects.createdAt));
+          results = await db.select()
+            .from(projects)
+            .where(conditions.length > 0 ? and(...conditions) : undefined)
+            .orderBy(desc(projects.createdAt));
+        } catch (error) {
+          if (!hasMissingColumnError(error)) throw error;
+          results = await selectLegacyProjects(db, {
+            category: input?.category,
+            featured: input?.featured,
+          });
+        }
 
         return results.map(normalizeProject);
       }),
@@ -409,15 +571,51 @@ export const appRouter = router({
       .query(async ({ input }) => {
         const db = await getDb();
         if (!db) return null;
-        const result = await db.select().from(projects).where(eq(projects.slug, input));
-        return result[0] ? normalizeProject(result[0]) : null;
+        try {
+          const result = await db.select().from(projects).where(eq(projects.slug, input));
+          return result[0] ? normalizeProject(result[0]) : null;
+        } catch (error) {
+          if (!hasMissingColumnError(error)) throw error;
+          const query = `
+            SELECT
+              id, slug, title,
+              NULL AS titleEn,
+              description,
+              NULL AS descriptionEn,
+              fullDescription,
+              NULL AS fullDescriptionEn,
+              coverImage,
+              category,
+              status,
+              location,
+              startDate,
+              endDate,
+              beneficiaries,
+              impact,
+              featured,
+              createdAt,
+              updatedAt
+            FROM projects
+            WHERE slug = '${escapeSqlValue(input)}'
+            LIMIT 1
+          `;
+          const raw = await db.execute(query as any);
+          const rows = (raw as any[])[0] ?? [];
+          return rows[0] ? normalizeProject(rows[0]) : null;
+        }
       }),
 
     adminList: adminProcedure
       .query(async () => {
         const db = await getDb();
         if (!db) return [];
-        const results = await db.select().from(projects).orderBy(desc(projects.createdAt));
+        let results: any[] = [];
+        try {
+          results = await db.select().from(projects).orderBy(desc(projects.createdAt));
+        } catch (error) {
+          if (!hasMissingColumnError(error)) throw error;
+          results = await selectLegacyProjects(db);
+        }
         return results.map(normalizeProject);
       }),
 

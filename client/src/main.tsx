@@ -38,10 +38,28 @@ queryClient.getMutationCache().subscribe(event => {
   }
 });
 
+const resolveTrpcUrl = () => {
+  const rawBase = (import.meta.env.VITE_API_URL || "").trim();
+
+  if (!rawBase) {
+    return "/api/trpc";
+  }
+
+  if (!rawBase.startsWith("http")) {
+    return rawBase.endsWith("/api/trpc") ? rawBase : "/api/trpc";
+  }
+
+  const normalized = rawBase.replace(/\/+$/, "");
+  if (normalized.endsWith("/api/trpc")) {
+    return normalized;
+  }
+  return `${normalized}/api/trpc`;
+};
+
 const trpcClient = trpc.createClient({
   links: [
     httpBatchLink({
-      url: `${import.meta.env.VITE_API_URL ?? ""}/api/trpc`,
+      url: resolveTrpcUrl(),
       transformer: superjson,
       fetch(input, init) {
         return globalThis.fetch(input, {
