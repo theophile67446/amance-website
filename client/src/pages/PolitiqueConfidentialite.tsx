@@ -1,66 +1,72 @@
 import Layout from "@/components/Layout";
 import { ShieldCheck } from "lucide-react";
+import { useTranslation, Trans } from "react-i18next";
+import SEO from "@/components/SEO";
 
 export default function PolitiqueConfidentialite() {
+  const { t } = useTranslation();
+
+  const collectionItems = t("privacy.body.collect.items", { returnObjects: true }) as string[];
+  const usageItems = t("privacy.body.usage.items", { returnObjects: true }) as string[];
+
   return (
     <Layout>
+      <SEO title={t("privacy.hero.seo_title")} description={t("privacy.hero.seo_desc")} />
       <section className="py-32 bg-gray-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold mb-6 bg-amance-green/10 text-amance-green">
               <ShieldCheck size={16} />
-              Confidentialité & Données
+              {t("privacy.hero.badge")}
             </div>
             <h1 className="text-4xl md:text-5xl font-extrabold text-amance-blue mb-6 font-heading">
-              Politique de Confidentialité
+              {t("privacy.hero.title")}
             </h1>
             <p className="text-xl text-gray-600 font-sans">
-              Comment nous protégeons et gérons vos données personnelles.
+              {t("privacy.hero.subtitle")}
             </p>
           </div>
 
           <div className="bg-white rounded-3xl shadow-xl shadow-gray-200/50 p-8 sm:p-12 border border-gray-100 prose prose-lg prose-gray max-w-none prose-headings:font-heading prose-p:font-sans">
             <p className="lead text-xl text-gray-700 font-semibold mb-8">
-              L'association AMANCE accorde une grande importance à la protection de la vie privée et des données personnelles de ses utilisateurs, donateurs et partenaires.
+              {t("privacy.body.lead")}
             </p>
 
-            <h2 className="text-2xl font-bold text-amance-blue mt-8 mb-4">1. Collecte des données</h2>
+            <h2 className="text-2xl font-bold text-amance-blue mt-8 mb-4">{t("privacy.body.collect.title")}</h2>
             <p>
-              Nous collectons les données personnelles que vous nous fournissez volontairement lors de :
-            </p>
-            <ul>
-              <li>L'utilisation de notre formulaire de contact</li>
-              <li>L'inscription à notre newsletter</li>
-              <li>La réalisation d'un don</li>
-              <li>Votre inscription en tant que bénévole</li>
-            </ul>
-
-            <h2 className="text-2xl font-bold text-amance-blue mt-8 mb-4">2. Utilisation des données</h2>
-            <p>
-              Les informations recueillies sont exclusivement utilisées pour :
+              {t("privacy.body.collect.p1")}
             </p>
             <ul>
-              <li>Répondre à vos demandes de renseignements</li>
-              <li>Gérer vos dons et éditer vos reçus fiscaux</li>
-              <li>Vous informer de nos actions et actualités (si vous y avez consenti)</li>
-              <li>Organiser nos missions bénévoles</li>
+              {collectionItems && Array.isArray(collectionItems) && collectionItems.map((item, i) => (
+                <li key={i}>{item}</li>
+              ))}
             </ul>
 
-            <h2 className="text-2xl font-bold text-amance-blue mt-8 mb-4">3. Partage des données</h2>
+            <h2 className="text-2xl font-bold text-amance-blue mt-8 mb-4">{t("privacy.body.usage.title")}</h2>
             <p>
-              Nous nous engageons à ne <strong>jamais</strong> vendre, louer ou échanger vos données personnelles à des tiers à des fins commerciales. Vos données peuvent être partagées uniquement avec nos prestataires techniques (hébergement, plateforme de dons) qui sont soumis à de strictes obligations de confidentialité.
+              {t("privacy.body.usage.p1")}
+            </p>
+            <ul>
+              {usageItems && Array.isArray(usageItems) && usageItems.map((item, i) => (
+                <li key={i}>{item}</li>
+              ))}
+            </ul>
+
+            <h2 className="text-2xl font-bold text-amance-blue mt-8 mb-4">{t("privacy.body.sharing.title")}</h2>
+            <p>
+              <Trans i18nKey="privacy.body.sharing.p1" />
             </p>
 
-            <h2 className="text-2xl font-bold text-amance-blue mt-8 mb-4">4. Vos droits</h2>
+            <h2 className="text-2xl font-bold text-amance-blue mt-8 mb-4">{t("privacy.body.rights.title")}</h2>
             <p>
-              Conformément à la réglementation applicable, vous disposez d'un droit d'accès, de rectification, de suppression et d'opposition au traitement de vos données personnelles.
-              <br />
-              Pour exercer ces droits, vous pouvez nous contacter à tout moment à l'adresse suivante : <strong>infos@amance.org</strong>
+              {t("privacy.body.rights.p1")}
+              <br /><br />
+              <Trans i18nKey="privacy.body.rights.p2" />
             </p>
 
-            <h2 className="text-2xl font-bold text-amance-blue mt-8 mb-4">5. Sécurité</h2>
+            <h2 className="text-2xl font-bold text-amance-blue mt-8 mb-4">{t("privacy.body.security.title")}</h2>
             <p>
-              Nous mettons en œuvre toutes les mesures techniques et organisationnelles nécessaires pour garantir la sécurité et la confidentialité de vos données contre tout accès non autorisé, altération, divulgation ou destruction.
+              {t("privacy.body.security.p1")}
             </p>
           </div>
         </div>

@@ -12,94 +12,99 @@ import {
   ArrowRight,
   Heart,
 } from "lucide-react";
-
-const documents = [
-  {
-    title: "Statuts de l'Association AMANCE",
-    description: "Document fondateur définissant la mission, les objectifs et la structure organisationnelle d'AMANCE.",
-    type: "Statuts",
-    year: "2023",
-    icon: Scale,
-    color: "var(--amance-blue)",
-    colorBg: "rgba(28,58,95,0.08)",
-  },
-  {
-    title: "Procès-verbal de l'Assemblée Constitutive",
-    description: "Compte-rendu de la réunion fondatrice de l'association, avec liste des membres fondateurs.",
-    type: "PV Assemblée",
-    year: "2023",
-    icon: BookOpen,
-    color: "var(--amance-green)",
-    colorBg: "rgba(82,180,82,0.08)",
-  },
-  {
-    title: "Récépissé de Reconnaissance Officielle",
-    description: "Document officiel délivré par les autorités camerounaises attestant de la légalité d'AMANCE.",
-    type: "Reconnaissance légale",
-    year: "2023",
-    icon: Award,
-    color: "var(--amance-green-dark)",
-    colorBg: "rgba(42,100,60,0.08)",
-  },
-  {
-    title: "Rapport d'Activités 2024",
-    description: "Bilan complet des actions menées en 2024 : projets réalisés, bénéficiaires touchés, ressources mobilisées.",
-    type: "Rapport annuel",
-    year: "2024",
-    icon: FileText,
-    color: "var(--amance-blue-light)",
-    colorBg: "rgba(28,100,150,0.08)",
-  },
-  {
-    title: "Plan Stratégique 2024-2027",
-    description: "Feuille de route stratégique définissant les orientations, objectifs et indicateurs d'impact pour les 3 prochaines années.",
-    type: "Plan stratégique",
-    year: "2024",
-    icon: Eye,
-    color: "var(--amance-blue)",
-    colorBg: "rgba(28,58,95,0.08)",
-  },
-  {
-    title: "Charte Éthique et Déontologique",
-    description: "Principes éthiques guidant les actions d'AMANCE : intégrité, transparence, respect des bénéficiaires.",
-    type: "Charte",
-    year: "2023",
-    icon: Shield,
-    color: "var(--amance-green)",
-    colorBg: "rgba(82,180,82,0.08)",
-  },
-];
-
-const principles = [
-  {
-    icon: Shield,
-    title: "Intégrité",
-    description: "Nous agissons avec honnêteté et droiture dans toutes nos actions et communications.",
-    color: "var(--amance-green)",
-  },
-  {
-    icon: Eye,
-    title: "Transparence",
-    description: "Nos finances, nos activités et nos résultats sont accessibles à tous nos partenaires et donateurs.",
-    color: "var(--amance-blue)",
-  },
-  {
-    icon: CheckCircle,
-    title: "Redevabilité",
-    description: "Nous rendons compte de l'utilisation des ressources confiées et de l'impact de nos actions.",
-    color: "var(--amance-green-dark)",
-  },
-  {
-    icon: Award,
-    title: "Excellence",
-    description: "Nous visons la qualité maximale dans la conception et l'exécution de nos programmes.",
-    color: "var(--amance-blue-light)",
-  },
-];
+import { useTranslation } from "react-i18next";
+import SEO from "@/components/SEO";
 
 export default function Transparence() {
+  const { t } = useTranslation();
+
+  const documents = [
+    {
+      title: t("transparency_page.documents.items.statutes.title"),
+      description: t("transparency_page.documents.items.statutes.desc"),
+      type: t("transparency_page.documents.types.statutes"),
+      year: "2023",
+      icon: Scale,
+      color: "var(--amance-blue)",
+      colorBg: "rgba(28,58,95,0.08)",
+    },
+    {
+      title: t("transparency_page.documents.items.pv.title"),
+      description: t("transparency_page.documents.items.pv.desc"),
+      type: t("transparency_page.documents.types.pv"),
+      year: "2023",
+      icon: BookOpen,
+      color: "var(--amance-green)",
+      colorBg: "rgba(82,180,82,0.08)",
+    },
+    {
+      title: t("transparency_page.documents.items.legal.title"),
+      description: t("transparency_page.documents.items.legal.desc"),
+      type: t("transparency_page.documents.types.legal"),
+      year: "2023",
+      icon: Award,
+      color: "var(--amance-green-dark)",
+      colorBg: "rgba(42,100,60,0.08)",
+    },
+    {
+      title: t("transparency_page.documents.items.report.title"),
+      description: t("transparency_page.documents.items.report.desc"),
+      type: t("transparency_page.documents.types.report"),
+      year: "2024",
+      icon: FileText,
+      color: "var(--amance-blue-light)",
+      colorBg: "rgba(28,100,150,0.08)",
+    },
+    {
+      title: t("transparency_page.documents.items.strategy.title"),
+      description: t("transparency_page.documents.items.strategy.desc"),
+      type: t("transparency_page.documents.types.strategy"),
+      year: "2024",
+      icon: Eye,
+      color: "var(--amance-blue)",
+      colorBg: "rgba(28,58,95,0.08)",
+    },
+    {
+      title: t("transparency_page.documents.items.charter.title"),
+      description: t("transparency_page.documents.items.charter.desc"),
+      type: t("transparency_page.documents.types.charter"),
+      year: "2023",
+      icon: Shield,
+      color: "var(--amance-green)",
+      colorBg: "rgba(82,180,82,0.08)",
+    },
+  ];
+
+  const principles = [
+    {
+      icon: Shield,
+      title: t("transparency_page.principles.items.integrity.title"),
+      description: t("transparency_page.principles.items.integrity.desc"),
+      color: "var(--amance-green)",
+    },
+    {
+      icon: Eye,
+      title: t("transparency_page.principles.items.transparency.title"),
+      description: t("transparency_page.principles.items.transparency.desc"),
+      color: "var(--amance-blue)",
+    },
+    {
+      icon: CheckCircle,
+      title: t("transparency_page.principles.items.accountability.title"),
+      description: t("transparency_page.principles.items.accountability.desc"),
+      color: "var(--amance-green-dark)",
+    },
+    {
+      icon: Award,
+      title: t("transparency_page.principles.items.excellence.title"),
+      description: t("transparency_page.principles.items.excellence.desc"),
+      color: "var(--amance-blue-light)",
+    },
+  ];
+
   return (
     <Layout>
+      <SEO title={t("transparency_page.hero.seo_title")} description={t("transparency_page.hero.seo_desc")} />
       {/* Hero */}
       <section
         className="py-32"
@@ -111,17 +116,16 @@ export default function Transparence() {
             style={{ backgroundColor: "rgba(255,255,255,0.15)" }}
           >
             <Shield size={14} />
-            Transparence & Gouvernance
+            {t("transparency_page.hero.badge")}
           </div>
           <h1
             className="text-4xl md:text-5xl font-extrabold text-white mb-6"
             style={{ fontFamily: "Montserrat, sans-serif" }}
           >
-            Notre Engagement pour la Transparence
+            {t("transparency_page.hero.title")}
           </h1>
           <p className="text-xl text-blue-200 max-w-3xl mx-auto" style={{ fontFamily: "Open Sans, sans-serif" }}>
-            AMANCE s'engage à une transparence totale dans sa gouvernance, ses finances et ses
-            activités. Retrouvez ici tous nos documents officiels et rapports d'impact.
+            {t("transparency_page.hero.subtitle")}
           </p>
         </div>
       </section>
@@ -134,11 +138,10 @@ export default function Transparence() {
               className="text-3xl md:text-4xl font-extrabold mb-6"
               style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}
             >
-              Nos Principes de Gouvernance
+              {t("transparency_page.principles.title")}
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto" style={{ fontFamily: "Open Sans, sans-serif" }}>
-              La confiance de nos partenaires et donateurs repose sur notre engagement indéfectible
-              envers ces valeurs fondamentales.
+              {t("transparency_page.principles.subtitle")}
             </p>
           </div>
 
@@ -182,17 +185,16 @@ export default function Transparence() {
               style={{ backgroundColor: "rgba(28,58,95,0.1)", color: "var(--amance-blue)" }}
             >
               <FileText size={14} />
-              Documents officiels
+              {t("transparency_page.documents.badge")}
             </div>
             <h2
               className="text-3xl md:text-4xl font-extrabold mb-6"
               style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}
             >
-              Nos Documents Officiels
+              {t("transparency_page.documents.title")}
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto" style={{ fontFamily: "Open Sans, sans-serif" }}>
-              Accédez librement à nos documents institutionnels, rapports d'activités et
-              documents légaux attestant de notre légitimité et de notre sérieux.
+              {t("transparency_page.documents.subtitle")}
             </p>
           </div>
 
@@ -234,12 +236,11 @@ export default function Transparence() {
                     className="flex items-center gap-2 text-sm font-semibold transition-all duration-200 hover:gap-3"
                     style={{ color: doc.color, fontFamily: "Montserrat, sans-serif" }}
                     onClick={() => {
-                      // In production, this would link to actual document URLs
-                      alert("Document disponible sur demande. Contactez-nous à infos@amance.org");
+                      alert(t("transparency_page.documents.alert_request"));
                     }}
                   >
                     <Download size={16} />
-                    Télécharger le document
+                    {t("transparency_page.documents.cta_download")}
                   </button>
                 </div>
               );
@@ -252,7 +253,7 @@ export default function Transparence() {
           >
             <Shield size={24} className="mx-auto mb-3" style={{ color: "var(--amance-green)" }} />
             <p className="text-sm text-gray-600" style={{ fontFamily: "Open Sans, sans-serif" }}>
-              Vous ne trouvez pas le document que vous cherchez ? Contactez-nous directement à{" "}
+              {t("transparency_page.documents.not_found")}{" "}
               <a href="mailto:infos@amance.org" className="font-semibold" style={{ color: "var(--amance-green)" }}>
                 infos@amance.org
               </a>
@@ -271,11 +272,10 @@ export default function Transparence() {
             className="text-3xl font-extrabold text-white mb-6"
             style={{ fontFamily: "Montserrat, sans-serif" }}
           >
-            Faites Confiance à AMANCE
+            {t("transparency_page.cta.title")}
           </h2>
           <p className="text-lg text-blue-200 mb-10" style={{ fontFamily: "Open Sans, sans-serif" }}>
-            Notre transparence est le fondement de la confiance que vous nous accordez.
-            Rejoignez notre communauté de partenaires et de donateurs engagés.
+            {t("transparency_page.cta.subtitle")}
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link
@@ -284,7 +284,7 @@ export default function Transparence() {
               style={{ backgroundColor: "var(--amance-green)", fontFamily: "Montserrat, sans-serif" }}
             >
               <Heart size={18} fill="white" />
-              Faire un Don
+              {t("transparency_page.cta.cta_donate")}
             </Link>
             <Link
               href="/contact"
@@ -293,7 +293,7 @@ export default function Transparence() {
               onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = "var(--amance-blue)"; }}
               onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = "white"; }}
             >
-              Nous Contacter <ArrowRight size={18} />
+              {t("transparency_page.cta.cta_contact")} <ArrowRight size={18} />
             </Link>
           </div>
         </div>

@@ -13,34 +13,35 @@ import { trpc } from "@/lib/trpc";
 import { formatDate } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 import SEO from "@/components/SEO";
+import ShareActions from "@/components/ShareActions";
 
 const HERO_BLOG = "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1920&q=80";
 
-const categoryConfig: Record<string, { label: string; color: string; bg: string }> = {
-  terrain: { label: "Terrain", color: "var(--amance-green)", bg: "rgba(82,180,82,0.1)" },
-  actualites: { label: "Actualités", color: "var(--amance-blue)", bg: "rgba(28,58,95,0.1)" },
-  rapport: { label: "Rapport", color: "var(--amance-green-dark)", bg: "rgba(42,100,60,0.1)" },
-  communique: { label: "Communiqué", color: "var(--amance-blue-light)", bg: "rgba(28,100,150,0.1)" },
-};
-
-const filters = [
-  { value: "all", label: "Tous" },
-  { value: "terrain", label: "Terrain" },
-  { value: "actualites", label: "Actualités" },
-  { value: "rapport", label: "Rapports" },
-  { value: "communique", label: "Communiqués" },
-];
-
 export default function Actualites() {
+  const { t, i18n } = useTranslation();
   const [activeFilter, setActiveFilter] = useState("all");
   const [search, setSearch] = useState("");
   const queryInput = activeFilter === "all" ? undefined : { category: activeFilter as any };
+  const isEn = i18n.language.startsWith('en');
+
+  // Configuration des catégories traduites
+  const categoryConfig: Record<string, { label: string; color: string; bg: string }> = {
+    terrain: { label: t("news_page.filters.terrain"), color: "var(--amance-green)", bg: "rgba(82,180,82,0.1)" },
+    actualites: { label: t("news_page.filters.actualites"), color: "var(--amance-blue)", bg: "rgba(28,58,95,0.1)" },
+    rapport: { label: t("news_page.filters.rapport"), color: "var(--amance-green-dark)", bg: "rgba(42,100,60,0.1)" },
+    communique: { label: t("news_page.filters.communique"), color: "var(--amance-blue-light)", bg: "rgba(28,100,150,0.1)" },
+  };
+
+  const filters = [
+    { value: "all", label: t("news_page.filters.all") },
+    { value: "terrain", label: t("news_page.filters.terrain") },
+    { value: "actualites", label: t("news_page.filters.actualites") },
+    { value: "rapport", label: t("news_page.filters.rapport") },
+    { value: "communique", label: t("news_page.filters.communique") },
+  ];
 
   // Récupérer les articles depuis l'API
   const { data: articles = [], isLoading } = trpc.articles.list.useQuery(queryInput);
-
-  const { i18n } = useTranslation();
-  const isEn = i18n.language.startsWith('en');
 
   const filtered = articles.filter((a) => {
     const title = (isEn && a.titleEn) ? a.titleEn : a.title;
@@ -50,7 +51,7 @@ export default function Actualites() {
 
   return (
     <Layout>
-      <SEO title="Actualités" description="Découvrez les dernières actualités et les actions sur le terrain de l'AMANCE au Cameroun." />
+      <SEO title={t("news_page.hero.seo_title")} description={t("news_page.hero.seo_desc")} />
       {/* Hero */}
       <section className="relative py-32 overflow-hidden">
         <div
@@ -67,16 +68,16 @@ export default function Actualites() {
             style={{ backgroundColor: "rgba(255,255,255,0.15)" }}
           >
             <Globe size={14} />
-            Actualités & Blog
+            {t("news_page.hero.badge")}
           </div>
           <h1
             className="text-4xl md:text-5xl font-extrabold text-white mb-6"
             style={{ fontFamily: "Montserrat, sans-serif" }}
           >
-            Nos Dernières Actualités
+            {t("news_page.hero.title")}
           </h1>
           <p className="text-xl text-gray-200 max-w-3xl mx-auto" style={{ fontFamily: "Open Sans, sans-serif" }}>
-            Suivez nos actions sur le terrain, nos communiqués officiels et nos rapports d'impact.
+            {t("news_page.hero.subtitle")}
           </p>
         </div>
       </section>
@@ -89,7 +90,7 @@ export default function Actualites() {
               <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
-                placeholder="Rechercher un article..."
+                placeholder={t("news_page.search.placeholder")}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full pl-12 pr-4 py-3 rounded-full border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:border-transparent"
@@ -112,6 +113,18 @@ export default function Actualites() {
                 </button>
               ))}
             </div>
+          </div>
+
+          <div className="mb-8 flex items-center justify-between gap-3 flex-wrap">
+            <p className="text-sm text-gray-500" style={{ fontFamily: "Open Sans, sans-serif" }}>
+              Partagez cette page pour amplifier nos actions.
+            </p>
+            <ShareActions
+              title={t("news_page.hero.title")}
+              summary={t("news_page.hero.subtitle")}
+              path="/actualites"
+              compact
+            />
           </div>
 
           {isLoading ? (
@@ -149,7 +162,7 @@ export default function Actualites() {
                         </span>
                         <span className="flex items-center gap-1">
                           <User size={12} />
-                          {article.author || "Équipe AMANCE"}
+                          {article.author || t("news_page.card.author_default")}
                         </span>
                       </div>
                       <h3
@@ -165,7 +178,7 @@ export default function Actualites() {
                         className="flex items-center gap-1 mt-4 text-sm font-semibold"
                         style={{ color: "var(--amance-green)" }}
                       >
-                        Lire la suite <ChevronRight size={16} />
+                        {t("news_page.card.read_more")} <ChevronRight size={16} />
                       </div>
                     </div>
                   </Link>
@@ -176,7 +189,7 @@ export default function Actualites() {
             <div className="text-center py-16">
               <Search size={48} className="mx-auto text-gray-300 mb-4" />
               <p className="text-gray-500" style={{ fontFamily: "Open Sans, sans-serif" }}>
-                Aucun article trouvé pour cette recherche.
+                {t("news_page.card.no_results")}
               </p>
             </div>
           )}

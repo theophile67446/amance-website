@@ -1,25 +1,20 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import LocalLogin from "@/components/LocalLogin";
 import AdminLayout from "@/components/AdminLayout";
+import { formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Plus, Edit2, Trash2, FileText, Briefcase, Eye, EyeOff, Calendar, MapPin, Mail, Users, CheckCircle, Clock, ArrowUp, ArrowDown } from "lucide-react";
+import { Plus, Edit2, Trash2, FileText, Briefcase, Eye, EyeOff, Calendar, MapPin, Mail, Users, CheckCircle, Clock, ArrowUp, ArrowDown, Search, List, LayoutGrid } from "lucide-react";
 
-const TAB_LABELS: Record<string, string> = {
-  dashboard: "Vue d'ensemble",
-  articles: "Actualités & Articles",
-  projets: "Projets & Missions",
-  contacts: "Messages",
-  registrations: "Bénévoles & Partenaires",
-  equipe: "Équipe",
-};
+import { useTranslation } from "react-i18next";
 
 export default function Admin() {
   const { user } = useAuth();
+  const { t } = useTranslation();
 
   if (!user || user.role !== "admin") {
     return <LocalLogin />;
@@ -33,7 +28,17 @@ export default function Admin() {
 }
 
 function AdminContent({ activeTab, setActiveTab }: { activeTab: string; setActiveTab: (tab: string) => void }) {
+  const { t } = useTranslation();
   const [message, setMessage] = useState("");
+
+  const TAB_LABELS: Record<string, string> = {
+    dashboard: t("admin.sidebar.dashboard"),
+    articles: t("admin.sidebar.articles"),
+    projets: t("admin.sidebar.projects"),
+    contacts: t("admin.sidebar.contacts"),
+    registrations: t("admin.sidebar.registrations"),
+    equipe: t("admin.sidebar.team"),
+  };
 
   const renderTab = () => {
     switch (activeTab) {
@@ -52,7 +57,7 @@ function AdminContent({ activeTab, setActiveTab }: { activeTab: string; setActiv
       {/* Page header */}
       <div className="bg-white border-b border-gray-200 px-6 py-5 sticky top-0 z-30">
         <h1 className="text-xl font-bold text-[#1A361D] font-heading">
-          {TAB_LABELS[activeTab] ?? "Administration"}
+          {TAB_LABELS[activeTab] ?? t("admin.sidebar.admin_label")}
         </h1>
       </div>
 
@@ -75,6 +80,7 @@ function AdminContent({ activeTab, setActiveTab }: { activeTab: string; setActiv
 }
 
 function DashboardTab({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
+  const { t } = useTranslation();
   const { data: articles = [] } = trpc.articles.adminList.useQuery();
   const { data: projects = [] } = trpc.projects.adminList.useQuery();
   const { data: contacts = [] } = trpc.contact.adminList.useQuery();
@@ -95,7 +101,7 @@ function DashboardTab({ setActiveTab }: { setActiveTab: (tab: string) => void })
         <CardContent className="p-6">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-gray-500 font-medium mb-1">Articles</p>
+              <p className="text-gray-500 font-medium mb-1">{t("admin.dashboard.articles.title")}</p>
               <h3 className="text-3xl font-bold text-[#1A361D]">{articles.length}</h3>
             </div>
             <div className="p-3 bg-orange-50 rounded-full text-[#F5B100]">
@@ -103,7 +109,7 @@ function DashboardTab({ setActiveTab }: { setActiveTab: (tab: string) => void })
             </div>
           </div>
           <div className="mt-4 flex space-x-2 text-sm">
-            <span className="text-green-600 font-medium">{publishedArticles} publiés</span>
+            <span className="text-green-600 font-medium">{publishedArticles} {t("admin.dashboard.articles.unit")}</span>
           </div>
         </CardContent>
       </Card>
@@ -115,7 +121,7 @@ function DashboardTab({ setActiveTab }: { setActiveTab: (tab: string) => void })
         <CardContent className="p-6">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-gray-500 font-medium mb-1">Projets</p>
+              <p className="text-gray-500 font-medium mb-1">{t("admin.dashboard.projects.title")}</p>
               <h3 className="text-3xl font-bold text-[#1A361D]">{projects.length}</h3>
             </div>
             <div className="p-3 bg-green-50 rounded-full text-[#1E5D2A]">
@@ -123,7 +129,7 @@ function DashboardTab({ setActiveTab }: { setActiveTab: (tab: string) => void })
             </div>
           </div>
           <div className="mt-4 flex space-x-2 text-sm">
-            <span className="text-blue-600 font-medium">{projects.filter(p => p.status === 'en_cours').length} en cours</span>
+            <span className="text-blue-600 font-medium">{projects.filter(p => p.status === 'en_cours').length} {t("admin.dashboard.projects.unit")}</span>
           </div>
         </CardContent>
       </Card>
@@ -135,7 +141,7 @@ function DashboardTab({ setActiveTab }: { setActiveTab: (tab: string) => void })
         <CardContent className="p-6">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-gray-500 font-medium mb-1">Messages</p>
+              <p className="text-gray-500 font-medium mb-1">{t("admin.dashboard.messages.title")}</p>
               <h3 className="text-3xl font-bold text-[#1A361D]">{contacts.length}</h3>
             </div>
             <div className="p-3 bg-blue-50 rounded-full text-blue-500">
@@ -143,7 +149,7 @@ function DashboardTab({ setActiveTab }: { setActiveTab: (tab: string) => void })
             </div>
           </div>
           <div className="mt-4 flex space-x-2 text-sm">
-            <span className={`${unreadMessages > 0 ? 'text-red-500 font-bold' : 'text-gray-500'}`}>{unreadMessages} non lus</span>
+            <span className={`${unreadMessages > 0 ? 'text-red-500 font-bold' : 'text-gray-500'}`}>{unreadMessages} {t("admin.dashboard.messages.unit")}</span>
           </div>
         </CardContent>
       </Card>
@@ -155,7 +161,7 @@ function DashboardTab({ setActiveTab }: { setActiveTab: (tab: string) => void })
         <CardContent className="p-6">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-gray-500 font-medium mb-1">Inscriptions</p>
+              <p className="text-gray-500 font-medium mb-1">{t("admin.dashboard.registrations.title")}</p>
               <h3 className="text-3xl font-bold text-[#1A361D]">{registrations.length}</h3>
             </div>
             <div className="p-3 bg-purple-50 rounded-full text-purple-500">
@@ -163,7 +169,7 @@ function DashboardTab({ setActiveTab }: { setActiveTab: (tab: string) => void })
             </div>
           </div>
           <div className="mt-4 flex space-x-2 text-sm">
-            <span className={`${newRegistrations > 0 ? 'text-purple-600 font-bold' : 'text-gray-500'}`}>{newRegistrations} nouvelles</span>
+            <span className={`${newRegistrations > 0 ? 'text-purple-600 font-bold' : 'text-gray-500'}`}>{newRegistrations} {t("admin.dashboard.registrations.unit")}</span>
           </div>
         </CardContent>
       </Card>
@@ -175,7 +181,7 @@ function DashboardTab({ setActiveTab }: { setActiveTab: (tab: string) => void })
         <CardContent className="p-6">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-gray-500 font-medium mb-1">Équipe</p>
+              <p className="text-gray-500 font-medium mb-1">{t("admin.dashboard.team.title")}</p>
               <h3 className="text-3xl font-bold text-[#1A361D]">{teamMembers.length}</h3>
             </div>
             <div className="p-3 bg-emerald-50 rounded-full text-emerald-500">
@@ -183,7 +189,7 @@ function DashboardTab({ setActiveTab }: { setActiveTab: (tab: string) => void })
             </div>
           </div>
           <div className="mt-4 flex space-x-2 text-sm">
-            <span className="text-emerald-700 font-medium">{activeMembers} actifs</span>
+            <span className="text-emerald-700 font-medium">{activeMembers} {t("admin.dashboard.team.unit")}</span>
           </div>
         </CardContent>
       </Card>
@@ -192,6 +198,7 @@ function DashboardTab({ setActiveTab }: { setActiveTab: (tab: string) => void })
 }
 
 function ArticlesTab({ setMessage }: { setMessage: (msg: string) => void }) {
+  const { t } = useTranslation();
   const utils = trpc.useContext();
   const { data: articles = [], isLoading } = trpc.articles.adminList.useQuery();
   const createMutation = trpc.articles.create.useMutation();
@@ -199,6 +206,15 @@ function ArticlesTab({ setMessage }: { setMessage: (msg: string) => void }) {
   const deleteMutation = trpc.articles.delete.useMutation();
 
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [articlesView, setArticlesView] = useState<"list" | "grid">("list");
+  const [articleStatusFilter, setArticleStatusFilter] = useState<"all" | "published" | "draft">("all");
+  const [sortBy, setSortBy] = useState<"date" | "status" | "author">("date");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
+  const [pageSize, setPageSize] = useState<10 | 25 | 50>(10);
+  const [page, setPage] = useState(1);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [bulkPending, setBulkPending] = useState(false);
 
   const defaultForm = {
     title: "",
@@ -216,21 +232,130 @@ function ArticlesTab({ setMessage }: { setMessage: (msg: string) => void }) {
 
   const [form, setForm] = useState(defaultForm);
 
+  const filteredArticles = useMemo(
+    () => articles.filter((article: any) => {
+      const q = searchTerm.toLowerCase();
+      const matchesSearch =
+        article.title.toLowerCase().includes(q)
+        || (article.slug || "").toLowerCase().includes(q)
+        || (article.author || "").toLowerCase().includes(q);
+
+      const matchesStatus =
+        articleStatusFilter === "all"
+        || (articleStatusFilter === "published" && article.published)
+        || (articleStatusFilter === "draft" && !article.published);
+
+      return matchesSearch && matchesStatus;
+    }),
+    [articles, searchTerm, articleStatusFilter],
+  );
+
+  const sortedArticles = useMemo(() => {
+    const items = [...filteredArticles];
+    items.sort((a: any, b: any) => {
+      if (sortBy === "author") {
+        const av = (a.author || "").toLowerCase();
+        const bv = (b.author || "").toLowerCase();
+        return sortDir === "asc" ? av.localeCompare(bv) : bv.localeCompare(av);
+      }
+
+      if (sortBy === "status") {
+        const av = a.published ? 1 : 0;
+        const bv = b.published ? 1 : 0;
+        return sortDir === "asc" ? av - bv : bv - av;
+      }
+
+      const av = new Date(a.publishedAt || a.createdAt || 0).getTime();
+      const bv = new Date(b.publishedAt || b.createdAt || 0).getTime();
+      return sortDir === "asc" ? av - bv : bv - av;
+    });
+    return items;
+  }, [filteredArticles, sortBy, sortDir]);
+
+  const totalPages = Math.max(1, Math.ceil(sortedArticles.length / pageSize));
+  const paginatedArticles = useMemo(
+    () => sortedArticles.slice((page - 1) * pageSize, page * pageSize),
+    [sortedArticles, page, pageSize],
+  );
+
+  const allPageSelected = paginatedArticles.length > 0 && paginatedArticles.every((article: any) => selectedIds.includes(article.id));
+
+  useEffect(() => {
+    setPage(1);
+  }, [searchTerm, articleStatusFilter, sortBy, sortDir, pageSize]);
+
+  useEffect(() => {
+    if (page > totalPages) setPage(totalPages);
+  }, [page, totalPages]);
+
+  const toggleSort = (column: "date" | "status" | "author") => {
+    if (sortBy === column) {
+      setSortDir((prev) => (prev === "asc" ? "desc" : "asc"));
+      return;
+    }
+    setSortBy(column);
+    setSortDir("desc");
+  };
+
+  const toggleSelectAllPage = () => {
+    if (allPageSelected) {
+      setSelectedIds((prev) => prev.filter((id) => !paginatedArticles.some((article: any) => article.id === id)));
+      return;
+    }
+    setSelectedIds((prev) => Array.from(new Set([...prev, ...paginatedArticles.map((article: any) => article.id)])));
+  };
+
+  const toggleSelectOne = (id: number) => {
+    setSelectedIds((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
+  };
+
+  const runBulkPublish = async (published: boolean) => {
+    if (selectedIds.length === 0 || bulkPending) return;
+    setBulkPending(true);
+    try {
+      await Promise.all(selectedIds.map((id) => updateMutation.mutateAsync({ id, published })));
+      setMessage(published ? t("admin.articles.bulk_messages.publish_success") : t("admin.articles.bulk_messages.draft_success"));
+      setSelectedIds([]);
+      await utils.articles.adminList.invalidate();
+    } catch {
+      setMessage(t("admin.articles.bulk_messages.error"));
+    } finally {
+      setBulkPending(false);
+    }
+  };
+
+  const runBulkDelete = async () => {
+    if (selectedIds.length === 0 || bulkPending) return;
+    if (!window.confirm(t("admin.articles.bulk_messages.delete_confirm", { count: selectedIds.length }))) return;
+
+    setBulkPending(true);
+    try {
+      await Promise.all(selectedIds.map((id) => deleteMutation.mutateAsync(id)));
+      setMessage(t("admin.articles.bulk_messages.delete_success"));
+      setSelectedIds([]);
+      await utils.articles.adminList.invalidate();
+    } catch {
+      setMessage(t("admin.articles.bulk_messages.error"));
+    } finally {
+      setBulkPending(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       if (editingId) {
         await updateMutation.mutateAsync({ id: editingId, ...form });
-        setMessage("✅ Article mis à jour avec succès!");
+        setMessage(t("admin.articles.update_success"));
       } else {
         await createMutation.mutateAsync(form);
-        setMessage("✅ Article créé avec succès!");
+        setMessage(t("admin.articles.create_success"));
       }
       setForm(defaultForm);
       setEditingId(null);
       utils.articles.adminList.invalidate();
     } catch (error) {
-      setMessage("❌ Erreur lors de l'enregistrement");
+      setMessage(t("admin.articles.error_save"));
     }
   };
 
@@ -265,14 +390,14 @@ function ArticlesTab({ setMessage }: { setMessage: (msg: string) => void }) {
           <CardHeader className="bg-gray-50/50 border-b border-gray-100 pb-4">
             <CardTitle className="text-xl flex items-center text-[#1A361D]">
               <Edit2 className="w-5 h-5 mr-3 text-[#F5B100]" />
-              {editingId ? "Modifier l'article" : "Créer un nouvel article"}
+              {editingId ? t("admin.articles.form_title_edit") : t("admin.articles.form_title_create")}
             </CardTitle>
           </CardHeader>
           <CardContent className="pt-6">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Titre de l'article (FR)</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">{t("admin.articles.label_title_fr")}</label>
                   <Input
                     className="h-12 border-gray-200 focus:border-[#1E5D2A] focus:ring-[#1E5D2A]"
                     value={form.title}
@@ -281,7 +406,7 @@ function ArticlesTab({ setMessage }: { setMessage: (msg: string) => void }) {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Titre de l'article (EN)</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">{t("admin.articles.label_title_en")}</label>
                   <Input
                     className="h-12 border-gray-200 focus:border-[#1E5D2A] focus:ring-[#1E5D2A]"
                     value={form.titleEn}
@@ -292,7 +417,7 @@ function ArticlesTab({ setMessage }: { setMessage: (msg: string) => void }) {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Slug (URL amicale)</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">{t("admin.articles.label_slug")}</label>
                   <Input
                     className="h-12 border-gray-200"
                     value={form.slug}
@@ -304,20 +429,20 @@ function ArticlesTab({ setMessage }: { setMessage: (msg: string) => void }) {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Catégorie</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">{t("admin.articles.label_category")}</label>
                   <select
                     value={form.category}
                     onChange={(e) => setForm({ ...form, category: e.target.value as any })}
                     className="w-full h-12 px-3 border border-gray-200 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-[#1E5D2A]"
                   >
-                    <option value="actualites">Actualités</option>
-                    <option value="terrain">Terrain</option>
-                    <option value="rapport">Rapport</option>
-                    <option value="communique">Communiqué</option>
+                    <option value="actualites">{t("common.categories.actualites")}</option>
+                    <option value="terrain">{t("common.categories.terrain")}</option>
+                    <option value="rapport">{t("common.categories.rapport")}</option>
+                    <option value="communique">{t("common.categories.communique")}</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Auteur</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">{t("admin.articles.label_author")}</label>
                   <Input
                     className="h-12 border-gray-200"
                     value={form.author}
@@ -328,7 +453,7 @@ function ArticlesTab({ setMessage }: { setMessage: (msg: string) => void }) {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Image de couverture (URL externe)</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">{t("admin.articles.label_cover")}</label>
                 <div className="flex gap-4">
                   <Input
                     className="h-12 border-gray-200 flex-1"
@@ -346,7 +471,7 @@ function ArticlesTab({ setMessage }: { setMessage: (msg: string) => void }) {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Résumé (FR)</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">{t("admin.articles.label_excerpt_fr")}</label>
                   <textarea
                     value={form.excerpt}
                     onChange={(e) => setForm({ ...form, excerpt: e.target.value })}
@@ -355,7 +480,7 @@ function ArticlesTab({ setMessage }: { setMessage: (msg: string) => void }) {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Résumé (EN)</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">{t("admin.articles.label_excerpt_en")}</label>
                   <textarea
                     value={form.excerptEn}
                     onChange={(e) => setForm({ ...form, excerptEn: e.target.value })}
@@ -367,7 +492,7 @@ function ArticlesTab({ setMessage }: { setMessage: (msg: string) => void }) {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-8">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Contenu complet (FR)</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">{t("admin.articles.label_content_fr")}</label>
                   <textarea
                     value={form.content}
                     onChange={(e) => setForm({ ...form, content: e.target.value })}
@@ -377,7 +502,7 @@ function ArticlesTab({ setMessage }: { setMessage: (msg: string) => void }) {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Contenu complet (EN)</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">{t("admin.articles.label_content_en")}</label>
                   <textarea
                     value={form.contentEn}
                     onChange={(e) => setForm({ ...form, contentEn: e.target.value })}
@@ -397,7 +522,7 @@ function ArticlesTab({ setMessage }: { setMessage: (msg: string) => void }) {
                     className="w-5 h-5 text-[#1E5D2A] rounded border-gray-300 focus:ring-[#1E5D2A]"
                   />
                   <label htmlFor="published" className="font-medium text-gray-700 cursor-pointer">
-                    Publier l'article (visible par le public)
+                    {t("admin.articles.label_published")}
                   </label>
                 </div>
               )}
@@ -408,11 +533,11 @@ function ArticlesTab({ setMessage }: { setMessage: (msg: string) => void }) {
                   className="bg-[#1A361D] hover:bg-[#152e18] text-white flex-1 h-12 text-lg"
                   disabled={createMutation.isPending || updateMutation.isPending}
                 >
-                  {(createMutation.isPending || updateMutation.isPending) ? "Enregistrement..." : (editingId ? "Mettre à jour" : "Créer l'article (Brouillon)")}
+                  {(createMutation.isPending || updateMutation.isPending) ? t("common.saving") : (editingId ? t("common.update") : t("common.create_draft"))}
                 </Button>
                 {editingId && (
                   <Button type="button" variant="outline" onClick={cancelEdit} className="h-12 px-8">
-                    Annuler
+                    {t("common.cancel")}
                   </Button>
                 )}
               </div>
@@ -425,65 +550,221 @@ function ArticlesTab({ setMessage }: { setMessage: (msg: string) => void }) {
       <div className="lg:col-span-4">
         <Card className="border border-gray-100 shadow-sm sticky top-6">
           <CardHeader className="bg-gray-50/50 border-b border-gray-100 pb-4">
-            <CardTitle className="text-xl text-[#1A361D]">Articles {articles.length > 0 && `(${articles.length})`}</CardTitle>
+            <CardTitle className="text-xl text-[#1A361D]">{t("admin.sidebar.articles")} {articles.length > 0 && `(${articles.length})`}</CardTitle>
+            <div className="flex flex-wrap items-center gap-2 mt-3">
+              <Button
+                type="button"
+                size="sm"
+                variant={articleStatusFilter === "all" ? "default" : "outline"}
+                className={articleStatusFilter === "all" ? "bg-[#1A361D] hover:bg-[#152e18]" : ""}
+                onClick={() => setArticleStatusFilter("all")}
+              >
+                {t("admin.projects.filter_all")}
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant={articleStatusFilter === "published" ? "default" : "outline"}
+                className={articleStatusFilter === "published" ? "bg-emerald-700 hover:bg-emerald-800" : ""}
+                onClick={() => setArticleStatusFilter("published")}
+              >
+                {t("admin.articles.status.published")}
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant={articleStatusFilter === "draft" ? "default" : "outline"}
+                className={articleStatusFilter === "draft" ? "bg-amber-600 hover:bg-amber-700" : ""}
+                onClick={() => setArticleStatusFilter("draft")}
+              >
+                {t("admin.articles.status.draft")}
+              </Button>
+
+              <div className="ml-auto inline-flex items-center gap-1 border rounded-md bg-white p-1">
+                <Button
+                  type="button"
+                  size="icon"
+                  variant={articlesView === "list" ? "secondary" : "ghost"}
+                  className="h-8 w-8"
+                  onClick={() => setArticlesView("list")}
+                  aria-label={t("admin.projects.table.project")}
+                >
+                  <List className="w-4 h-4" />
+                </Button>
+                <Button
+                  type="button"
+                  size="icon"
+                  variant={articlesView === "grid" ? "secondary" : "ghost"}
+                  className="h-8 w-8"
+                  onClick={() => setArticlesView("grid")}
+                  aria-label={t("admin.projects.table.project")}
+                >
+                  <LayoutGrid className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+            <div className="relative mt-3">
+              <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Input
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder={t("admin.projects.search_placeholder")}
+                className="pl-9 h-10 bg-white"
+              />
+            </div>
+            <div className="mt-3 flex items-center justify-between gap-2">
+              <p className="text-xs text-gray-500">
+                {t("admin.projects.results_count", { count: sortedArticles.length })}
+              </p>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-gray-500">{t("admin.projects.per_page")}</span>
+                <select
+                  value={pageSize}
+                  onChange={(e) => setPageSize(Number(e.target.value) as 10 | 25 | 50)}
+                  className="h-8 px-2 text-xs border rounded-md bg-white"
+                >
+                  <option value={10}>10</option>
+                  <option value={25}>25</option>
+                  <option value={50}>50</option>
+                </select>
+              </div>
+            </div>
           </CardHeader>
           <CardContent className="pt-0 p-0">
             {isLoading ? (
-              <div className="p-6 text-center text-gray-500">Chargement...</div>
+              <div className="p-6 text-center text-gray-500">{t("admin.projects.loading")}</div>
             ) : (
-              <div className="max-h-[800px] overflow-y-auto divide-y divide-gray-100">
-                {articles.map((article: any) => (
-                  <div
-                    key={article.id}
-                    className={`p-4 hover:bg-gray-50 transition-colors flex flex-col ${editingId === article.id ? 'bg-orange-50/50' : ''}`}
-                  >
-                    <div className="flex justify-between items-start mb-2">
-                      <div className="flex-1 pr-4">
-                        <p className="font-bold text-gray-800 line-clamp-2 leading-tight">{article.title}</p>
-                        <div className="flex items-center space-x-2 mt-2">
-                          <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded font-medium capitalize">
-                            {article.category}
-                          </span>
-                          {article.published ? (
-                            <span className="text-xs flex items-center text-green-700 bg-green-50 px-2 py-1 rounded font-medium">
-                              <Eye className="w-3 h-3 mr-1" /> Publié
-                            </span>
-                          ) : (
-                            <span className="text-xs flex items-center text-orange-700 bg-orange-50 px-2 py-1 rounded font-medium">
-                              <EyeOff className="w-3 h-3 mr-1" /> Brouillon
-                            </span>
-                          )}
-                        </div>
-                      </div>
+              <div className="max-h-[800px] overflow-y-auto">
+                <div className="p-3 border-b bg-gray-50/70 flex items-center justify-between gap-2 flex-wrap">
+                  <p className="text-xs text-gray-600">
+                    {selectedIds.length > 0 ? t("admin.projects.selection_count", { count: selectedIds.length }) : t("admin.projects.no_selection")}
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <Button size="sm" variant="outline" className="h-8" disabled={selectedIds.length === 0 || bulkPending} onClick={() => runBulkPublish(true)}>
+                      {t("admin.articles.bulk.publish")}
+                    </Button>
+                    <Button size="sm" variant="outline" className="h-8" disabled={selectedIds.length === 0 || bulkPending} onClick={() => runBulkPublish(false)}>
+                      {t("admin.articles.bulk.draft")}
+                    </Button>
+                    <Button size="sm" variant="destructive" className="h-8" disabled={selectedIds.length === 0 || bulkPending} onClick={runBulkDelete}>
+                      {t("admin.articles.bulk.delete")}
+                    </Button>
+                  </div>
+                </div>
+
+                {articlesView === "list" ? (
+                  <div className="divide-y divide-gray-100">
+                    <div className="grid grid-cols-[44px_1.6fr_1fr_0.9fr_0.9fr_140px] gap-2 px-3 py-2 text-xs font-semibold text-gray-500 bg-white sticky top-0 z-10 border-b">
+                      <input type="checkbox" checked={allPageSelected} onChange={toggleSelectAllPage} className="w-4 h-4" />
+                      <span>{t("admin.articles.table.article")}</span>
+                      <button type="button" className="text-left hover:text-gray-700" onClick={() => toggleSort("author")}>{t("admin.articles.table.author")}</button>
+                      <button type="button" className="text-left hover:text-gray-700" onClick={() => toggleSort("status")}>{t("admin.articles.table.status")}</button>
+                      <button type="button" className="text-left hover:text-gray-700" onClick={() => toggleSort("date")}>{t("admin.articles.table.date")}</button>
+                      <span className="text-right">{t("admin.projects.table.actions")}</span>
                     </div>
 
-                    <div className="flex justify-end space-x-2 mt-3 pt-3 border-t border-gray-50">
-                      <Button
-                        size="sm"
-                        variant="secondary"
-                        className="bg-gray-100 hover:bg-gray-200 text-gray-700 h-8"
-                        onClick={() => handleEdit(article)}
+                    {paginatedArticles.map((article: any) => (
+                      <div
+                        key={article.id}
+                        className={`grid grid-cols-[44px_1.6fr_1fr_0.9fr_0.9fr_140px] gap-2 px-3 py-3 items-center hover:bg-gray-50 ${editingId === article.id ? "bg-orange-50/50 border-l-4 border-l-[#F5B100]" : ""}`}
                       >
-                        <Edit2 className="w-3.5 h-3.5 mr-1.5" /> Modifier
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        className="h-8"
-                        onClick={() => {
-                          if (window.confirm("Êtes-vous sûr de vouloir supprimer cet article ?")) {
-                            deleteMutation.mutate(article.id, {
-                              onSuccess: () => utils.articles.adminList.invalidate()
-                            });
-                          }
-                        }}
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </Button>
-                    </div>
+                        <input
+                          type="checkbox"
+                          checked={selectedIds.includes(article.id)}
+                          onChange={() => toggleSelectOne(article.id)}
+                          className="w-4 h-4"
+                        />
+                        <div className="min-w-0">
+                          <p className="font-semibold text-sm text-gray-800 truncate">{article.title}</p>
+                          <p className="text-xs text-gray-500 truncate">/{article.slug}</p>
+                        </div>
+                        <p className="text-sm text-gray-600 truncate">{article.author || "-"}</p>
+                        <div>
+                          {article.published ? (
+                            <span className="text-xs inline-flex items-center text-green-700 bg-green-50 px-2 py-1 rounded font-medium"><Eye className="w-3 h-3 mr-1" />{t("admin.articles.status.published")}</span>
+                          ) : (
+                            <span className="text-xs inline-flex items-center text-orange-700 bg-orange-50 px-2 py-1 rounded font-medium"><EyeOff className="w-3 h-3 mr-1" />{t("admin.articles.status.draft")}</span>
+                          )}
+                        </div>
+                        <p className="text-xs text-gray-500">{article.publishedAt ? formatDate(article.publishedAt) : formatDate(article.createdAt)}</p>
+                        <div className="flex justify-end gap-1">
+                          <Button size="icon" variant="secondary" className="h-8 w-8" onClick={() => handleEdit(article)} aria-label={t("common.update")}>
+                            <Edit2 className="w-3.5 h-3.5" />
+                          </Button>
+                          <Button
+                            size="icon"
+                            variant="destructive"
+                            className="h-8 w-8"
+                            onClick={() => {
+                              if (window.confirm(t("admin.articles.confirm_delete"))) {
+                                deleteMutation.mutate(article.id, { onSuccess: () => utils.articles.adminList.invalidate() });
+                              }
+                            }}
+                            aria-label="Supprimer"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                ))}
-                {articles.length === 0 && (
+                ) : (
+                  <div className="p-3 grid grid-cols-1 gap-3">
+                    {paginatedArticles.map((article: any) => (
+                      <div
+                        key={article.id}
+                        className={`p-4 rounded-xl border border-gray-200 hover:bg-gray-50/80 transition-colors flex flex-col ${editingId === article.id ? 'bg-orange-50/50 border-l-4 border-l-[#F5B100]' : ''}`}
+                      >
+                        <div className="flex justify-between items-start mb-2">
+                          <div className="flex-1 pr-4">
+                            <p className="font-bold text-gray-800 line-clamp-2 leading-tight">{article.title}</p>
+                            <p className="text-xs text-gray-500 mt-1">/{article.slug} {article.author ? `- ${article.author}` : ""}</p>
+                            <div className="flex items-center space-x-2 mt-2">
+                              <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded font-medium capitalize">{article.category}</span>
+                              {article.published ? (
+                                <span className="text-xs flex items-center text-green-700 bg-green-50 px-2 py-1 rounded font-medium"><Eye className="w-3 h-3 mr-1" /> Publié</span>
+                              ) : (
+                                <span className="text-xs flex items-center text-orange-700 bg-orange-50 px-2 py-1 rounded font-medium"><EyeOff className="w-3 h-3 mr-1" /> Brouillon</span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex justify-end space-x-2 mt-3 pt-3 border-t border-gray-50">
+                          <Button size="sm" variant="secondary" className="bg-gray-100 hover:bg-gray-200 text-gray-700 h-8" onClick={() => handleEdit(article)}>
+                            <Edit2 className="w-3.5 h-3.5 mr-1.5" /> Modifier
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            className="h-8"
+                            onClick={() => {
+                              if (window.confirm("Êtes-vous sûr de vouloir supprimer cet article ?")) {
+                                deleteMutation.mutate(article.id, { onSuccess: () => utils.articles.adminList.invalidate() });
+                              }
+                            }}
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <div className="p-3 border-t bg-white flex items-center justify-between">
+                  <p className="text-xs text-gray-500">Page {page} / {totalPages}</p>
+                  <div className="flex items-center gap-2">
+                    <Button size="sm" variant="outline" className="h-8" disabled={page <= 1} onClick={() => setPage((prev) => Math.max(1, prev - 1))}>
+                      Precedent
+                    </Button>
+                    <Button size="sm" variant="outline" className="h-8" disabled={page >= totalPages} onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))}>
+                      Suivant
+                    </Button>
+                  </div>
+                </div>
+
+                {paginatedArticles.length === 0 && (
                   <div className="p-8 text-center text-gray-500">Aucun article trouvé.</div>
                 )}
               </div>
@@ -496,6 +777,7 @@ function ArticlesTab({ setMessage }: { setMessage: (msg: string) => void }) {
 }
 
 function ProjetsTab({ setMessage }: { setMessage: (msg: string) => void }) {
+  const { t } = useTranslation();
   const utils = trpc.useContext();
   const { data: projects = [], isLoading } = trpc.projects.adminList.useQuery();
   const createMutation = trpc.projects.create.useMutation();
@@ -503,6 +785,15 @@ function ProjetsTab({ setMessage }: { setMessage: (msg: string) => void }) {
   const deleteMutation = trpc.projects.delete.useMutation();
 
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [projectSearch, setProjectSearch] = useState("");
+  const [projectsView, setProjectsView] = useState<"list" | "grid">("list");
+  const [projectStatusFilter, setProjectStatusFilter] = useState<"all" | "en_cours" | "termine" | "planifie">("all");
+  const [projectSortBy, setProjectSortBy] = useState<"date" | "status" | "location">("date");
+  const [projectSortDir, setProjectSortDir] = useState<"asc" | "desc">("desc");
+  const [projectPageSize, setProjectPageSize] = useState<10 | 25 | 50>(10);
+  const [projectPage, setProjectPage] = useState(1);
+  const [selectedProjectIds, setSelectedProjectIds] = useState<number[]>([]);
+  const [projectBulkPending, setProjectBulkPending] = useState(false);
 
   const defaultForm = {
     title: "",
@@ -522,21 +813,129 @@ function ProjetsTab({ setMessage }: { setMessage: (msg: string) => void }) {
 
   const [form, setForm] = useState(defaultForm);
 
+  const filteredProjects = useMemo(
+    () => projects.filter((project: any) => {
+      const q = projectSearch.toLowerCase();
+      const matchesSearch = (
+        project.title.toLowerCase().includes(q)
+        || (project.location || "").toLowerCase().includes(q)
+        || (project.status || "").toLowerCase().includes(q)
+      );
+
+      const matchesStatus = projectStatusFilter === "all" || project.status === projectStatusFilter;
+
+      return matchesSearch && matchesStatus;
+    }),
+    [projects, projectSearch, projectStatusFilter],
+  );
+
+  const sortedProjects = useMemo(() => {
+    const items = [...filteredProjects];
+    items.sort((a: any, b: any) => {
+      if (projectSortBy === "location") {
+        const av = (a.location || "").toLowerCase();
+        const bv = (b.location || "").toLowerCase();
+        return projectSortDir === "asc" ? av.localeCompare(bv) : bv.localeCompare(av);
+      }
+
+      if (projectSortBy === "status") {
+        const statusWeight = { en_cours: 3, planifie: 2, termine: 1 } as Record<string, number>;
+        const av = statusWeight[a.status || ""] || 0;
+        const bv = statusWeight[b.status || ""] || 0;
+        return projectSortDir === "asc" ? av - bv : bv - av;
+      }
+
+      const av = new Date(a.startDate || a.createdAt || 0).getTime();
+      const bv = new Date(b.startDate || b.createdAt || 0).getTime();
+      return projectSortDir === "asc" ? av - bv : bv - av;
+    });
+    return items;
+  }, [filteredProjects, projectSortBy, projectSortDir]);
+
+  const totalProjectPages = Math.max(1, Math.ceil(sortedProjects.length / projectPageSize));
+  const paginatedProjects = useMemo(
+    () => sortedProjects.slice((projectPage - 1) * projectPageSize, projectPage * projectPageSize),
+    [sortedProjects, projectPage, projectPageSize],
+  );
+
+  const allProjectPageSelected = paginatedProjects.length > 0 && paginatedProjects.every((project: any) => selectedProjectIds.includes(project.id));
+
+  useEffect(() => {
+    setProjectPage(1);
+  }, [projectSearch, projectStatusFilter, projectSortBy, projectSortDir, projectPageSize]);
+
+  useEffect(() => {
+    if (projectPage > totalProjectPages) setProjectPage(totalProjectPages);
+  }, [projectPage, totalProjectPages]);
+
+  const toggleProjectSort = (column: "date" | "status" | "location") => {
+    if (projectSortBy === column) {
+      setProjectSortDir((prev) => (prev === "asc" ? "desc" : "asc"));
+      return;
+    }
+    setProjectSortBy(column);
+    setProjectSortDir("desc");
+  };
+
+  const toggleSelectAllProjectsPage = () => {
+    if (allProjectPageSelected) {
+      setSelectedProjectIds((prev) => prev.filter((id) => !paginatedProjects.some((project: any) => project.id === id)));
+      return;
+    }
+    setSelectedProjectIds((prev) => Array.from(new Set([...prev, ...paginatedProjects.map((project: any) => project.id)])));
+  };
+
+  const toggleSelectProject = (id: number) => {
+    setSelectedProjectIds((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
+  };
+
+  const runBulkProjectStatus = async (status: "en_cours" | "termine" | "planifie") => {
+    if (selectedProjectIds.length === 0 || projectBulkPending) return;
+    setProjectBulkPending(true);
+    try {
+      await Promise.all(selectedProjectIds.map((id) => updateMutation.mutateAsync({ id, status })));
+      setMessage(t("admin.projects.bulk_messages.status_success", { count: selectedProjectIds.length }));
+      setSelectedProjectIds([]);
+      await utils.projects.adminList.invalidate();
+    } catch {
+      setMessage(t("admin.projects.bulk_messages.status_error"));
+    } finally {
+      setProjectBulkPending(false);
+    }
+  };
+
+  const runBulkProjectDelete = async () => {
+    if (selectedProjectIds.length === 0 || projectBulkPending) return;
+    if (!window.confirm(t("admin.projects.bulk_messages.delete_confirm", { count: selectedProjectIds.length }))) return;
+
+    setProjectBulkPending(true);
+    try {
+      await Promise.all(selectedProjectIds.map((id) => deleteMutation.mutateAsync(id)));
+      setMessage(t("admin.projects.bulk_messages.delete_success"));
+      setSelectedProjectIds([]);
+      await utils.projects.adminList.invalidate();
+    } catch {
+      setMessage(t("admin.projects.bulk_messages.delete_error"));
+    } finally {
+      setProjectBulkPending(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       if (editingId) {
         await updateMutation.mutateAsync({ id: editingId, ...form, beneficiaries: Number(form.beneficiaries) });
-        setMessage("✅ Projet mis à jour avec succès!");
+        setMessage(t("admin.projects.update_success"));
       } else {
         await createMutation.mutateAsync({ ...form, beneficiaries: Number(form.beneficiaries) });
-        setMessage("✅ Projet créé avec succès!");
+        setMessage(t("admin.projects.create_success"));
       }
       setForm(defaultForm);
       setEditingId(null);
       utils.projects.adminList.invalidate();
     } catch (error) {
-      setMessage("❌ Erreur lors de l'enregistrement");
+      setMessage(t("admin.projects.error_save"));
     }
   };
 
@@ -751,62 +1150,231 @@ function ProjetsTab({ setMessage }: { setMessage: (msg: string) => void }) {
         <Card className="border border-gray-100 shadow-sm sticky top-6">
           <CardHeader className="bg-gray-50/50 border-b border-gray-100 pb-4">
             <CardTitle className="text-xl text-[#1A361D]">Projets {projects.length > 0 && `(${projects.length})`}</CardTitle>
+            <div className="flex flex-wrap items-center gap-2 mt-3">
+              <Button
+                type="button"
+                size="sm"
+                variant={projectStatusFilter === "all" ? "default" : "outline"}
+                className={projectStatusFilter === "all" ? "bg-[#1A361D] hover:bg-[#152e18]" : ""}
+                onClick={() => setProjectStatusFilter("all")}
+              >
+                {t("admin.projects.filter_all")}
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant={projectStatusFilter === "en_cours" ? "default" : "outline"}
+                className={projectStatusFilter === "en_cours" ? "bg-blue-700 hover:bg-blue-800" : ""}
+                onClick={() => setProjectStatusFilter("en_cours")}
+              >
+                {t("admin.projects.filter_active")}
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant={projectStatusFilter === "termine" ? "default" : "outline"}
+                className={projectStatusFilter === "termine" ? "bg-emerald-700 hover:bg-emerald-800" : ""}
+                onClick={() => setProjectStatusFilter("termine")}
+              >
+                {t("admin.projects.filter_finished")}
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant={projectStatusFilter === "planifie" ? "default" : "outline"}
+                className={projectStatusFilter === "planifie" ? "bg-amber-600 hover:bg-amber-700" : ""}
+                onClick={() => setProjectStatusFilter("planifie")}
+              >
+                {t("admin.projects.filter_planned")}
+              </Button>
+
+              <div className="ml-auto inline-flex items-center gap-1 border rounded-md bg-white p-1">
+                <Button
+                  type="button"
+                  size="icon"
+                  variant={projectsView === "list" ? "secondary" : "ghost"}
+                  className="h-8 w-8"
+                  onClick={() => setProjectsView("list")}
+                  aria-label="Affichage liste"
+                >
+                  <List className="w-4 h-4" />
+                </Button>
+                <Button
+                  type="button"
+                  size="icon"
+                  variant={projectsView === "grid" ? "secondary" : "ghost"}
+                  className="h-8 w-8"
+                  onClick={() => setProjectsView("grid")}
+                  aria-label="Affichage grille"
+                >
+                  <LayoutGrid className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+            <div className="relative mt-3">
+              <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Input
+                value={projectSearch}
+                onChange={(e) => setProjectSearch(e.target.value)}
+                placeholder={t("admin.projects.search_placeholder", "Rechercher par titre, lieu ou statut...")}
+                className="pl-9 h-10 bg-white"
+              />
+            </div>
+            <div className="mt-3 flex items-center justify-between gap-2">
+              <p className="text-xs text-gray-500">{t("admin.projects.results_count", { count: sortedProjects.length })}</p>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-gray-500">{t("admin.projects.per_page")}</span>
+                <select
+                  value={projectPageSize}
+                  onChange={(e) => setProjectPageSize(Number(e.target.value) as 10 | 25 | 50)}
+                  className="h-8 px-2 text-xs border rounded-md bg-white"
+                >
+                  <option value={10}>10</option>
+                  <option value={25}>25</option>
+                  <option value={50}>50</option>
+                </select>
+              </div>
+            </div>
           </CardHeader>
           <CardContent className="pt-0 p-0">
             {isLoading ? (
-              <div className="p-6 text-center text-gray-500">Chargement...</div>
+              <div className="p-6 text-center text-gray-500">{t("admin.projects.loading")}</div>
             ) : (
-              <div className="max-h-[800px] overflow-y-auto divide-y divide-gray-100">
-                {projects.map((project: any) => (
-                  <div
-                    key={project.id}
-                    className={`p-4 hover:bg-gray-50 transition-colors flex flex-col ${editingId === project.id ? 'bg-green-50/50' : ''}`}
-                  >
-                    <div className="flex justify-between items-start mb-2">
-                      <div className="flex-1 pr-4">
-                        <p className="font-bold text-gray-800 line-clamp-2 leading-tight">{project.title}</p>
-                        <div className="flex items-center space-x-2 mt-2">
-                          <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded font-medium capitalize flex items-center">
-                            <MapPin className="w-3 h-3 mr-1" /> {project.location || "N/A"}
-                          </span>
-                          <span className={`text-xs px-2 py-1 rounded font-medium capitalize ${project.status === 'en_cours' ? 'bg-blue-50 text-blue-700' :
-                            project.status === 'termine' ? 'bg-green-50 text-green-700' :
-                              'bg-orange-50 text-orange-700'
-                            }`}>
-                            {project.status.replace("_", " ")}
-                          </span>
-                        </div>
-                      </div>
+              <div className="max-h-[800px] overflow-y-auto">
+                <div className="p-3 border-b bg-gray-50/70 flex items-center justify-between gap-2 flex-wrap">
+                  <p className="text-xs text-gray-600">
+                    {selectedProjectIds.length > 0 ? t("admin.projects.selection_count", { count: selectedProjectIds.length }) : t("admin.projects.no_selection")}
+                  </p>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <Button size="sm" variant="outline" className="h-8" disabled={selectedProjectIds.length === 0 || projectBulkPending} onClick={() => runBulkProjectStatus("en_cours")}>
+                      {t("admin.projects.bulk.active")}
+                    </Button>
+                    <Button size="sm" variant="outline" className="h-8" disabled={selectedProjectIds.length === 0 || projectBulkPending} onClick={() => runBulkProjectStatus("planifie")}>
+                      {t("admin.projects.bulk.plan")}
+                    </Button>
+                    <Button size="sm" variant="outline" className="h-8" disabled={selectedProjectIds.length === 0 || projectBulkPending} onClick={() => runBulkProjectStatus("termine")}>
+                      {t("admin.projects.bulk.finish")}
+                    </Button>
+                    <Button size="sm" variant="destructive" className="h-8" disabled={selectedProjectIds.length === 0 || projectBulkPending} onClick={runBulkProjectDelete}>
+                      {t("admin.projects.bulk.delete")}
+                    </Button>
+                  </div>
+                </div>
+
+                {projectsView === "list" ? (
+                  <div className="divide-y divide-gray-100">
+                    <div className="grid grid-cols-[44px_1.5fr_1fr_0.9fr_0.9fr_140px] gap-2 px-3 py-2 text-xs font-semibold text-gray-500 bg-white sticky top-0 z-10 border-b">
+                      <input type="checkbox" checked={allProjectPageSelected} onChange={toggleSelectAllProjectsPage} className="w-4 h-4" />
+                      <span>{t("admin.projects.table.project")}</span>
+                      <button type="button" className="text-left hover:text-gray-700" onClick={() => toggleProjectSort("location")}>{t("admin.projects.table.location")}</button>
+                      <button type="button" className="text-left hover:text-gray-700" onClick={() => toggleProjectSort("status")}>{t("admin.projects.table.status")}</button>
+                      <button type="button" className="text-left hover:text-gray-700" onClick={() => toggleProjectSort("date")}>{t("admin.projects.table.date")}</button>
+                      <span className="text-right">{t("admin.projects.table.actions")}</span>
                     </div>
 
-                    <div className="flex justify-end space-x-2 mt-3 pt-3 border-t border-gray-50">
-                      <Button
-                        size="sm"
-                        variant="secondary"
-                        className="bg-gray-100 hover:bg-gray-200 text-gray-700 h-8"
-                        onClick={() => handleEdit(project)}
+                    {paginatedProjects.map((project: any) => (
+                      <div
+                        key={project.id}
+                        className={`grid grid-cols-[44px_1.5fr_1fr_0.9fr_0.9fr_140px] gap-2 px-3 py-3 items-center hover:bg-gray-50 ${editingId === project.id ? "bg-green-50/50" : ""}`}
                       >
-                        <Edit2 className="w-3.5 h-3.5 mr-1.5" /> Modifier
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        className="h-8"
-                        onClick={() => {
-                          if (window.confirm("Êtes-vous sûr de vouloir supprimer ce projet ?")) {
-                            deleteMutation.mutate(project.id, {
-                              onSuccess: () => utils.projects.adminList.invalidate()
-                            });
-                          }
-                        }}
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </Button>
-                    </div>
+                        <input
+                          type="checkbox"
+                          checked={selectedProjectIds.includes(project.id)}
+                          onChange={() => toggleSelectProject(project.id)}
+                          className="w-4 h-4"
+                        />
+                        <div className="min-w-0">
+                          <p className="font-semibold text-sm text-gray-800 truncate">{project.title}</p>
+                          <p className="text-xs text-gray-500 truncate">/{project.slug}</p>
+                        </div>
+                        <p className="text-sm text-gray-600 truncate">{project.location || "N/A"}</p>
+                        <span className={`text-xs px-2 py-1 rounded font-medium capitalize w-fit ${project.status === 'en_cours' ? 'bg-blue-50 text-blue-700' : project.status === 'termine' ? 'bg-green-50 text-green-700' : 'bg-orange-50 text-orange-700'}`}>
+                          {project.status.replace("_", " ")}
+                        </span>
+                        <p className="text-xs text-gray-500">{project.startDate ? formatDate(project.startDate) : formatDate(project.createdAt)}</p>
+                        <div className="flex justify-end gap-1">
+                          <Button size="icon" variant="secondary" className="h-8 w-8" onClick={() => handleEdit(project)} aria-label={t("admin.projects.table.actions")}>
+                            <Edit2 className="w-3.5 h-3.5" />
+                          </Button>
+                          <Button
+                            size="icon"
+                            variant="destructive"
+                            className="h-8 w-8"
+                            onClick={() => {
+                              if (window.confirm(t("admin.projects.confirm_delete"))) {
+                                deleteMutation.mutate(project.id, { onSuccess: () => utils.projects.adminList.invalidate() });
+                              }
+                            }}
+                            aria-label={t("admin.projects.bulk.delete")}
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                ))}
-                {projects.length === 0 && (
-                  <div className="p-8 text-center text-gray-500">Aucun projet trouvé.</div>
+                ) : (
+                  <div className="p-3 grid grid-cols-1 gap-3">
+                    {paginatedProjects.map((project: any) => (
+                      <div
+                        key={project.id}
+                        className={`p-4 rounded-xl border border-gray-200 hover:bg-gray-50/80 transition-colors flex flex-col ${editingId === project.id ? 'bg-green-50/50' : ''}`}
+                      >
+                        <div className="flex justify-between items-start mb-2 gap-2">
+                          <div className="flex-1 pr-2">
+                            <p className="font-bold text-gray-800 line-clamp-2 leading-tight">{project.title}</p>
+                            <p className="text-xs text-gray-500 mt-1">/{project.slug} - {project.beneficiaries || 0} {t("admin.projects.label_beneficiaries")}</p>
+                            <div className="flex items-center space-x-2 mt-2">
+                              <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded font-medium capitalize flex items-center"><MapPin className="w-3 h-3 mr-1" /> {project.location || "N/A"}</span>
+                              <span className={`text-xs px-2 py-1 rounded font-medium capitalize ${project.status === 'en_cours' ? 'bg-blue-50 text-blue-700' : project.status === 'termine' ? 'bg-green-50 text-green-700' : 'bg-orange-50 text-orange-700'}`}>
+                                {project.status.replace("_", " ")}
+                              </span>
+                            </div>
+                          </div>
+                          <input
+                            type="checkbox"
+                            checked={selectedProjectIds.includes(project.id)}
+                            onChange={() => toggleSelectProject(project.id)}
+                            className="w-4 h-4 mt-1"
+                          />
+                        </div>
+
+                        <div className="flex justify-end space-x-2 mt-3 pt-3 border-t border-gray-50">
+                          <Button size="sm" variant="secondary" className="bg-gray-100 hover:bg-gray-200 text-gray-700 h-8" onClick={() => handleEdit(project)}>
+                            <Edit2 className="w-3.5 h-3.5 mr-1.5" /> {t("admin.projects.table.actions")}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            className="h-8"
+                            onClick={() => {
+                              if (window.confirm(t("admin.projects.confirm_delete"))) {
+                                deleteMutation.mutate(project.id, { onSuccess: () => utils.projects.adminList.invalidate() });
+                              }
+                            }}
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <div className="p-3 border-t bg-white flex items-center justify-between">
+                  <p className="text-xs text-gray-500">{t("admin.projects.pagination.page", { current: projectPage, total: totalProjectPages })}</p>
+                  <div className="flex items-center gap-2">
+                    <Button size="sm" variant="outline" className="h-8" disabled={projectPage <= 1} onClick={() => setProjectPage((prev) => Math.max(1, prev - 1))}>
+                      {t("admin.projects.pagination.prev")}
+                    </Button>
+                    <Button size="sm" variant="outline" className="h-8" disabled={projectPage >= totalProjectPages} onClick={() => setProjectPage((prev) => Math.min(totalProjectPages, prev + 1))}>
+                      {t("admin.projects.pagination.next")}
+                    </Button>
+                  </div>
+                </div>
+
+                {paginatedProjects.length === 0 && (
+                  <div className="p-8 text-center text-gray-500">{t("admin.projects.empty_results")}</div>
                 )}
               </div>
             )}
@@ -818,6 +1386,7 @@ function ProjetsTab({ setMessage }: { setMessage: (msg: string) => void }) {
 }
 
 function TeamTab({ setMessage }: { setMessage: (msg: string) => void }) {
+  const { t } = useTranslation();
   const utils = trpc.useContext();
   const { data: members = [], isLoading } = trpc.team.adminList.useQuery();
   const createMutation = trpc.team.create.useMutation();
@@ -826,6 +1395,8 @@ function TeamTab({ setMessage }: { setMessage: (msg: string) => void }) {
   const reorderMutation = trpc.team.reorder.useMutation();
 
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [memberSearch, setMemberSearch] = useState("");
+  const [initialEditReady, setInitialEditReady] = useState(false);
 
   const defaultForm = {
     name: "",
@@ -838,6 +1409,19 @@ function TeamTab({ setMessage }: { setMessage: (msg: string) => void }) {
   };
 
   const [form, setForm] = useState(defaultForm);
+
+  const selectedMember = useMemo(
+    () => members.find((member: any) => member.id === editingId) || null,
+    [members, editingId],
+  );
+
+  const filteredMembers = useMemo(
+    () => members.filter((member: any) => {
+      const q = memberSearch.toLowerCase();
+      return member.name.toLowerCase().includes(q) || member.role.toLowerCase().includes(q);
+    }),
+    [members, memberSearch],
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -879,6 +1463,22 @@ function TeamTab({ setMessage }: { setMessage: (msg: string) => void }) {
     setForm(defaultForm);
   };
 
+  useEffect(() => {
+    if (initialEditReady || members.length === 0) return;
+    const firstMember = members[0];
+    setEditingId(firstMember.id);
+    setForm({
+      name: firstMember.name,
+      role: firstMember.role,
+      title: firstMember.title || "",
+      location: firstMember.location || "",
+      image: firstMember.image || "",
+      bio: firstMember.bio || "",
+      active: firstMember.active,
+    });
+    setInitialEditReady(true);
+  }, [initialEditReady, members]);
+
   const moveMember = async (id: number, direction: "up" | "down") => {
     const currentIndex = members.findIndex((member: any) => member.id === id);
     if (currentIndex === -1) return;
@@ -895,7 +1495,7 @@ function TeamTab({ setMessage }: { setMessage: (msg: string) => void }) {
       utils.team.adminList.invalidate();
       utils.team.list.invalidate();
     } catch (error) {
-      setMessage("❌ Erreur lors de la réorganisation");
+      setMessage(t("admin.team.error_reorder"));
     }
   };
 
@@ -904,19 +1504,62 @@ function TeamTab({ setMessage }: { setMessage: (msg: string) => void }) {
       <div className="lg:col-span-8">
         <Card className="border border-gray-100 shadow-sm">
           <CardHeader className="bg-gray-50/50 border-b border-gray-100 pb-4">
-            <CardTitle className="text-xl flex items-center text-[#1A361D]">
-              <Edit2 className="w-5 h-5 mr-3 text-[#1E5D2A]" />
-              {editingId ? "Modifier un membre" : "Ajouter un membre"}
-            </CardTitle>
+            <div className="flex items-center justify-between gap-3">
+              <CardTitle className="text-xl flex items-center text-[#1A361D]">
+                <Edit2 className="w-5 h-5 mr-3 text-[#1E5D2A]" />
+                {editingId ? t("admin.team.form_title_edit") : t("admin.team.form_title_add")}
+              </CardTitle>
+              <Button type="button" variant="outline" size="sm" onClick={cancelEdit}>
+                {t("admin.team.btn_new")}
+              </Button>
+            </div>
             <CardDescription>
-              Gérez l'équipe affichée sur la page À Propos avec photo, rôle et ordre d'affichage.
+              {t("admin.team.desc")}
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
             <form onSubmit={handleSubmit} className="space-y-6">
+              {members.length > 0 && (
+                <div className="p-4 border rounded-lg bg-gray-50/70 space-y-3">
+                  <p className="text-sm font-semibold text-gray-700">{t("admin.team.edit_existing")}</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <select
+                      value={editingId ? String(editingId) : ""}
+                      onChange={(e) => {
+                        if (!e.target.value) {
+                          cancelEdit();
+                          return;
+                        }
+                        const picked = members.find((member: any) => member.id === Number(e.target.value));
+                        if (picked) {
+                          handleEdit(picked);
+                        }
+                      }}
+                      className="w-full h-11 px-3 border border-gray-200 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-[#1E5D2A]"
+                    >
+                      <option value="">{t("admin.team.btn_new")}</option>
+                      {members.map((member: any) => (
+                        <option key={member.id} value={member.id}>{member.name} - {member.role}</option>
+                      ))}
+                    </select>
+                    <Button type="button" variant="outline" onClick={cancelEdit} className="h-11">
+                      {t("admin.team.btn_new")}
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {selectedMember && (
+                <div className="p-4 border rounded-lg bg-emerald-50/40 flex flex-wrap items-center gap-2 text-sm">
+                  <span className="font-semibold text-emerald-800">{t("admin.team.editing_now")}</span>
+                  <span className="text-emerald-900">{selectedMember.name}</span>
+                  <span className="text-emerald-700">({selectedMember.role})</span>
+                </div>
+              )}
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Nom complet</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">{t("admin.team.label_name")}</label>
                   <Input
                     className="h-12 border-gray-200"
                     value={form.name}
@@ -925,12 +1568,12 @@ function TeamTab({ setMessage }: { setMessage: (msg: string) => void }) {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Rôle</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">{t("admin.team.label_role")}</label>
                   <Input
                     className="h-12 border-gray-200"
                     value={form.role}
                     onChange={(e) => setForm({ ...form, role: e.target.value })}
-                    placeholder="Présidente, Secrétaire..."
+                    placeholder={t("admin.team.placeholder_role")}
                     required
                   />
                 </div>
@@ -938,7 +1581,7 @@ function TeamTab({ setMessage }: { setMessage: (msg: string) => void }) {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Titre / Fonction</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">{t("admin.team.label_title")}</label>
                   <Input
                     className="h-12 border-gray-200"
                     value={form.title}
@@ -947,24 +1590,24 @@ function TeamTab({ setMessage }: { setMessage: (msg: string) => void }) {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Localisation</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">{t("admin.team.label_location")}</label>
                   <Input
                     className="h-12 border-gray-200"
                     value={form.location}
                     onChange={(e) => setForm({ ...form, location: e.target.value })}
-                    placeholder="Buea"
+                    placeholder={t("admin.team.placeholder_location")}
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Photo (URL)</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">{t("admin.team.label_image")}</label>
                 <div className="flex gap-4">
                   <Input
                     className="h-12 border-gray-200 flex-1"
                     value={form.image}
                     onChange={(e) => setForm({ ...form, image: e.target.value })}
-                    placeholder="https://..."
+                    placeholder={t("admin.team.placeholder_image")}
                   />
                   {form.image && (
                     <div className="w-16 h-12 bg-gray-100 rounded-md overflow-hidden border">
@@ -975,12 +1618,12 @@ function TeamTab({ setMessage }: { setMessage: (msg: string) => void }) {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Bio courte (optionnel)</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">{t("admin.team.label_bio")}</label>
                 <textarea
                   value={form.bio}
                   onChange={(e) => setForm({ ...form, bio: e.target.value })}
                   className="w-full px-4 py-3 border border-gray-200 rounded-md h-24 resize-none focus:outline-none focus:ring-2 focus:ring-[#1E5D2A]"
-                  placeholder="Présentation courte du membre"
+                  placeholder={t("admin.team.label_bio")}
                 />
               </div>
 
@@ -993,7 +1636,7 @@ function TeamTab({ setMessage }: { setMessage: (msg: string) => void }) {
                   className="w-5 h-5 text-[#1E5D2A] rounded border-gray-300 focus:ring-[#1E5D2A]"
                 />
                 <label htmlFor="activeMember" className="font-medium text-gray-700 cursor-pointer">
-                  Membre actif (visible sur la page publique)
+                  {t("admin.team.label_active")}
                 </label>
               </div>
 
@@ -1004,8 +1647,8 @@ function TeamTab({ setMessage }: { setMessage: (msg: string) => void }) {
                   disabled={createMutation.isPending || updateMutation.isPending}
                 >
                   {(createMutation.isPending || updateMutation.isPending)
-                    ? "Enregistrement..."
-                    : (editingId ? "Mettre à jour" : "Ajouter le membre")}
+                    ? t("common.saving")
+                    : (editingId ? t("common.update") : t("admin.team.form_title_add"))}
                 </Button>
                 {editingId && (
                   <Button type="button" variant="outline" onClick={cancelEdit} className="h-12 px-8">
@@ -1021,86 +1664,101 @@ function TeamTab({ setMessage }: { setMessage: (msg: string) => void }) {
       <div className="lg:col-span-4">
         <Card className="border border-gray-100 shadow-sm sticky top-6">
           <CardHeader className="bg-gray-50/50 border-b border-gray-100 pb-4">
-            <CardTitle className="text-xl text-[#1A361D]">Membres ({members.length})</CardTitle>
+            <CardTitle className="text-xl text-[#1A361D]">{t("admin.sidebar.team")} ({members.length})</CardTitle>
             <CardDescription>
-              Utilisez les flèches pour définir l'ordre d'affichage.
+              {t("admin.team.desc")}
             </CardDescription>
+            <div className="relative mt-3">
+              <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Input
+                value={memberSearch}
+                onChange={(e) => setMemberSearch(e.target.value)}
+                placeholder={t("admin.projects.search_placeholder")}
+                className="pl-9 h-10 bg-white"
+              />
+            </div>
           </CardHeader>
           <CardContent className="pt-0 p-0">
             {isLoading ? (
-              <div className="p-6 text-center text-gray-500">Chargement...</div>
+              <div className="p-6 text-center text-gray-500">{t("admin.projects.loading")}</div>
             ) : (
               <div className="max-h-[800px] overflow-y-auto divide-y divide-gray-100">
-                {members.map((member: any, index: number) => (
-                  <div key={member.id} className={`p-4 hover:bg-gray-50 transition-colors ${editingId === member.id ? "bg-emerald-50/40" : ""}`}>
-                    <div className="flex items-start gap-3">
-                      <img
-                        src={member.image || "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=200&q=80"}
-                        alt={member.name}
-                        className="w-12 h-12 rounded-full object-cover border"
-                      />
-                      <div className="flex-1 min-w-0">
-                        <p className="font-bold text-gray-800 truncate">{member.name}</p>
-                        <p className="text-sm text-gray-600 truncate">{member.role}</p>
-                        <p className="text-xs text-gray-500 truncate">{member.location || "Sans localisation"}</p>
-                        <div className="mt-2">
-                          <span className={`text-xs px-2 py-1 rounded-full font-medium ${member.active ? "bg-emerald-100 text-emerald-700" : "bg-gray-200 text-gray-700"}`}>
-                            {member.active ? "Actif" : "Inactif"}
-                          </span>
+                {filteredMembers.map((member: any) => {
+                  const index = members.findIndex((candidate: any) => candidate.id === member.id);
+                  return (
+                    <div key={member.id} className={`p-4 hover:bg-gray-50 transition-colors ${editingId === member.id ? "bg-emerald-50/40" : ""}`}>
+                      <div className="flex items-start gap-3">
+                        <img
+                          src={member.image || "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=200&q=80"}
+                          alt={member.name}
+                          className="w-12 h-12 rounded-full object-cover border"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <p className="font-bold text-gray-800 truncate">{member.name}</p>
+                          <p className="text-sm text-gray-600 truncate">{member.role}</p>
+                          <p className="text-xs text-gray-500 truncate">{member.location || t("common.no_location")}</p>
+                          <div className="mt-2">
+                            <span className="text-xs px-2 py-1 rounded-full font-medium bg-gray-100 text-gray-600 mr-2">
+                              {t("common.order")} #{index + 1}
+                            </span>
+                            <span className={`text-xs px-2 py-1 rounded-full font-medium ${member.active ? "bg-emerald-100 text-emerald-700" : "bg-gray-200 text-gray-700"}`}>
+                              {member.active ? t("common.active") : t("common.inactive")}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
+                        <div className="flex gap-1">
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="h-8 w-8"
+                            onClick={() => moveMember(member.id, "up")}
+                            disabled={index === 0 || reorderMutation.isPending}
+                          >
+                            <ArrowUp className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="h-8 w-8"
+                            onClick={() => moveMember(member.id, "down")}
+                            disabled={index === members.length - 1 || reorderMutation.isPending}
+                          >
+                            <ArrowDown className="w-4 h-4" />
+                          </Button>
+                        </div>
+
+                        <div className="flex gap-2">
+                          <Button size="sm" variant="secondary" className="h-8" onClick={() => handleEdit(member)}>
+                            <Edit2 className="w-3.5 h-3.5 mr-1.5" /> {t("common.update")}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            className="h-8"
+                            onClick={() => {
+                              if (window.confirm(t("admin.team.confirm_delete"))) {
+                                deleteMutation.mutate(member.id, {
+                                  onSuccess: () => {
+                                    setMessage(t("admin.team.delete_success"));
+                                    utils.team.adminList.invalidate();
+                                    utils.team.list.invalidate();
+                                  },
+                                });
+                              }
+                            }}
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </Button>
                         </div>
                       </div>
                     </div>
-
-                    <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
-                      <div className="flex gap-1">
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          className="h-8 w-8"
-                          onClick={() => moveMember(member.id, "up")}
-                          disabled={index === 0 || reorderMutation.isPending}
-                        >
-                          <ArrowUp className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          className="h-8 w-8"
-                          onClick={() => moveMember(member.id, "down")}
-                          disabled={index === members.length - 1 || reorderMutation.isPending}
-                        >
-                          <ArrowDown className="w-4 h-4" />
-                        </Button>
-                      </div>
-
-                      <div className="flex gap-2">
-                        <Button size="sm" variant="secondary" className="h-8" onClick={() => handleEdit(member)}>
-                          <Edit2 className="w-3.5 h-3.5 mr-1.5" /> Modifier
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          className="h-8"
-                          onClick={() => {
-                            if (window.confirm("Supprimer ce membre de l'équipe ?")) {
-                              deleteMutation.mutate(member.id, {
-                                onSuccess: () => {
-                                  setMessage("✅ Membre supprimé");
-                                  utils.team.adminList.invalidate();
-                                  utils.team.list.invalidate();
-                                },
-                              });
-                            }
-                          }}
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                {members.length === 0 && (
-                  <div className="p-8 text-center text-gray-500">Aucun membre enregistré.</div>
+                  );
+                })}
+                {filteredMembers.length === 0 && (
+                  <div className="p-8 text-center text-gray-500">{t("common.no_results")}</div>
                 )}
               </div>
             )}
@@ -1112,37 +1770,58 @@ function TeamTab({ setMessage }: { setMessage: (msg: string) => void }) {
 }
 
 function ContactsTab({ setMessage }: { setMessage: (msg: string) => void }) {
+  const { t } = useTranslation();
   const utils = trpc.useContext();
   const { data: contacts = [], isLoading } = trpc.contact.adminList.useQuery();
   const updateStatus = trpc.contact.updateStatus.useMutation();
+  const [contactSearch, setContactSearch] = useState("");
+
+  const filteredContacts = useMemo(
+    () => contacts.filter((contact: any) => {
+      const q = contactSearch.toLowerCase();
+      return (
+        (contact.subject || "").toLowerCase().includes(q)
+        || (contact.email || "").toLowerCase().includes(q)
+        || `${contact.firstName || ""} ${contact.lastName || ""}`.toLowerCase().includes(q)
+      );
+    }),
+    [contacts, contactSearch],
+  );
 
   const handleStatusChange = async (id: number, status: "nouveau" | "lu" | "traite") => {
     try {
       await updateStatus.mutateAsync({ id, status });
       utils.contact.adminList.invalidate();
     } catch (error) {
-      setMessage("❌ Erreur lors de la mise à jour");
+      setMessage(t("common.error_generic"));
     }
   };
 
   return (
     <Card className="border border-gray-100 shadow-sm">
       <CardHeader className="bg-gray-50/50 border-b border-gray-100 pb-4">
-        <CardTitle className="text-xl text-[#1A361D]">Boîte de réception ({contacts.length})</CardTitle>
-      </CardHeader>
-      <CardContent className="p-0">
+        <CardTitle className="text-xl text-[#1A361D]">{t("admin.sidebar.contacts")} ({contacts.length})</CardTitle>
+        <div className="relative mt-3 max-w-md">
+          <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Input
+            value={contactSearch}
+            onChange={(e) => setContactSearch(e.target.value)}
+            placeholder={t("admin.contacts.search_placeholder")}
+            className="pl-9 h-10 bg-white"
+          />
+        <CardContent className="p-0">
         {isLoading ? (
-          <div className="p-6 text-center text-gray-500">Chargement...</div>
+          <div className="p-6 text-center text-gray-500">{t("admin.projects.loading")}</div>
         ) : (
           <div className="divide-y divide-gray-100">
-            {contacts.map((contact: any) => (
+            {filteredContacts.map((contact: any) => (
               <div key={contact.id} className={`p-6 hover:bg-gray-50 ${contact.status === 'nouveau' ? 'bg-blue-50/30' : ''}`}>
                 <div className="flex justify-between items-start mb-2">
                   <div>
                     <h4 className={`text-lg hover:underline cursor-pointer ${contact.status === 'nouveau' ? 'font-bold text-blue-900' : 'font-semibold text-gray-800'}`}>
                       {contact.subject}
                     </h4>
-                    <p className="text-sm text-gray-500 font-medium">De: {contact.firstName} {contact.lastName} ({contact.email})</p>
+                    <p className="text-sm text-gray-500 font-medium">{t("admin.contacts.label_from")}: {contact.firstName} {contact.lastName} ({contact.email})</p>
                   </div>
                   <select
                     value={contact.status}
@@ -1150,11 +1829,11 @@ function ContactsTab({ setMessage }: { setMessage: (msg: string) => void }) {
                     className={`text-sm rounded-full px-3 py-1 font-medium border ${contact.status === 'nouveau' ? 'bg-blue-100 text-blue-800 border-blue-200' :
                       contact.status === 'traite' ? 'bg-green-100 text-green-800 border-green-200' :
                         'bg-gray-100 text-gray-800 border-gray-200'
-                      }`}
+                       }`}
                   >
-                    <option value="nouveau">Nouveau</option>
-                    <option value="lu">Lu</option>
-                    <option value="traite">Traité</option>
+                    <option value="nouveau">{t("admin.contacts.status.nouveau")}</option>
+                    <option value="lu">{t("admin.contacts.status.lu")}</option>
+                    <option value="traite">{t("admin.contacts.status.traite")}</option>
                   </select>
                 </div>
                 <div className="mt-4 p-4 bg-white border rounded-lg text-gray-700 whitespace-pre-wrap text-sm">
@@ -1162,7 +1841,10 @@ function ContactsTab({ setMessage }: { setMessage: (msg: string) => void }) {
                 </div>
               </div>
             ))}
-            {contacts.length === 0 && <div className="p-8 text-center text-gray-500">Aucun message de contact.</div>}
+            {filteredContacts.length === 0 && <div className="p-8 text-center text-gray-500">{t("admin.contacts.empty")}</div>}
+          </div>
+        )}
+div>}
           </div>
         )}
       </CardContent>
@@ -1171,36 +1853,60 @@ function ContactsTab({ setMessage }: { setMessage: (msg: string) => void }) {
 }
 
 function RegistrationsTab({ setMessage }: { setMessage: (msg: string) => void }) {
+  const { t } = useTranslation();
   const utils = trpc.useContext();
   const { data: registrations = [], isLoading } = trpc.registration.adminList.useQuery();
   const updateStatus = trpc.registration.updateStatus.useMutation();
+  const [registrationSearch, setRegistrationSearch] = useState("");
+
+  const filteredRegistrations = useMemo(
+    () => registrations.filter((reg: any) => {
+      const q = registrationSearch.toLowerCase();
+      return (
+        `${reg.firstName || ""} ${reg.lastName || ""}`.toLowerCase().includes(q)
+        || (reg.email || "").toLowerCase().includes(q)
+        || (reg.organization || "").toLowerCase().includes(q)
+        || (reg.city || "").toLowerCase().includes(q)
+      );
+    }),
+    [registrations, registrationSearch],
+  );
 
   const handleStatusChange = async (id: number, status: "nouveau" | "contacte" | "actif" | "inactif") => {
     try {
       await updateStatus.mutateAsync({ id, status });
       utils.registration.adminList.invalidate();
     } catch (error) {
-      setMessage("❌ Erreur lors de la mise à jour");
+      setMessage(t("common.error_generic"));
     }
   };
 
   return (
     <Card className="border border-gray-100 shadow-sm">
       <CardHeader className="bg-gray-50/50 border-b border-gray-100 pb-4">
-        <CardTitle className="text-xl text-[#1A361D]">Candidatures Bénévoles & Partenaires ({registrations.length})</CardTitle>
+        <CardTitle className="text-xl text-[#1A361D]">{t("admin.sidebar.registrations")} ({registrations.length})</CardTitle>
+        <div className="relative mt-3 max-w-md">
+          <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Input
+            value={registrationSearch}
+            onChange={(e) => setRegistrationSearch(e.target.value)}
+            placeholder={t("admin.registrations.search_placeholder")}
+            className="pl-9 h-10 bg-white"
+          />
+        </div>
       </CardHeader>
       <CardContent className="p-0">
         {isLoading ? (
           <div className="p-6 text-center text-gray-500">Chargement...</div>
         ) : (
           <div className="divide-y divide-gray-100">
-            {registrations.map((reg: any) => (
+            {filteredRegistrations.map((reg: any) => (
               <div key={reg.id} className={`p-6 hover:bg-gray-50 ${reg.status === 'nouveau' ? 'bg-purple-50/30' : ''}`}>
                 <div className="flex justify-between items-start mb-2">
                   <div>
                     <div className="flex items-center gap-2 mb-1">
                       <span className={`text-xs px-2 py-0.5 rounded-full font-bold uppercase ${reg.type === 'benevole' ? 'bg-orange-100 text-orange-800' : 'bg-teal-100 text-teal-800'}`}>
-                        {reg.type}
+                        {t(`admin.registrations.type.${reg.type}`)}
                       </span>
                       <h4 className="text-lg font-bold text-gray-800">
                         {reg.firstName} {reg.lastName} {reg.organization ? `(${reg.organization})` : ''}
@@ -1216,10 +1922,10 @@ function RegistrationsTab({ setMessage }: { setMessage: (msg: string) => void })
                         'bg-gray-100 text-gray-800 border-gray-200'
                       }`}
                   >
-                    <option value="nouveau">Nouveau</option>
-                    <option value="contacte">Contacté</option>
-                    <option value="actif">Actif</option>
-                    <option value="inactif">Inactif</option>
+                    <option value="nouveau">{t("admin.registrations.status.nouveau")}</option>
+                    <option value="contacte">{t("admin.registrations.status.contacte")}</option>
+                    <option value="actif">{t("admin.registrations.status.actif")}</option>
+                    <option value="inactif">{t("admin.registrations.status.inactif")}</option>
                   </select>
                 </div>
                 <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1238,7 +1944,7 @@ function RegistrationsTab({ setMessage }: { setMessage: (msg: string) => void })
                 </div>
               </div>
             ))}
-            {registrations.length === 0 && <div className="p-8 text-center text-gray-500">Aucune candidature.</div>}
+            {filteredRegistrations.length === 0 && <div className="p-8 text-center text-gray-500">Aucune candidature.</div>}
           </div>
         )}
       </CardContent>

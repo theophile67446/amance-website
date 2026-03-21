@@ -110,7 +110,7 @@ export default function Navbar() {
                 AMANCE
               </div>
               <div className="text-[10px] sm:text-xs text-gray-500 leading-tight truncate">
-                Angel Mary Association
+                {t("nav.association_name")}
               </div>
             </div>
           </Link>
@@ -154,7 +154,7 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center gap-2 xl:gap-3 flex-shrink-0">
             <button
               onClick={toggleLanguage}
-              title={isFrench ? "Switch to English" : "Passer en français"}
+              title={t("nav.switch_lang")}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-bold text-gray-700 border border-gray-200 hover:border-amance-green hover:text-amance-green transition-colors"
             >
               <Globe size={15} />
@@ -172,7 +172,7 @@ export default function Navbar() {
           <div className="lg:hidden flex items-center gap-1.5 flex-shrink-0">
             <button
               onClick={toggleLanguage}
-              title={isFrench ? "Switch to English" : "Passer en français"}
+              title={t("nav.switch_lang")}
               className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-gray-200 text-gray-700 hover:border-amance-green hover:text-amance-green transition-colors"
             >
               <Globe size={14} />
@@ -181,7 +181,7 @@ export default function Navbar() {
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
-              aria-label={isOpen ? "Fermer le menu" : "Ouvrir le menu"}
+              aria-label={isOpen ? t("nav.close_menu") : t("nav.open_menu")}
             >
               {isOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
@@ -216,7 +216,7 @@ export default function Navbar() {
                           href={link.href}
                           className="block px-3 py-2 rounded-lg text-sm font-semibold text-amance-blue hover:bg-amance-blue/5 transition-colors"
                         >
-                          → Voir tout
+                          {t("nav.see_all")}
                         </Link>
                         {link.children.map((child) => (
                           <Link

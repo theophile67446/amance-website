@@ -1,6 +1,7 @@
 import Layout from "@/components/Layout";
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
+import { useTranslation } from "react-i18next";
 import {
   MapPin,
   Phone,
@@ -8,7 +9,6 @@ import {
   Clock,
   Send,
   CheckCircle,
-  Leaf,
   Facebook,
   Twitter,
   Instagram,
@@ -17,6 +17,7 @@ import {
 import { toast } from "sonner";
 
 export default function Contact() {
+  const { t } = useTranslation();
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -32,15 +33,15 @@ export default function Contact() {
       setSubmitted(true);
       setForm({ firstName: "", lastName: "", email: "", phone: "", subject: "", message: "" });
     },
-    onError: (err) => {
-      toast.error("Une erreur est survenue. Veuillez réessayer.");
+    onError: () => {
+      toast.error(t("common.error_generic"));
     },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.firstName || !form.lastName || !form.email || !form.subject || !form.message) {
-      toast.error("Veuillez remplir tous les champs obligatoires.");
+      toast.error(t("common.form_required"));
       return;
     }
     submitContact.mutate(form);
@@ -63,17 +64,16 @@ export default function Contact() {
             style={{ backgroundColor: "rgba(255,255,255,0.15)" }}
           >
             <Mail size={14} />
-            Nous Contacter
+            {t("contact.hero.badge")}
           </div>
           <h1
             className="text-4xl md:text-5xl font-extrabold text-white mb-6"
             style={{ fontFamily: "Montserrat, sans-serif" }}
           >
-            Entrons en Contact
+            {t("contact.hero.title")}
           </h1>
           <p className="text-xl text-blue-200 max-w-3xl mx-auto" style={{ fontFamily: "Open Sans, sans-serif" }}>
-            Vous avez une question, une proposition de partenariat ou souhaitez en savoir plus sur
-            nos actions ? Nous sommes à votre écoute.
+            {t("contact.hero.subtitle")}
           </p>
         </div>
       </section>
@@ -87,7 +87,7 @@ export default function Contact() {
                 className="text-2xl font-extrabold mb-8"
                 style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}
               >
-                Nos Coordonnées
+                {t("contact.info.title")}
               </h2>
 
               <div className="space-y-6">
@@ -100,12 +100,10 @@ export default function Contact() {
                   </div>
                   <div>
                     <h4 className="font-bold text-sm mb-1" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>
-                      Adresse
+                      {t("contact.info.address_label")}
                     </h4>
                     <p className="text-sm text-gray-600" style={{ fontFamily: "Open Sans, sans-serif" }}>
-                      Buea, Division du Fako<br />
-                      Région du Sud-Ouest<br />
-                      Cameroun
+                      {t("contact.info.address_val")}
                     </p>
                   </div>
                 </div>
@@ -119,7 +117,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <h4 className="font-bold text-sm mb-1" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>
-                      Téléphone
+                      {t("contact.info.phone_label")}
                     </h4>
                     <p className="text-sm text-gray-600" style={{ fontFamily: "Open Sans, sans-serif" }}>
                       <a href="tel:+237674943368" className="hover:text-green-600 transition-colors">+237 674 943 368</a><br />
@@ -137,7 +135,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <h4 className="font-bold text-sm mb-1" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>
-                      E-mail
+                      {t("contact.info.email_label")}
                     </h4>
                     <p className="text-sm text-gray-600" style={{ fontFamily: "Open Sans, sans-serif" }}>
                       <a href="mailto:infos@amance.org" className="hover:text-green-600 transition-colors">infos@amance.org</a>
@@ -154,13 +152,11 @@ export default function Contact() {
                   </div>
                   <div>
                     <h4 className="font-bold text-sm mb-1" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>
-                      Horaires
+                      {t("contact.info.hours_label")}
                     </h4>
-                    <p className="text-sm text-gray-600" style={{ fontFamily: "Open Sans, sans-serif" }}>
-                      Lundi – Vendredi : 8h00 – 17h00<br />
-                      Samedi : 9h00 – 13h00<br />
-                      <span className="text-gray-400">Dimanche : Fermé</span>
-                    </p>
+                    <pre className="text-sm text-gray-600 font-sans whitespace-pre-line">
+                      {t("contact.info.hours_val")}
+                    </pre>
                   </div>
                 </div>
               </div>
@@ -168,7 +164,7 @@ export default function Contact() {
               {/* Social Media */}
               <div className="mt-8 pt-8 border-t border-gray-100">
                 <h4 className="font-bold text-sm mb-4" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>
-                  Suivez-nous
+                  {t("contact.info.follow_us")}
                 </h4>
                 <div className="flex gap-3">
                   {[
@@ -207,18 +203,17 @@ export default function Contact() {
                     className="text-2xl font-extrabold mb-4"
                     style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}
                   >
-                    Message envoyé avec succès !
+                    {t("contact.form.success_title")}
                   </h3>
                   <p className="text-gray-600 max-w-md mb-8" style={{ fontFamily: "Open Sans, sans-serif" }}>
-                    Merci de nous avoir contactés. Notre équipe vous répondra dans les plus brefs délais,
-                    généralement sous 24 à 48 heures ouvrables.
+                    {t("contact.form.success_desc")}
                   </p>
                   <button
                     onClick={() => setSubmitted(false)}
                     className="px-6 py-3 rounded-full font-bold text-white text-sm"
                     style={{ backgroundColor: "var(--amance-green)", fontFamily: "Montserrat, sans-serif" }}
                   >
-                    Envoyer un autre message
+                    {t("contact.form.send_another")}
                   </button>
                 </div>
               ) : (
@@ -227,20 +222,20 @@ export default function Contact() {
                     className="text-2xl font-extrabold mb-8"
                     style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}
                   >
-                    Envoyer un Message
+                    {t("contact.form.title")}
                   </h2>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-semibold mb-2" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>
-                        Prénom <span className="text-red-500">*</span>
+                        {t("contact.form.first_name")} <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
                         name="firstName"
                         value={form.firstName}
                         onChange={handleChange}
-                        placeholder="Votre prénom"
+                        placeholder={t("contact.form.placeholder_first_name")}
                         required
                         className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:border-transparent transition-all"
                         style={{ fontFamily: "Open Sans, sans-serif" }}
@@ -248,14 +243,14 @@ export default function Contact() {
                     </div>
                     <div>
                       <label className="block text-sm font-semibold mb-2" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>
-                        Nom <span className="text-red-500">*</span>
+                        {t("contact.form.last_name")} <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
                         name="lastName"
                         value={form.lastName}
                         onChange={handleChange}
-                        placeholder="Votre nom"
+                        placeholder={t("contact.form.placeholder_last_name")}
                         required
                         className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:border-transparent transition-all"
                         style={{ fontFamily: "Open Sans, sans-serif" }}
@@ -266,14 +261,14 @@ export default function Contact() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-semibold mb-2" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>
-                        E-mail <span className="text-red-500">*</span>
+                        {t("contact.form.email")} <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="email"
                         name="email"
                         value={form.email}
                         onChange={handleChange}
-                        placeholder="votre@email.com"
+                        placeholder={t("contact.form.placeholder_email")}
                         required
                         className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:border-transparent transition-all"
                         style={{ fontFamily: "Open Sans, sans-serif" }}
@@ -281,14 +276,14 @@ export default function Contact() {
                     </div>
                     <div>
                       <label className="block text-sm font-semibold mb-2" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>
-                        Téléphone
+                        {t("contact.form.phone")}
                       </label>
                       <input
                         type="tel"
                         name="phone"
                         value={form.phone}
                         onChange={handleChange}
-                        placeholder="+237 6XX XXX XXX"
+                        placeholder={t("contact.form.placeholder_phone")}
                         className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:border-transparent transition-all"
                         style={{ fontFamily: "Open Sans, sans-serif" }}
                       />
@@ -297,7 +292,7 @@ export default function Contact() {
 
                   <div>
                     <label className="block text-sm font-semibold mb-2" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>
-                      Sujet <span className="text-red-500">*</span>
+                      {t("contact.form.subject")} <span className="text-red-500">*</span>
                     </label>
                     <select
                       name="subject"
@@ -307,25 +302,25 @@ export default function Contact() {
                       className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:border-transparent transition-all bg-white"
                       style={{ fontFamily: "Open Sans, sans-serif" }}
                     >
-                      <option value="">Sélectionnez un sujet</option>
-                      <option value="Demande d'information">Demande d'information</option>
-                      <option value="Proposition de partenariat">Proposition de partenariat</option>
-                      <option value="Don et soutien financier">Don et soutien financier</option>
-                      <option value="Bénévolat">Bénévolat</option>
-                      <option value="Médias et presse">Médias et presse</option>
-                      <option value="Autre">Autre</option>
+                      <option value="">{t("contact.form.placeholder_subject")}</option>
+                      <option value="Demande d'information">{t("contact.form.subjects.info")}</option>
+                      <option value="Proposition de partenariat">{t("contact.form.subjects.partnership")}</option>
+                      <option value="Don et soutien financier">{t("contact.form.subjects.donation")}</option>
+                      <option value="Bénévolat">{t("contact.form.subjects.volunteer")}</option>
+                      <option value="Médias et presse">{t("contact.form.subjects.media")}</option>
+                      <option value="Autre">{t("contact.form.subjects.other")}</option>
                     </select>
                   </div>
 
                   <div>
                     <label className="block text-sm font-semibold mb-2" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>
-                      Message <span className="text-red-500">*</span>
+                      {t("contact.form.message")} <span className="text-red-500">*</span>
                     </label>
                     <textarea
                       name="message"
                       value={form.message}
                       onChange={handleChange}
-                      placeholder="Décrivez votre demande en détail..."
+                      placeholder={t("contact.form.placeholder_message")}
                       required
                       rows={6}
                       className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:border-transparent transition-all resize-none"
@@ -342,12 +337,12 @@ export default function Contact() {
                     {submitContact.isPending ? (
                       <>
                         <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        Envoi en cours...
+                        {t("contact.form.submitting")}
                       </>
                     ) : (
                       <>
                         <Send size={16} />
-                        Envoyer le Message
+                        {t("contact.form.submit")}
                       </>
                     )}
                   </button>

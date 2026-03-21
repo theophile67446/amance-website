@@ -1,6 +1,6 @@
 import Layout from "@/components/Layout";
 import { trpc } from "@/lib/trpc";
-import { Link } from "wouter";
+import { useTranslation } from "react-i18next";
 import {
   Target,
   Eye,
@@ -11,7 +11,6 @@ import {
   Award,
   FileText,
   Download,
-  ArrowRight,
   CheckCircle,
   Leaf,
 } from "lucide-react";
@@ -19,84 +18,82 @@ import {
 const TEAM_IMAGE = "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=80";
 const ABOUT_HERO = "https://images.unsplash.com/photo-1509099836639-18ba1795216d?w=1920&q=80";
 
-const defaultTeamMembers = [
-  {
-    name: "Fule Ndiba Juliette",
-    role: "Présidente",
-    title: "BSc Administration",
-    location: "Buea",
-    image: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=200&q=80",
-  },
-  {
-    name: "Ekanya Georgette Oyang",
-    role: "Secrétaire Générale",
-    title: "Gestion des Ressources Forestières",
-    location: "Buea",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80",
-  },
-  {
-    name: "Gwei Kilah Etienne",
-    role: "Secrétaire Financier",
-    title: "Économiste",
-    location: "Buea",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80",
-  },
-  {
-    name: "Simeu Noutchom Alain",
-    role: "Conseiller",
-    title: "Zoologiste (PhD)",
-    location: "Yaoundé",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&q=80",
-  },
-];
-
-const values = [
-  {
-    icon: Shield,
-    title: "Intégrité",
-    description:
-      "Nous alignons nos paroles et nos actes. L'honnêteté, la cohérence et la responsabilité sont au cœur de chacune de nos actions quotidiennes.",
-    color: "var(--amance-blue)",
-  },
-  {
-    icon: Heart,
-    title: "Compassion",
-    description:
-      "Nous comprenons et ressentons la souffrance des autres. Notre désir sincère d'aider guide chaque intervention sur le terrain.",
-    color: "var(--amance-green)",
-  },
-  {
-    icon: Users,
-    title: "Diversité & Inclusion",
-    description:
-      "Nous travaillons avec des personnes aux origines, genres, religions et perspectives différentes. Chaque voix compte.",
-    color: "var(--amance-blue-light)",
-  },
-  {
-    icon: Globe,
-    title: "Impact",
-    description:
-      "Nous nous concentrons sur les actions qui créent le plus grand impact, tant pour les personnes que pour l'environnement où elles vivent.",
-    color: "var(--amance-green-dark)",
-  },
-];
-
-const sdgs = [
-  { num: 1, label: "Pas de pauvreté" },
-  { num: 2, label: "Faim zéro" },
-  { num: 3, label: "Bonne santé" },
-  { num: 4, label: "Éducation de qualité" },
-  { num: 5, label: "Égalité des sexes" },
-  { num: 6, label: "Eau propre" },
-  { num: 8, label: "Travail décent" },
-  { num: 13, label: "Action climatique" },
-  { num: 15, label: "Vie terrestre" },
-  { num: 16, label: "Paix & Justice" },
-  { num: 17, label: "Partenariats" },
-];
-
 export default function APropos() {
+  const { t } = useTranslation();
   const { data: teamMembersData = [] } = trpc.team.list.useQuery();
+
+  const defaultTeamMembers = [
+    {
+      name: "Fule Ndiba Juliette",
+      role: t("about.team.roles.president"),
+      title: "BSc Administration",
+      location: "Buea",
+      image: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=200&q=80",
+    },
+    {
+      name: "Ekanya Georgette Oyang",
+      role: t("about.team.roles.sg"),
+      title: "Gestion des Ressources Forestières",
+      location: "Buea",
+      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80",
+    },
+    {
+      name: "Gwei Kilah Etienne",
+      role: t("about.team.roles.sf"),
+      title: "Économiste",
+      location: "Buea",
+      image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80",
+    },
+    {
+      name: "Simeu Noutchom Alain",
+      role: t("about.team.roles.advisor"),
+      title: "Zoologiste (PhD)",
+      location: "Yaoundé",
+      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&q=80",
+    },
+  ];
+
+  const values = [
+    {
+      icon: Shield,
+      title: t("about.values.items.integrity.title"),
+      description: t("about.values.items.integrity.desc"),
+      color: "var(--amance-blue)",
+    },
+    {
+      icon: Heart,
+      title: t("about.values.items.compassion.title"),
+      description: t("about.values.items.compassion.desc"),
+      color: "var(--amance-green)",
+    },
+    {
+      icon: Users,
+      title: t("about.values.items.diversity.title"),
+      description: t("about.values.items.diversity.desc"),
+      color: "var(--amance-blue-light)",
+    },
+    {
+      icon: Globe,
+      title: t("about.values.items.impact.title"),
+      description: t("about.values.items.impact.desc"),
+      color: "var(--amance-green-dark)",
+    },
+  ];
+
+  const sdgs = [
+    { num: 1, label: t("about.goals.items.1") },
+    { num: 2, label: t("about.goals.items.2") },
+    { num: 3, label: t("about.goals.items.3") },
+    { num: 4, label: t("about.goals.items.4") },
+    { num: 5, label: t("about.goals.items.5") },
+    { num: 6, label: t("about.goals.items.6") },
+    { num: 8, label: t("about.goals.items.4") },
+    { num: 13, label: "Action climatique" },
+    { num: 15, label: "Vie terrestre" },
+    { num: 16, label: "Paix & Justice" },
+    { num: 17, label: "Partenariats" },
+  ];
+
   const displayedTeamMembers = teamMembersData.length > 0 ? teamMembersData : defaultTeamMembers;
 
   return (
@@ -117,17 +114,16 @@ export default function APropos() {
             style={{ backgroundColor: "rgba(255,255,255,0.15)" }}
           >
             <Leaf size={14} />
-            À Propos d'AMANCE
+            {t("about.hero.badge")}
           </div>
           <h1
             className="text-4xl md:text-5xl font-extrabold text-white mb-6"
             style={{ fontFamily: "Montserrat, sans-serif" }}
           >
-            Qui Sommes-Nous ?
+            {t("about.hero.title")}
           </h1>
           <p className="text-xl text-gray-200 max-w-3xl mx-auto" style={{ fontFamily: "Open Sans, sans-serif" }}>
-            AMANCE est une organisation à but non lucratif fondée à Buea, Cameroun, dédiée à
-            l'allègement des souffrances humaines et à la conservation de la biodiversité.
+            {t("about.hero.subtitle")}
           </p>
         </div>
       </section>
@@ -142,13 +138,13 @@ export default function APropos() {
                 style={{ backgroundColor: "rgba(82,180,82,0.1)", color: "var(--amance-green)" }}
               >
                 <Target size={14} />
-                Notre Raison d'Être
+                {t("about.mission.badge")}
               </div>
               <h2
                 className="text-3xl md:text-4xl font-extrabold mb-8"
                 style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}
               >
-                Mission, Vision & Slogan
+                {t("about.mission.title")}
               </h2>
 
               <div className="space-y-6">
@@ -156,13 +152,11 @@ export default function APropos() {
                   <div className="flex items-center gap-3 mb-3">
                     <Target size={20} style={{ color: "var(--amance-green)" }} />
                     <h3 className="font-bold text-lg" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>
-                      Notre Mission
+                      {t("about.mission.mission_title")}
                     </h3>
                   </div>
                   <p className="text-gray-700 leading-relaxed" style={{ fontFamily: "Open Sans, sans-serif" }}>
-                    Alléger les souffrances humaines et défendre la conservation de la biodiversité.
-                    Nous agissons au quotidien pour soutenir les personnes vulnérables tout en
-                    préservant les ressources naturelles du Cameroun pour les générations futures.
+                    {t("about.mission.mission_desc")}
                   </p>
                 </div>
 
@@ -170,12 +164,11 @@ export default function APropos() {
                   <div className="flex items-center gap-3 mb-3">
                     <Eye size={20} style={{ color: "var(--amance-blue)" }} />
                     <h3 className="font-bold text-lg" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>
-                      Notre Vision
+                      {t("about.mission.vision_title")}
                     </h3>
                   </div>
                   <p className="text-gray-700 leading-relaxed" style={{ fontFamily: "Open Sans, sans-serif" }}>
-                    "Nous envisageons un monde respectueux de l'environnement où la pauvreté a été
-                    surmontée, et où tous les êtres humains vivent dans la dignité."
+                    {t("about.mission.vision_desc")}
                   </p>
                 </div>
 
@@ -183,13 +176,13 @@ export default function APropos() {
                   <div className="flex items-center gap-3 mb-3">
                     <Award size={20} style={{ color: "var(--amance-green-dark)" }} />
                     <h3 className="font-bold text-lg" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>
-                      Notre Slogan
+                      {t("about.mission.slogan_title")}
                     </h3>
                   </div>
                   <p className="text-gray-700 italic leading-relaxed" style={{ fontFamily: "Open Sans, sans-serif" }}>
-                    "Speak up for those who cannot speak for themselves, to save lives for a safe environment."
+                    {t("about.mission.slogan_desc")}
                     <br />
-                    <span className="text-sm text-gray-500 not-italic">— Proverbes 31:8</span>
+                    <span className="text-sm text-gray-500 not-italic">— {t("about.mission.slogan_source")}</span>
                   </p>
                 </div>
               </div>
@@ -202,23 +195,16 @@ export default function APropos() {
                 style={{ backgroundColor: "rgba(28,58,95,0.1)", color: "var(--amance-blue)" }}
               >
                 <CheckCircle size={14} />
-                Nos Objectifs
+                {t("about.goals.badge")}
               </div>
               <h2
                 className="text-3xl md:text-4xl font-extrabold mb-8"
                 style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}
               >
-                Ce Que Nous Poursuivons
+                {t("about.goals.title")}
               </h2>
               <div className="space-y-4">
-                {[
-                  "Respecter et promouvoir l'adhésion aux lois de l'État camerounais",
-                  "Rassembler les membres autour d'un bien commun et d'une vision partagée",
-                  "Soutenir les projets de développement et favoriser la croissance des membres",
-                  "Aider les personnes défavorisées par une assistance financière, médicale et matérielle",
-                  "Accompagner les communautés rurales par des initiatives de développement et d'éducation",
-                  "Promouvoir la conservation de la biodiversité et l'éducation au développement durable",
-                ].map((goal, i) => (
+                {[1, 2, 3, 4, 5, 6].map((i) => (
                   <div key={i} className="flex items-start gap-3">
                     <div
                       className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
@@ -227,7 +213,7 @@ export default function APropos() {
                       <CheckCircle size={14} className="text-white" />
                     </div>
                     <p className="text-gray-700 text-sm leading-relaxed" style={{ fontFamily: "Open Sans, sans-serif" }}>
-                      {goal}
+                      {t(`about.goals.items.${i}`)}
                     </p>
                   </div>
                 ))}
@@ -236,7 +222,7 @@ export default function APropos() {
               {/* SDGs */}
               <div className="mt-8 p-6 rounded-2xl" style={{ backgroundColor: "rgba(82,180,82,0.05)" }}>
                 <h4 className="font-bold mb-4 text-sm uppercase tracking-wide" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>
-                  Alignement avec les ODD des Nations Unies
+                  {t("about.goals.sdgs_title")}
                 </h4>
                 <div className="flex flex-wrap gap-2">
                   {sdgs.map((sdg) => (
@@ -265,16 +251,16 @@ export default function APropos() {
               style={{ backgroundColor: "rgba(82,180,82,0.1)", color: "var(--amance-green)" }}
             >
               <Heart size={14} />
-              Nos Valeurs Fondamentales
+              {t("about.values.badge")}
             </div>
             <h2
               className="text-3xl md:text-4xl font-extrabold mb-4"
               style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}
             >
-              Ce Qui Nous Guide
+              {t("about.values.title")}
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto" style={{ fontFamily: "Open Sans, sans-serif" }}>
-              Quatre valeurs essentielles qui orientent chacune de nos décisions et de nos actions sur le terrain.
+              {t("about.values.subtitle")}
             </p>
           </div>
 
@@ -314,17 +300,16 @@ export default function APropos() {
               style={{ backgroundColor: "rgba(28,58,95,0.1)", color: "var(--amance-blue)" }}
             >
               <Users size={14} />
-              Notre Équipe
+              {t("about.team.badge")}
             </div>
             <h2
               className="text-3xl md:text-4xl font-extrabold mb-4"
               style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}
             >
-              Le Bureau Exécutif d'AMANCE
+              {t("about.team.title")}
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto" style={{ fontFamily: "Open Sans, sans-serif" }}>
-              Des professionnels engagés et compétents, unis par une même vision : construire un
-              Cameroun plus juste et plus vert.
+              {t("about.team.subtitle")}
             </p>
           </div>
 
@@ -379,17 +364,16 @@ export default function APropos() {
               style={{ backgroundColor: "rgba(255,255,255,0.15)" }}
             >
               <FileText size={14} />
-              Transparence & Documents
+              {t("about.transparency.badge")}
             </div>
             <h2
               className="text-3xl md:text-4xl font-extrabold text-white mb-4"
               style={{ fontFamily: "Montserrat, sans-serif" }}
             >
-              Notre Engagement pour la Transparence
+              {t("about.transparency.title")}
             </h2>
             <p className="text-lg text-blue-200 max-w-2xl mx-auto" style={{ fontFamily: "Open Sans, sans-serif" }}>
-              AMANCE s'engage à une gestion transparente et responsable. Tous nos documents officiels
-              sont accessibles à nos partenaires et donateurs.
+              {t("about.transparency.subtitle")}
             </p>
           </div>
 
@@ -397,22 +381,22 @@ export default function APropos() {
             {[
               {
                 icon: FileText,
-                title: "Constitution de l'Association",
-                description: "Document fondateur définissant les statuts, objectifs et fonctionnement d'AMANCE.",
+                title: t("about.transparency.doc1_title"),
+                description: t("about.transparency.doc1_desc"),
                 type: "PDF",
                 year: "2024",
               },
               {
                 icon: Award,
-                title: "Rapport d'Activités Annuel",
-                description: "Bilan complet de nos actions, projets réalisés et impact mesuré sur le terrain.",
+                title: t("about.transparency.doc2_title"),
+                description: t("about.transparency.doc2_desc"),
                 type: "PDF",
                 year: "2025",
               },
               {
                 icon: Shield,
-                title: "Rapport Financier Audité",
-                description: "Comptes annuels vérifiés par un auditeur externe indépendant pour garantir la transparence.",
+                title: t("about.transparency.doc3_title"),
+                description: t("about.transparency.doc3_desc"),
                 type: "PDF",
                 year: "2025",
               },
@@ -439,10 +423,10 @@ export default function APropos() {
                   </p>
                   <button
                     className="flex items-center gap-2 text-sm font-semibold text-white hover:opacity-80 transition-opacity"
-                    onClick={() => alert("Document disponible sur demande. Contactez-nous à infos@amance.org")}
+                    onClick={() => alert(t("about.transparency.request_note"))}
                   >
                     <Download size={16} />
-                    Télécharger
+                    {t("about.transparency.download")}
                   </button>
                 </div>
               );

@@ -8,35 +8,16 @@ import {
   ArrowRight,
   CheckCircle,
   Send,
-  Leaf,
-  Globe,
-  Clock,
-  Star,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
+import SEO from "@/components/SEO";
 
 const IMG_BENEVOLE = "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&q=80";
 const IMG_PARTENAIRE = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80";
 
-const benefitsBenevole = [
-  "Expérience de terrain enrichissante au Cameroun",
-  "Développement de compétences professionnelles",
-  "Réseau international de professionnels engagés",
-  "Attestation officielle de bénévolat",
-  "Immersion culturelle authentique",
-  "Impact direct et mesurable sur des vies réelles",
-];
-
-const benefitsPartenaire = [
-  "Visibilité sur nos supports de communication",
-  "Rapports d'impact réguliers et transparents",
-  "Accès à notre réseau de partenaires internationaux",
-  "Contribution à des ODD mesurables",
-  "Co-branding sur les projets soutenus",
-  "Invitation aux événements et missions de terrain",
-];
-
 export default function SImpliquer() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<"benevole" | "partenaire">("benevole");
   const [submitted, setSubmitted] = useState(false);
 
@@ -70,14 +51,14 @@ export default function SImpliquer() {
       setSubmitted(true);
     },
     onError: () => {
-      toast.error("Une erreur est survenue. Veuillez réessayer.");
+      toast.error(t("common.error_generic"));
     },
   });
 
   const handleBenevoleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!benevoleForm.firstName || !benevoleForm.lastName || !benevoleForm.email) {
-      toast.error("Veuillez remplir tous les champs obligatoires.");
+      toast.error(t("common.form_required"));
       return;
     }
     submitRegistration.mutate({ type: "benevole", ...benevoleForm });
@@ -86,14 +67,18 @@ export default function SImpliquer() {
   const handlePartenaireSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!partenaireForm.firstName || !partenaireForm.lastName || !partenaireForm.email) {
-      toast.error("Veuillez remplir tous les champs obligatoires.");
+      toast.error(t("common.form_required"));
       return;
     }
     submitRegistration.mutate({ type: "partenaire", ...partenaireForm });
   };
 
+  const benefitsBenevole = t("get_involved.volunteer.benefits", { returnObjects: true }) as string[];
+  const benefitsPartenaire = t("get_involved.partner.benefits", { returnObjects: true }) as string[];
+
   return (
     <Layout>
+      <SEO title={t("get_involved.hero.seo_title")} description={t("get_involved.hero.seo_desc")} />
       {/* Hero */}
       <section
         className="py-32"
@@ -105,17 +90,16 @@ export default function SImpliquer() {
             style={{ backgroundColor: "rgba(255,255,255,0.15)" }}
           >
             <Heart size={14} />
-            S'Impliquer avec AMANCE
+            {t("get_involved.hero.badge")}
           </div>
           <h1
             className="text-4xl md:text-5xl font-extrabold text-white mb-6"
             style={{ fontFamily: "Montserrat, sans-serif" }}
           >
-            Rejoignez Notre Mission
+            {t("get_involved.hero.title")}
           </h1>
           <p className="text-xl text-blue-200 max-w-3xl mx-auto" style={{ fontFamily: "Open Sans, sans-serif" }}>
-            Que vous souhaitiez offrir votre temps, vos compétences ou établir un partenariat
-            stratégique, AMANCE vous accueille avec enthousiasme.
+            {t("get_involved.hero.subtitle")}
           </p>
         </div>
       </section>
@@ -136,7 +120,7 @@ export default function SImpliquer() {
                 }}
               >
                 <Users size={16} />
-                Devenir Bénévole
+                {t("get_involved.tabs.volunteer")}
               </button>
               <button
                 onClick={() => { setActiveTab("partenaire"); setSubmitted(false); }}
@@ -148,7 +132,7 @@ export default function SImpliquer() {
                 }}
               >
                 <Building2 size={16} />
-                Devenir Partenaire
+                {t("get_involved.tabs.partner")}
               </button>
             </div>
           </div>
@@ -165,18 +149,17 @@ export default function SImpliquer() {
                 className="text-2xl font-extrabold mb-4"
                 style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}
               >
-                Inscription reçue avec succès !
+                {t("get_involved.success.title")}
               </h3>
               <p className="text-gray-600 max-w-md mb-8" style={{ fontFamily: "Open Sans, sans-serif" }}>
-                Merci pour votre engagement ! Notre équipe examinera votre candidature et vous
-                contactera dans les plus brefs délais pour la suite du processus.
+                {t("get_involved.success.desc")}
               </p>
               <button
                 onClick={() => setSubmitted(false)}
                 className="px-6 py-3 rounded-full font-bold text-white text-sm"
                 style={{ backgroundColor: "var(--amance-green)", fontFamily: "Montserrat, sans-serif" }}
               >
-                Soumettre une autre candidature
+                {t("get_involved.success.another")}
               </button>
             </div>
           ) : (
@@ -191,32 +174,30 @@ export default function SImpliquer() {
                       style={{ backgroundColor: "rgba(82,180,82,0.1)", color: "var(--amance-green)" }}
                     >
                       <Users size={14} />
-                      Bénévolat
+                      {t("get_involved.volunteer.badge")}
                     </div>
                     <h2
                       className="text-3xl font-extrabold mb-6"
                       style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}
                     >
-                      Devenez Bénévole AMANCE
+                      {t("get_involved.volunteer.title")}
                     </h2>
                     <p className="text-gray-600 leading-relaxed mb-8" style={{ fontFamily: "Open Sans, sans-serif" }}>
-                      Rejoignez une équipe de passionnés et contribuez directement à améliorer les
-                      conditions de vie des communautés camerounaises. Votre temps et vos compétences
-                      ont une valeur inestimable pour nous.
+                      {t("get_involved.volunteer.desc")}
                     </p>
 
                     <div className="relative rounded-2xl overflow-hidden mb-8 h-48">
-                      <img src={IMG_BENEVOLE} alt="Bénévoles AMANCE" className="w-full h-full object-cover" />
+                      <img src={IMG_BENEVOLE} alt={t("get_involved.volunteer.badge")} className="w-full h-full object-cover" />
                     </div>
 
                     <h4
                       className="font-bold text-sm uppercase tracking-wide mb-4"
                       style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}
                     >
-                      Ce que vous y gagnez
+                      {t("get_involved.volunteer.benefits_title")}
                     </h4>
                     <div className="space-y-3">
-                      {benefitsBenevole.map((b, i) => (
+                      {benefitsBenevole && Array.isArray(benefitsBenevole) && benefitsBenevole.map((b, i) => (
                         <div key={i} className="flex items-center gap-3">
                           <CheckCircle size={16} style={{ color: "var(--amance-green)" }} className="flex-shrink-0" />
                           <span className="text-sm text-gray-700" style={{ fontFamily: "Open Sans, sans-serif" }}>{b}</span>
@@ -231,13 +212,13 @@ export default function SImpliquer() {
                       className="text-xl font-extrabold mb-6"
                       style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}
                     >
-                      Formulaire d'Inscription Bénévole
+                      {t("get_involved.volunteer.form_title")}
                     </h3>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-xs font-semibold mb-1.5" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>
-                          Prénom *
+                          {t("get_involved.volunteer.firstName")}
                         </label>
                         <input
                           type="text" name="firstName" required
@@ -249,7 +230,7 @@ export default function SImpliquer() {
                       </div>
                       <div>
                         <label className="block text-xs font-semibold mb-1.5" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>
-                          Nom *
+                          {t("get_involved.volunteer.lastName")}
                         </label>
                         <input
                           type="text" name="lastName" required
@@ -264,7 +245,7 @@ export default function SImpliquer() {
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-xs font-semibold mb-1.5" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>
-                          E-mail *
+                          {t("get_involved.volunteer.email")}
                         </label>
                         <input
                           type="email" required
@@ -276,7 +257,7 @@ export default function SImpliquer() {
                       </div>
                       <div>
                         <label className="block text-xs font-semibold mb-1.5" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>
-                          Téléphone
+                          {t("get_involved.volunteer.phone")}
                         </label>
                         <input
                           type="tel"
@@ -291,7 +272,7 @@ export default function SImpliquer() {
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-xs font-semibold mb-1.5" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>
-                          Ville
+                          {t("get_involved.volunteer.city")}
                         </label>
                         <input
                           type="text"
@@ -303,7 +284,7 @@ export default function SImpliquer() {
                       </div>
                       <div>
                         <label className="block text-xs font-semibold mb-1.5" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>
-                          Disponibilité
+                          {t("get_involved.volunteer.availability.label")}
                         </label>
                         <select
                           value={benevoleForm.availability}
@@ -311,23 +292,23 @@ export default function SImpliquer() {
                           className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 bg-white"
                           style={{ fontFamily: "Open Sans, sans-serif" }}
                         >
-                          <option value="">Sélectionner</option>
-                          <option value="Temps plein">Temps plein</option>
-                          <option value="Temps partiel">Temps partiel</option>
-                          <option value="Week-ends">Week-ends uniquement</option>
-                          <option value="Vacances">Pendant les vacances</option>
-                          <option value="Ponctuel">Missions ponctuelles</option>
+                          <option value="">{t("get_involved.volunteer.availability.select")}</option>
+                          <option value="Temps plein">{t("get_involved.volunteer.availability.full")}</option>
+                          <option value="Temps partiel">{t("get_involved.volunteer.availability.partial")}</option>
+                          <option value="Week-ends">{t("get_involved.volunteer.availability.weekends")}</option>
+                          <option value="Vacances">{t("get_involved.volunteer.availability.vacation")}</option>
+                          <option value="Ponctuel">{t("get_involved.volunteer.availability.occasional")}</option>
                         </select>
                       </div>
                     </div>
 
                     <div>
                       <label className="block text-xs font-semibold mb-1.5" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>
-                        Compétences & Domaines d'expertise
+                        {t("get_involved.volunteer.skills.label")}
                       </label>
                       <input
                         type="text"
-                        placeholder="Ex: médecine, informatique, agriculture, communication..."
+                        placeholder={t("get_involved.volunteer.skills.placeholder")}
                         value={benevoleForm.skills}
                         onChange={(e) => setBenevoleForm(p => ({ ...p, skills: e.target.value }))}
                         className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2"
@@ -337,11 +318,11 @@ export default function SImpliquer() {
 
                     <div>
                       <label className="block text-xs font-semibold mb-1.5" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>
-                        Motivation *
+                        {t("get_involved.volunteer.motivation.label")}
                       </label>
                       <textarea
                         required rows={4}
-                        placeholder="Pourquoi souhaitez-vous rejoindre AMANCE ?"
+                        placeholder={t("get_involved.volunteer.motivation.placeholder")}
                         value={benevoleForm.motivation}
                         onChange={(e) => setBenevoleForm(p => ({ ...p, motivation: e.target.value }))}
                         className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 resize-none"
@@ -356,9 +337,9 @@ export default function SImpliquer() {
                       style={{ backgroundColor: "var(--amance-green)", fontFamily: "Montserrat, sans-serif" }}
                     >
                       {submitRegistration.isPending ? (
-                        <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> Envoi...</>
+                        <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> {t("get_involved.volunteer.submitting")}</>
                       ) : (
-                        <><Send size={16} /> Soumettre ma Candidature</>
+                        <><Send size={16} /> {t("get_involved.volunteer.submit")}</>
                       )}
                     </button>
                   </form>
@@ -375,32 +356,30 @@ export default function SImpliquer() {
                       style={{ backgroundColor: "rgba(28,58,95,0.1)", color: "var(--amance-blue)" }}
                     >
                       <Building2 size={14} />
-                      Partenariat
+                      {t("get_involved.partner.badge")}
                     </div>
                     <h2
                       className="text-3xl font-extrabold mb-6"
                       style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}
                     >
-                      Devenez Partenaire d'AMANCE
+                      {t("get_involved.partner.title")}
                     </h2>
                     <p className="text-gray-600 leading-relaxed mb-8" style={{ fontFamily: "Open Sans, sans-serif" }}>
-                      Institutions, entreprises, fondations, ONG : unissons nos forces pour un impact
-                      démultiplié. AMANCE recherche des partenaires partageant nos valeurs d'intégrité,
-                      de compassion et d'impact durable.
+                      {t("get_involved.partner.desc")}
                     </p>
 
                     <div className="relative rounded-2xl overflow-hidden mb-8 h-48">
-                      <img src={IMG_PARTENAIRE} alt="Partenaires AMANCE" className="w-full h-full object-cover" />
+                      <img src={IMG_PARTENAIRE} alt={t("get_involved.partner.badge")} className="w-full h-full object-cover" />
                     </div>
 
                     <h4
                       className="font-bold text-sm uppercase tracking-wide mb-4"
                       style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}
                     >
-                      Avantages du partenariat
+                      {t("get_involved.partner.benefits_title")}
                     </h4>
                     <div className="space-y-3">
-                      {benefitsPartenaire.map((b, i) => (
+                      {benefitsPartenaire && Array.isArray(benefitsPartenaire) && benefitsPartenaire.map((b, i) => (
                         <div key={i} className="flex items-center gap-3">
                           <CheckCircle size={16} style={{ color: "var(--amance-blue)" }} className="flex-shrink-0" />
                           <span className="text-sm text-gray-700" style={{ fontFamily: "Open Sans, sans-serif" }}>{b}</span>
@@ -415,12 +394,12 @@ export default function SImpliquer() {
                       className="text-xl font-extrabold mb-6"
                       style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}
                     >
-                      Formulaire de Partenariat
+                      {t("get_involved.partner.form_title")}
                     </h3>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-xs font-semibold mb-1.5" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>Prénom *</label>
+                        <label className="block text-xs font-semibold mb-1.5" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>{t("get_involved.partner.firstName")}</label>
                         <input type="text" required
                           value={partenaireForm.firstName}
                           onChange={(e) => setPartenaireForm(p => ({ ...p, firstName: e.target.value }))}
@@ -429,7 +408,7 @@ export default function SImpliquer() {
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-semibold mb-1.5" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>Nom *</label>
+                        <label className="block text-xs font-semibold mb-1.5" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>{t("get_involved.partner.lastName")}</label>
                         <input type="text" required
                           value={partenaireForm.lastName}
                           onChange={(e) => setPartenaireForm(p => ({ ...p, lastName: e.target.value }))}
@@ -440,7 +419,7 @@ export default function SImpliquer() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold mb-1.5" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>Organisation / Entreprise *</label>
+                      <label className="block text-xs font-semibold mb-1.5" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>{t("get_involved.partner.organization")}</label>
                       <input type="text" required
                         value={partenaireForm.organization}
                         onChange={(e) => setPartenaireForm(p => ({ ...p, organization: e.target.value }))}
@@ -450,27 +429,27 @@ export default function SImpliquer() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold mb-1.5" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>Type de partenaire</label>
+                      <label className="block text-xs font-semibold mb-1.5" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>{t("get_involved.partner.partnerType.label")}</label>
                       <select
                         value={partenaireForm.partnerType}
                         onChange={(e) => setPartenaireForm(p => ({ ...p, partnerType: e.target.value }))}
                         className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 bg-white"
                         style={{ fontFamily: "Open Sans, sans-serif" }}
                       >
-                        <option value="">Sélectionner</option>
-                        <option value="ONG / Association">ONG / Association</option>
-                        <option value="Entreprise privée">Entreprise privée</option>
-                        <option value="Institution publique">Institution publique</option>
-                        <option value="Fondation">Fondation</option>
-                        <option value="Bailleur de fonds">Bailleur de fonds</option>
-                        <option value="Université / Recherche">Université / Recherche</option>
-                        <option value="Médias">Médias</option>
+                        <option value="">{t("get_involved.partner.partnerType.select")}</option>
+                        <option value="ONG / Association">{t("get_involved.partner.partnerType.ong")}</option>
+                        <option value="Entreprise privée">{t("get_involved.partner.partnerType.private")}</option>
+                        <option value="Institution publique">{t("get_involved.partner.partnerType.public")}</option>
+                        <option value="Fondation">{t("get_involved.partner.partnerType.foundation")}</option>
+                        <option value="Bailleur de fonds">{t("get_involved.partner.partnerType.donor")}</option>
+                        <option value="Université / Recherche">{t("get_involved.partner.partnerType.research")}</option>
+                        <option value="Médias">{t("get_involved.partner.partnerType.media")}</option>
                       </select>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-xs font-semibold mb-1.5" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>E-mail *</label>
+                        <label className="block text-xs font-semibold mb-1.5" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>{t("get_involved.partner.email")}</label>
                         <input type="email" required
                           value={partenaireForm.email}
                           onChange={(e) => setPartenaireForm(p => ({ ...p, email: e.target.value }))}
@@ -479,7 +458,7 @@ export default function SImpliquer() {
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-semibold mb-1.5" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>Site web</label>
+                        <label className="block text-xs font-semibold mb-1.5" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>{t("get_involved.partner.website")}</label>
                         <input type="url"
                           value={partenaireForm.website}
                           onChange={(e) => setPartenaireForm(p => ({ ...p, website: e.target.value }))}
@@ -492,7 +471,7 @@ export default function SImpliquer() {
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-xs font-semibold mb-1.5" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>Ville</label>
+                        <label className="block text-xs font-semibold mb-1.5" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>{t("get_involved.partner.city")}</label>
                         <input type="text"
                           value={partenaireForm.city}
                           onChange={(e) => setPartenaireForm(p => ({ ...p, city: e.target.value }))}
@@ -501,7 +480,7 @@ export default function SImpliquer() {
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-semibold mb-1.5" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>Pays</label>
+                        <label className="block text-xs font-semibold mb-1.5" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>{t("get_involved.partner.country")}</label>
                         <input type="text"
                           value={partenaireForm.country}
                           onChange={(e) => setPartenaireForm(p => ({ ...p, country: e.target.value }))}
@@ -512,9 +491,9 @@ export default function SImpliquer() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold mb-1.5" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>Proposition de partenariat *</label>
+                      <label className="block text-xs font-semibold mb-1.5" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>{t("get_involved.partner.motivation.label")}</label>
                       <textarea required rows={4}
-                        placeholder="Décrivez votre proposition et les synergies envisagées..."
+                        placeholder={t("get_involved.partner.motivation.placeholder")}
                         value={partenaireForm.motivation}
                         onChange={(e) => setPartenaireForm(p => ({ ...p, motivation: e.target.value }))}
                         className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 resize-none"
@@ -529,9 +508,9 @@ export default function SImpliquer() {
                       style={{ backgroundColor: "var(--amance-blue)", fontFamily: "Montserrat, sans-serif" }}
                     >
                       {submitRegistration.isPending ? (
-                        <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> Envoi...</>
+                        <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> {t("get_involved.partner.submitting")}</>
                       ) : (
-                        <><Send size={16} /> Soumettre ma Proposition</>
+                        <><Send size={16} /> {t("get_involved.partner.submit")}</>
                       )}
                     </button>
                   </form>

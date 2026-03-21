@@ -1,8 +1,9 @@
 import Layout from "@/components/Layout";
 import { Link } from "wouter";
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import SEO from "@/components/SEO";
+import { useTranslation } from "react-i18next";
 import {
   Heart,
   ArrowRight,
@@ -22,72 +23,68 @@ import {
 
 const IMG_DON = "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1920&q=80";
 
-const impactAmounts = [
-  { amount: "10 000 FCFA", impact: "Fournitures scolaires pour 2 enfants pendant un trimestre", icon: HomeIcon },
-  { amount: "25 000 FCFA", impact: "Kit alimentaire d'urgence pour une famille de 5 personnes", icon: HandHeart },
-  { amount: "50 000 FCFA", impact: "Consultation médicale et médicaments pour 10 personnes", icon: Stethoscope },
-  { amount: "100 000 FCFA", impact: "Plantation de 50 arbres dans le cadre du reboisement", icon: TreePine },
-  { amount: "250 000 FCFA", impact: "Formation d'un agriculteur en agroforesterie durable", icon: Globe },
-  { amount: "500 000 FCFA", impact: "Soutien complet d'un orphelin pendant 6 mois", icon: Users },
-];
-
-const paymentMethods = [
-  {
-    icon: Smartphone,
-    title: "Mobile Money",
-    description: "MTN MoMo ou Orange Money",
-    detail: "+237 674 943 368 / +237 689 314 418",
-    color: "var(--amance-green)",
-  },
-  {
-    icon: Building,
-    title: "Virement Bancaire",
-    description: "Transfert bancaire international",
-    detail: "Contactez-nous pour les coordonnées bancaires",
-    color: "var(--amance-blue)",
-  },
-  {
-    icon: Mail,
-    title: "Par Courrier",
-    description: "Chèque ou mandat postal",
-    detail: "AMANCE, Buea, Région du Sud-Ouest, Cameroun",
-    color: "var(--amance-green-dark)",
-  },
-];
-
-const guarantees = [
-  "100% de votre don est utilisé pour les programmes sur le terrain",
-  "Rapport d'utilisation des fonds disponible sur demande",
-  "Reçu fiscal fourni pour tout don documenté",
-  "Transparence totale sur nos finances et activités",
-];
-
-const PRESET_AMOUNTS = [
-  { value: 5000, label: "5 000 FCFA" },
-  { value: 10000, label: "10 000 FCFA" },
-  { value: 25000, label: "25 000 FCFA" },
-  { value: 50000, label: "50 000 FCFA" },
-  { value: 100000, label: "100 000 FCFA" },
-];
-
 export default function FaireUnDon() {
+  const { t } = useTranslation();
   const [selectedAmount, setSelectedAmount] = useState<number | null>(10000);
   const [customAmount, setCustomAmount] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
 
+  const impactAmounts = [
+    { amount: t("donate_page.impact.items.0.amount"), impact: t("donate_page.impact.items.0.desc"), icon: HomeIcon },
+    { amount: t("donate_page.impact.items.1.amount"), impact: t("donate_page.impact.items.1.desc"), icon: HandHeart },
+    { amount: t("donate_page.impact.items.2.amount"), impact: t("donate_page.impact.items.2.desc"), icon: Stethoscope },
+    { amount: t("donate_page.impact.items.3.amount"), impact: t("donate_page.impact.items.3.desc"), icon: TreePine },
+    { amount: t("donate_page.impact.items.4.amount"), impact: t("donate_page.impact.items.4.desc"), icon: Globe },
+    { amount: t("donate_page.impact.items.5.amount"), impact: t("donate_page.impact.items.5.desc"), icon: Users },
+  ];
+
+  const paymentMethods = [
+    {
+      icon: Smartphone,
+      title: t("donate_page.methods.items.momo.title"),
+      description: t("donate_page.methods.items.momo.desc"),
+      detail: t("donate_page.methods.items.momo.detail"),
+      color: "var(--amance-green)",
+    },
+    {
+      icon: Building,
+      title: t("donate_page.methods.items.bank.title"),
+      description: t("donate_page.methods.items.bank.desc"),
+      detail: t("donate_page.methods.items.bank.detail"),
+      color: "var(--amance-blue)",
+    },
+    {
+      icon: Mail,
+      title: t("donate_page.methods.items.mail.title"),
+      description: t("donate_page.methods.items.mail.desc"),
+      detail: t("donate_page.methods.items.mail.detail"),
+      color: "var(--amance-green-dark)",
+    },
+  ];
+
+  const guarantees = t("donate_page.guarantees.items", { returnObjects: true }) as string[];
+
+  const PRESET_AMOUNTS = [
+    { value: 5000, label: "5 000 FCFA" },
+    { value: 10000, label: "10 000 FCFA" },
+    { value: 25000, label: "25 000 FCFA" },
+    { value: 50000, label: "50 000 FCFA" },
+    { value: 100000, label: "100 000 FCFA" },
+  ];
+
   const handleDonate = () => {
     setIsProcessing(true);
-    // Simulation d'une redirection vers une passerelle de paiement (Flutterwave/Campay)
     setTimeout(() => {
-      alert("Redirection vers la passerelle de paiement sécurisée...");
+      alert(t("donate_page.box.alert_redirect"));
       setIsProcessing(false);
     }, 1500);
   };
 
   const finalAmount = selectedAmount === null ? (parseInt(customAmount) || 0) : selectedAmount;
+
   return (
     <Layout>
-      <SEO title="Faire un Don" description="Soutenez les actions de l'AMANCE au Cameroun. Votre don contribue à la protection de l'environnement et au soutien des populations vulnérables." />
+      <SEO title={t("donate_page.hero.seo_title")} description={t("donate_page.hero.seo_desc")} />
       {/* Hero */}
       <section className="relative py-32 overflow-hidden">
         <div
@@ -106,7 +103,7 @@ export default function FaireUnDon() {
             style={{ backgroundColor: "rgba(255,255,255,0.15)" }}
           >
             <Heart size={14} fill="white" />
-            Soutien et Solidarité
+            {t("donate_page.hero.badge")}
           </motion.div>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -115,7 +112,7 @@ export default function FaireUnDon() {
             className="text-4xl md:text-6xl font-extrabold text-white mb-6 leading-tight"
             style={{ fontFamily: "Montserrat, sans-serif" }}
           >
-            Votre Générosité <br /><span style={{ color: "var(--amance-green-light)" }}>Change des Vies</span>
+            {t("donate_page.hero.title")}
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
@@ -124,8 +121,7 @@ export default function FaireUnDon() {
             className="text-xl text-gray-200 max-w-3xl mx-auto mb-10" 
             style={{ fontFamily: "Open Sans, sans-serif" }}
           >
-            Chaque contribution permet à AMANCE de poursuivre sa mission
-            auprès des personnes vulnérables et de préserver la biodiversité camerounaise.
+            {t("donate_page.hero.subtitle")}
           </motion.p>
         </div>
       </section>
@@ -140,9 +136,9 @@ export default function FaireUnDon() {
           >
             <div className="text-center mb-10">
               <h3 className="text-2xl font-bold mb-4" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>
-                Faire un don ponctuel
+                {t("donate_page.box.title")}
               </h3>
-              <p className="text-gray-500">Choisissez le montant de votre soutien</p>
+              <p className="text-gray-500">{t("donate_page.box.subtitle")}</p>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
@@ -163,7 +159,7 @@ export default function FaireUnDon() {
               <div className="relative col-span-2 md:col-span-1">
                 <input
                   type="number"
-                  placeholder="Autre montant"
+                  placeholder={t("donate_page.box.other_amount")}
                   value={customAmount}
                   onChange={(e) => { setCustomAmount(e.target.value); setSelectedAmount(null); }}
                   className={`w-full h-full py-4 px-6 rounded-2xl font-bold text-lg border-2 transition-all outline-none ${
@@ -189,13 +185,13 @@ export default function FaireUnDon() {
                 <div className="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
                 <>
-                  Continuer le paiement de {finalAmount.toLocaleString()} FCFA
+                  {t("donate_page.box.continue", { amount: finalAmount.toLocaleString() })}
                   <ArrowRight size={22} />
                 </>
               )}
             </button>
             <p className="text-center mt-6 text-xs text-gray-400">
-               Paiement sécurisé via MTN Mobile Money, Orange Money ou Carte Bancaire.
+               {t("donate_page.box.secure")}
             </p>
           </motion.div>
         </div>
@@ -210,17 +206,16 @@ export default function FaireUnDon() {
               style={{ backgroundColor: "rgba(82,180,82,0.1)", color: "var(--amance-green)" }}
             >
               <Heart size={14} />
-              Impact de votre don
+              {t("donate_page.impact.badge")}
             </div>
             <h2
               className="text-3xl md:text-4xl font-extrabold mb-6"
               style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}
             >
-              Que Représente Votre Don ?
+              {t("donate_page.impact.title")}
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto" style={{ fontFamily: "Open Sans, sans-serif" }}>
-              Chaque montant a un impact concret et mesurable sur le terrain. Voici des exemples
-              de ce que votre générosité permet de réaliser.
+              {t("donate_page.impact.subtitle")}
             </p>
           </div>
 
@@ -267,17 +262,16 @@ export default function FaireUnDon() {
               style={{ backgroundColor: "rgba(28,58,95,0.1)", color: "var(--amance-blue)" }}
             >
               <CreditCard size={14} />
-              Modalités de don
+              {t("donate_page.methods.badge")}
             </div>
             <h2
               className="text-3xl md:text-4xl font-extrabold mb-6"
               style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}
             >
-              Comment Faire un Don ?
+              {t("donate_page.methods.title")}
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto" style={{ fontFamily: "Open Sans, sans-serif" }}>
-              Plusieurs options s'offrent à vous pour soutenir AMANCE, selon votre localisation
-              et vos préférences.
+              {t("donate_page.methods.subtitle")}
             </p>
           </div>
 
@@ -314,14 +308,14 @@ export default function FaireUnDon() {
 
           <div className="text-center">
             <p className="text-sm text-gray-500 mb-4" style={{ fontFamily: "Open Sans, sans-serif" }}>
-              Pour tout renseignement sur les modalités de don, n'hésitez pas à nous contacter.
+              {t("donate_page.methods.cta_info")}
             </p>
             <Link
               href="/contact"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-sm transition-all duration-300 hover:-translate-y-1 text-white"
               style={{ backgroundColor: "var(--amance-blue)", fontFamily: "Montserrat, sans-serif" }}
             >
-              Nous Contacter <ArrowRight size={16} />
+              {t("donate_page.methods.cta_contact")} <ArrowRight size={16} />
             </Link>
           </div>
         </div>
@@ -336,17 +330,17 @@ export default function FaireUnDon() {
               style={{ backgroundColor: "rgba(82,180,82,0.1)", color: "var(--amance-green)" }}
             >
               <Shield size={14} />
-              Nos engagements
+              {t("donate_page.guarantees.badge")}
             </div>
             <h2
               className="text-3xl font-extrabold mb-4"
               style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}
             >
-              Votre Don en Toute Confiance
+              {t("donate_page.guarantees.title")}
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {guarantees.map((g, i) => (
+            {guarantees && Array.isArray(guarantees) && guarantees.map((g, i) => (
               <div key={i} className="flex items-start gap-3 p-4 rounded-xl" style={{ backgroundColor: "oklch(0.97 0.005 240)" }}>
                 <CheckCircle size={20} style={{ color: "var(--amance-green)" }} className="flex-shrink-0 mt-0.5" />
                 <span className="text-sm text-gray-700" style={{ fontFamily: "Open Sans, sans-serif" }}>{g}</span>
@@ -359,7 +353,7 @@ export default function FaireUnDon() {
               className="inline-flex items-center gap-2 text-sm font-semibold"
               style={{ color: "var(--amance-green)", fontFamily: "Montserrat, sans-serif" }}
             >
-              Voir nos rapports financiers <ArrowRight size={16} />
+              {t("donate_page.guarantees.link_transparency")} <ArrowRight size={16} />
             </Link>
           </div>
         </div>

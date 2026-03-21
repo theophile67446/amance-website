@@ -1,7 +1,18 @@
 {
   "common": {
     "learn_more": "En savoir plus",
-    "read_more": "Lire la suite"
+    "read_more": "Lire la suite",
+    "error_generic": "Une erreur est survenue. Veuillez réessayer.",
+    "form_required": "Veuillez remplir tous les champs obligatoires.",
+    "update": "Modifier",
+    "saving": "Enregistrement...",
+    "create_draft": "Créer (Brouillon)",
+    "cancel": "Annuler",
+    "no_location": "N/A",
+    "order": "Ordre",
+    "active": "Actif",
+    "inactive": "Inactif",
+    "no_results": "Aucun résultat trouvé."
   },
   "nav": {
     "home": "Accueil",
@@ -20,7 +31,12 @@
     "volunteer": "Devenir Bénévole",
     "partner": "Devenir Partenaire",
     "contact": "Contact",
-    "donate": "Faire un Don"
+    "donate": "Faire un Don",
+    "see_all": "→ Voir tout",
+    "switch_lang": "Passer en anglais",
+    "close_menu": "Fermer le menu",
+    "open_menu": "Ouvrir le menu",
+    "association_name": "Angel Mary Association"
   },
   "hero": {
     "badge": "ONG Camerounaise — Buea, Sud-Ouest",
@@ -135,5 +151,853 @@
     "subtitle": "Rejoignez AMANCE et contribuez à construire un Cameroun plus juste, plus sain et plus vert. Chaque contribution, grande ou petite, a un impact réel sur des vies réelles.",
     "cta_donate": "Faire un Don Maintenant",
     "cta_contact": "Nous Contacter"
+  },
+  "about": {
+    "hero": {
+      "badge": "À Propos d'AMANCE",
+      "title": "Qui Sommes-Nous ?",
+      "subtitle": "AMANCE est une organisation à but non lucratif fondée à Buea, Cameroun, dédiée à l'allègement des souffrances humaines et à la conservation de la biodiversité."
+    },
+    "mission": {
+      "badge": "Notre Raison d'Être",
+      "title": "Mission, Vision & Slogan",
+      "mission_title": "Notre Mission",
+      "mission_desc": "Alléger les souffrances humaines et défendre la conservation de la biodiversité. Nous agissons au quotidien pour soutenir les personnes vulnérables tout en préservant les ressources naturelles du Cameroun pour les générations futures.",
+      "vision_title": "Our Vision",
+      "vision_desc": "\"Nous envisageons un monde respectueux de l'environnement où la pauvreté a été surmontée, et où tous les êtres humains vivent dans la dignité.\"",
+      "slogan_title": "Notre Slogan",
+      "slogan_desc": "\"Speak up for those who cannot speak for themselves, to save lives for a safe environment.\"",
+      "slogan_source": "Proverbes 31:8"
+    },
+    "goals": {
+      "badge": "Nos Objectifs",
+      "title": "Ce Que Nous Poursuivons",
+      "items": {
+        "1": "Respecter et promouvoir l'adhésion aux lois de l'État camerounais",
+        "2": "Rassembler les membres autour d'un bien commun et d'une vision partagée",
+        "3": "Soutenir les projets de développement et favoriser la croissance des membres",
+        "4": "Aider les personnes défavorisées par une assistance financière, médicale et matérielle",
+        "5": "Accompagner les communautés rurales par des initiatives de développement et d'éducation",
+        "6": "Promouvoir la conservation de la biodiversité et l'éducation au développement durable"
+      },
+      "sdgs_title": "Alignement avec les ODD des Nations Unies"
+    },
+    "values": {
+      "badge": "Nos Valeurs Fondamentales",
+      "title": "Ce Qui Nous Guide",
+      "subtitle": "Quatre valeurs essentielles qui orientent chacune de nos décisions et de nos actions sur le terrain.",
+      "items": {
+        "integrity": {
+          "title": "Intégrité",
+          "desc": "Nous alignons nos paroles et nos actes. L'honnêteté, la cohérence et la responsabilité sont au cœur de chacune de nos actions quotidiennes."
+        },
+        "compassion": {
+          "title": "Compassion",
+          "desc": "Nous comprenons et ressentons la souffrance des autres. Notre désir sincère d'aider guide chaque intervention sur le terrain."
+        },
+        "diversity": {
+          "title": "Diversité & Inclusion",
+          "desc": "Nous travaillons avec des personnes aux origines, genres, religions et perspectives différentes. Chaque voix compte."
+        },
+        "impact": {
+          "title": "Impact",
+          "desc": "Nous nous concentrons sur les actions qui créent le plus grand impact, tant pour les personnes que pour l'environnement où elles vivent."
+        }
+      }
+    },
+    "team": {
+      "badge": "Notre Équipe",
+      "title": "Le Bureau Exécutif d'AMANCE",
+      "subtitle": "Des professionnels engagés et compétents, unis par une même vision : construire un Cameroun plus juste et plus vert.",
+      "roles": {
+        "president": "Présidente",
+        "sg": "Secrétaire Générale",
+        "sf": "Secrétaire Financier",
+        "advisor": "Conseiller"
+      }
+    },
+    "transparency": {
+      "badge": "Transparence & Documents",
+      "title": "Notre Engagement pour la Transparence",
+      "subtitle": "AMANCE s'engage à une gestion transparente et responsable. Tous nos documents officiels sont accessibles à nos partenaires et donateurs.",
+      "doc1_title": "Constitution de l'Association",
+      "doc1_desc": "Document fondateur définissant les statuts, objectifs et fonctionnement d'AMANCE.",
+      "doc2_title": "Rapport d'Activités Annuel",
+      "doc2_desc": "Bilan complet de nos actions, projets réalisés et impact mesuré sur le terrain.",
+      "doc3_title": "Rapport Financier Audité",
+      "doc3_desc": "Comptes annuels vérifiés par un auditeur externe indépendant pour garantir la transparence.",
+      "download": "Télécharger",
+      "request_note": "Document disponible sur demande. Contactez-nous à infos@amance.org"
+    }
+  },
+  "actions": {
+    "hero": {
+      "badge": "Nos 4 Programmes",
+      "title": "Nos Programmes d'Action",
+      "subtitle": "Quatre programmes complémentaires pour atténuer les souffrances humaines, renforcer les communautés, sensibiliser les citoyens et protéger la biodiversité unique du Cameroun."
+    },
+    "smile": {
+      "title": "Mettre le Sourire sur les Visages",
+      "subtitle": "Soutien aux personnes en difficulté",
+      "desc": "Ce programme soutient les personnes confrontées à des défis de vie particuliers. Toute personne en difficulté peut partager sa situation avec AMANCE. L'association priorise les urgences et histoires touchantes pour une assistance directe, transparente et vérifiable par tous les partenaires.",
+      "activities": [
+        "Assistance financière, médicale et matérielle d'urgence aux personnes en détresse",
+        "Distribution alimentaire aux familles déplacées et communautés vulnérables",
+        "Soutien aux orphelins, personnes âgées isolées et personnes handicapées",
+        "Mise à disposition des contacts des bénéficiaires pour vérification et confirmation",
+        "Coordination transparente avec les partenaires et bienfaiteurs",
+        "Section dédiée sur le site pour partager les urgences et histoires touchantes"
+      ],
+      "impact": {
+        "families": "Familles assistées",
+        "children": "Enfants soutenus",
+        "people": "Personnes accompagnées"
+      }
+    },
+    "education": {
+      "title": "Communication & Éducation",
+      "subtitle": "Sensibilisation et autonomisation des citoyens",
+      "desc": "Ce programme vise à doter les individus des outils nécessaires pour faire des choix éclairés en faveur de la protection de l'environnement et du bien-être social. AMANCE promeut l'utilisation des médias numériques pour sensibiliser et mobiliser autour des objectifs de développement durable.",
+      "activities": [
+        "Campagnes de sensibilisation via les médias digitaux et traditionnels",
+        "Éducation au développement durable dans les écoles et communautés",
+        "Promotion des ODD des Nations Unies auprès des populations locales",
+        "Formation des jeunes aux outils numériques et à la communication",
+        "Ateliers d'alphabétisation environnementale et sanitaire",
+        "Sensibilisation sur les lois camerounaises (foresterie, environnement)"
+      ],
+      "impact": {
+        "sensitized": "Personnes sensibilisées",
+        "campaigns": "Campagnes menées",
+        "students": "Élèves formés"
+      }
+    },
+    "community": {
+      "title": "Développement Communautaire",
+      "subtitle": "Autonomisation des communautés rurales",
+      "desc": "AMANCE cherche à doter les individus et les groupes des compétences nécessaires pour générer des changements positifs dans leurs communautés. Le programme inclut des projets axés sur la santé, le développement infrastructurel et les opportunités économiques, créant des partenariats entre différents secteurs et améliorant la qualité de vie.",
+      "activities": [
+        "Formation professionnelle et développement des compétences locales",
+        "Soutien à l'entrepreneuriat rural et aux micro-entreprises",
+        "Construction et réhabilitation d'infrastructures communautaires",
+        "Programmes d'éducation pour les enfants déscolarisés",
+        "Initiatives de développement économique pour les communautés rurales",
+        "Renforcement des capacités des leaders communautaires"
+      ],
+      "impact": {
+        "trained": "Personnes formées",
+        "families": "Familles autonomisées",
+        "communities": "Communautés touchées"
+      }
+    },
+    "conservation": {
+      "title": "Conservation de la Biodiversité",
+      "subtitle": "Protection des écosystèmes camerounais",
+      "desc": "Ce programme cherche à enrayer la perte de biodiversité et à remettre la nature sur la voie de la récupération. AMANCE travaille avec des partenaires de conservation pour restaurer les écosystèmes, conserver la biodiversité et permettre des moyens de subsistance durables. Nous renforçons la protection des aires protégées, restaurons forêts et zones humides, et promouvons l'agroforesterie.",
+      "activities": [
+        "Reboisement et restauration des forêts et zones humides dégradées",
+        "Promotion de l'agriculture intelligente et des systèmes agroforestiers",
+        "Conservation de la faune sauvage (primates, éléphants, reptiles, oiseaux…)",
+        "Sensibilisation contre le braconnage et le commerce illégal d'espèces",
+        "Partenariats avec les gestionnaires d'aires protégées et parcs nationaux",
+        "Éducation environnementale dans les communautés riveraines des forêts"
+      ],
+      "impact": {
+        "reforested": "Forêt reboisée",
+        "partners": "Aires protégées partenaires",
+        "students": "Élèves sensibilisés"
+      },
+      "zones_title": "Zones d'intervention clés"
+    },
+    "common": {
+      "see_projects": "Voir nos projets dans ce domaine",
+      "cta_title": "Soutenez Nos Actions sur le Terrain",
+      "cta_subtitle": "Chaque contribution permet à AMANCE d'intensifier ses interventions et d'atteindre davantage de personnes vulnérables et de zones naturelles menacées.",
+      "cta_donate": "Faire un Don",
+      "cta_involve": "S'impliquer",
+      "main_activities": "Nos activités principales"
+    }
+  },
+  "contact": {
+    "hero": {
+      "badge": "Nous Contacter",
+      "title": "Entrons en Contact",
+      "subtitle": "Vous avez une question, une proposition de partenariat ou souhaitez en savoir plus sur nos actions ? Nous sommes à votre écoute."
+    },
+    "info": {
+      "title": "Nos Coordonnées",
+      "address_label": "Adresse",
+      "address_val": "Buea, Division du Fako, Région du Sud-Ouest, Cameroun",
+      "phone_label": "Téléphone",
+      "email_label": "E-mail",
+      "hours_label": "Horaires",
+      "hours_val": "Lundi – Vendredi : 8h00 – 17h00\nSamedi : 9h00 – 13h00\nDimanche : Fermé",
+      "follow_us": "Suivez-nous"
+    },
+    "form": {
+      "title": "Envoyer un Message",
+      "first_name": "Prénom",
+      "last_name": "Nom",
+      "email": "E-mail",
+      "phone": "Téléphone",
+      "subject": "Sujet",
+      "message": "Message",
+      "placeholder_first_name": "Votre prénom",
+      "placeholder_last_name": "Votre nom",
+      "placeholder_email": "votre@email.com",
+      "placeholder_phone": "+237 6XX XXX XXX",
+      "placeholder_subject": "Sélectionnez un sujet",
+      "placeholder_message": "Décrivez votre demande en détail...",
+      "subjects": {
+        "info": "Demande d'information",
+        "partnership": "Proposition de partenariat",
+        "donation": "Don et soutien financier",
+        "volunteer": "Bénévolat",
+        "media": "Médias et presse",
+        "other": "Autre"
+      },
+      "submit": "Envoyer le Message",
+      "submitting": "Envoi en cours...",
+      "success_title": "Message envoyé avec succès !",
+      "success_desc": "Merci de nous avoir contactés. Notre équipe vous répondra dans les plus brefs délais, généralement sous 24 à 48 heures ouvrables.",
+      "send_another": "Envoyer un autre message"
+    }
+  },
+  "projects": {
+    "hero": {
+      "badge": "Nos Projets",
+      "title": "Nos Projets & Programmes",
+      "subtitle": "Des projets concrets, mesurables et durables qui transforment des vies et préservent l'environnement au Cameroun.",
+      "seo_title": "Projets AMANCE — Nos Actions au Cameroun",
+      "seo_desc": "Explorez nos projets de conservation, humanitaires et communautaires au Cameroun. Un impact concret et mesurable."
+    },
+    "filters": {
+      "all": "Tous les projets",
+      "conservation": "Conservation",
+      "humanitaire": "Humanitaire",
+      "sante": "Santé",
+      "communautaire": "Communautaire"
+    },
+    "status": {
+      "en_cours": "En cours",
+      "termine": "Terminé",
+      "planifie": "Planifié"
+    },
+    "card": {
+      "featured": "Projet phare",
+      "date_upcoming": "Date à venir",
+      "learn_more": "En savoir plus",
+      "no_projects": "Aucun projet trouvé dans cette catégorie."
+    },
+    "cta": {
+      "title": "Soutenez Nos Projets",
+      "subtitle": "Chaque don, aussi modeste soit-il, contribue directement à la réalisation de ces projets et à l'amélioration des conditions de vie de milliers de personnes au Cameroun.",
+      "cta_donate": "Soutenir un Projet",
+      "cta_partner": "Devenir Partenaire"
+    }
+  },
+  "news_page": {
+    "hero": {
+      "badge": "Actualités & Blog",
+      "title": "Nos Dernières Actualités",
+      "subtitle": "Suivez nos actions sur le terrain, nos communiqués officiels et nos rapports d'impact.",
+      "seo_title": "Actualités AMANCE — Blog & Actions au Cameroun",
+      "seo_desc": "Découvrez les dernières actualités et les actions sur le terrain de l'AMANCE au Cameroun."
+    },
+    "search": {
+      "placeholder": "Rechercher un article..."
+    },
+    "filters": {
+      "all": "Tous",
+      "terrain": "Terrain",
+      "actualites": "Actualités",
+      "rapport": "Rapports",
+      "communique": "Communiqués"
+    },
+    "card": {
+      "author_default": "Équipe AMANCE",
+      "read_more": "Lire la suite",
+      "no_results": "Aucun article trouvé pour cette recherche."
+    }
+  },
+  "get_involved": {
+    "hero": {
+      "badge": "S'Impliquer avec AMANCE",
+      "title": "Rejoignez Notre Mission",
+      "subtitle": "Que vous souhaitiez offrir votre temps, vos compétences ou établir un partenariat stratégique, AMANCE vous accueille avec enthousiasme.",
+      "seo_title": "S'impliquer — Rejoignez l'AMANCE au Cameroun",
+      "seo_desc": "Devenez bénévole ou partenaire de l'AMANCE. Participez à nos actions de conservation et de développement au Cameroun."
+    },
+    "tabs": {
+      "volunteer": "Devenir Bénévole",
+      "partner": "Devenir Partenaire"
+    },
+    "success": {
+      "title": "Inscription reçue avec succès !",
+      "desc": "Merci pour votre engagement ! Notre équipe examinera votre candidature et vous contactera dans les plus brefs délais pour la suite du processus.",
+      "another": "Soumettre une autre candidature"
+    },
+    "volunteer": {
+      "badge": "Bénévolat",
+      "title": "Devenez Bénévole AMANCE",
+      "desc": "Rejoignez une équipe de passionnés et contribuez directement à améliorer les conditions de vie des communautés camerounaises. Votre temps et vos compétences ont une valeur inestimable pour nous.",
+      "benefits_title": "Ce que vous y gagnez",
+      "benefits": [
+        "Expérience de terrain enrichissante au Cameroun",
+        "Développement de compétences professionnelles",
+        "Réseau international de professionnels engagés",
+        "Attestation officielle de bénévolat",
+        "Immersion culturelle authentique",
+        "Impact direct et mesurable sur des vies réelles"
+      ],
+      "form_title": "Formulaire d'Inscription Bénévole",
+      "firstName": "Prénom *",
+      "lastName": "Nom *",
+      "email": "E-mail *",
+      "phone": "Téléphone",
+      "city": "Ville",
+      "availability": {
+        "label": "Disponibilité",
+        "select": "Sélectionner",
+        "full": "Temps plein",
+        "partial": "Temps partiel",
+        "weekends": "Week-ends uniquement",
+        "vacation": "Pendant les vacances",
+        "occasional": "Missions ponctuelles"
+      },
+      "skills": {
+        "label": "Compétences & Domaines d'expertise",
+        "placeholder": "Ex: médecine, informatique, agriculture, communication..."
+      },
+      "motivation": {
+        "label": "Motivation *",
+        "placeholder": "Pourquoi souhaitez-vous rejoindre AMANCE ?"
+      },
+      "submit": "Soumettre ma Candidature",
+      "submitting": "Envoi..."
+    },
+    "partner": {
+      "badge": "Partenariat",
+      "title": "Devenez Partenaire d'AMANCE",
+      "desc": "Institutions, entreprises, fondations, ONG : unissons nos forces pour un impact démultiplié. AMANCE recherche des partenaires partageant nos valeurs d'intégrité, de compassion et d'impact durable.",
+      "benefits_title": "Avantages du partenariat",
+      "benefits": [
+        "Visibilité sur nos supports de communication",
+        "Rapports d'impact réguliers et transparents",
+        "Accès à notre réseau de partenaires internationaux",
+        "Contribution à des ODD mesurables",
+        "Co-branding sur les projets soutenus",
+        "Invitation aux événements et missions de terrain"
+      ],
+      "form_title": "Formulaire de Partenariat",
+      "firstName": "Prénom *",
+      "lastName": "Nom *",
+      "organization": "Organisation / Entreprise *",
+      "partnerType": {
+        "label": "Type de partenaire",
+        "select": "Sélectionner",
+        "ong": "ONG / Association",
+        "private": "Entreprise privée",
+        "public": "Institution publique",
+        "foundation": "Fondation",
+        "donor": "Bailleur de fonds",
+        "research": "Université / Recherche",
+        "media": "Médias"
+      },
+      "email": "E-mail *",
+      "website": "Site web",
+      "city": "Ville",
+      "country": "Pays",
+      "motivation": {
+        "label": "Proposition de partenariat *",
+        "placeholder": "Décrivez votre proposition et les synergies envisagées..."
+      },
+      "submit": "Soumettre ma Proposition",
+      "submitting": "Envoi..."
+    }
+  },
+  "transparency_page": {
+    "hero": {
+      "badge": "Transparence & Gouvernance",
+      "title": "Notre Engagement pour la Transparence",
+      "subtitle": "AMANCE s'engage à une transparence totale dans sa gouvernance, ses finances et ses activités. Retrouvez ici tous nos documents officiels et rapports d'impact.",
+      "seo_title": "Transparence — La Gouvernance d'AMANCE",
+      "seo_desc": "AMANCE s'engage à une transparence totale. Accédez à nos documents officiels, rapports d'activités et charte éthique."
+    },
+    "principles": {
+      "title": "Nos Principes de Gouvernance",
+      "subtitle": "La confiance de nos partenaires et donateurs repose sur notre engagement indéfectible envers ces valeurs fondamentales.",
+      "items": {
+        "integrity": {
+          "title": "Intégrité",
+          "desc": "Nous agissons avec honnêteté et droiture dans toutes nos actions et communications."
+        },
+        "transparency": {
+          "title": "Transparence",
+          "desc": "Nos finances, nos activités et nos résultats sont accessibles à tous nos partenaires et donateurs."
+        },
+        "accountability": {
+          "title": "Redevabilité",
+          "desc": "Nous rendons compte de l'utilisation des ressources confiées et de l'impact de nos actions."
+        },
+        "excellence": {
+          "title": "Excellence",
+          "desc": "Nous visons la qualité maximale dans la conception et l'exécution de nos programmes."
+        }
+      }
+    },
+    "documents": {
+      "badge": "Documents officiels",
+      "title": "Nos Documents Officiels",
+      "subtitle": "Accédez librement à nos documents institutionnels, rapports d'activités et documents légaux attestant de notre légitimité et de notre sérieux.",
+      "types": {
+        "statutes": "Statuts",
+        "pv": "PV Assemblée",
+        "legal": "Reconnaissance légale",
+        "report": "Rapport annuel",
+        "strategy": "Plan stratégique",
+        "charter": "Charte"
+      },
+      "items": {
+        "statutes": {
+          "title": "Statuts de l'Association AMANCE",
+          "desc": "Document fondateur définissant la mission, les objectifs et la structure organisationnelle d'AMANCE."
+        },
+        "pv": {
+          "title": "Procès-verbal de l'Assemblée Constitutive",
+          "desc": "Compte-rendu de la réunion fondatrice de l'association, avec liste des membres fondateurs."
+        },
+        "legal": {
+          "title": "Récépissé de Reconnaissance Officielle",
+          "desc": "Document officiel délivré par les autorités camerounaises attestant de la légalité d'AMANCE."
+        },
+        "report": {
+          "title": "Rapport d'Activités 2024",
+          "desc": "Bilan complet des actions menées en 2024 : projets réalisés, bénéficiaires touchés, ressources mobilisées."
+        },
+        "strategy": {
+          "title": "Plan Stratégique 2024-2027",
+          "desc": "Feuille de route stratégique définissant les orientations, objectifs et indicateurs d'impact pour les 3 prochaines années."
+        },
+        "charter": {
+          "title": "Charte Éthique et Déontologique",
+          "desc": "Principes éthiques guidant les actions d'AMANCE : intégrité, transparence, respect des bénéficiaires."
+        }
+      },
+      "cta_download": "Télécharger le document",
+      "not_found": "Vous ne trouvez pas le document que vous cherchez ? Contactez-nous directement à",
+      "alert_request": "Document disponible sur demande. Contactez-nous à infos@amance.org"
+    },
+    "cta": {
+      "title": "Faites Confiance à AMANCE",
+      "subtitle": "Notre transparence est le fondement de la confiance que vous nous accordez. Rejoignez notre communauté de partenaires et de donateurs engagés.",
+      "cta_donate": "Faire un Don",
+      "cta_contact": "Nous Contacter"
+    }
+  },
+  "donate_page": {
+    "hero": {
+      "badge": "Soutien et Solidarité",
+      "title": "Votre Générosité Change des Vies",
+      "subtitle": "Chaque contribution permet à AMANCE de poursuivre sa mission auprès des personnes vulnérables et de préserver la biodiversité camerounaise.",
+      "seo_title": "Faire un Don — Soutenez l'AMANCE au Cameroun",
+      "seo_desc": "Soutenez les actions de l'AMANCE au Cameroun. Votre don contribue à la protection de l'environnement et au soutien des populations vulnérables."
+    },
+    "box": {
+      "title": "Faire un don ponctuel",
+      "subtitle": "Choisissez le montant de votre soutien",
+      "other_amount": "Autre montant",
+      "continue": "Continuer le paiement de {{amount}} FCFA",
+      "secure": "Paiement sécurisé via MTN Mobile Money, Orange Money ou Carte Bancaire.",
+      "alert_redirect": "Redirection vers la passerelle de paiement sécurisée..."
+    },
+    "impact": {
+      "badge": "Impact de votre don",
+      "title": "Que Représente Votre Don ?",
+      "subtitle": "Chaque montant a un impact concret et mesurable sur le terrain. Voici des exemples de ce que votre générosité permet de réaliser.",
+      "items": [
+        { "amount": "10 000 FCFA", "desc": "Fournitures scolaires pour 2 enfants pendant un trimestre" },
+        { "amount": "25 000 FCFA", "desc": "Kit alimentaire d'urgence pour une famille de 5 personnes" },
+        { "amount": "50 000 FCFA", "desc": "Consultation médicale et médicaments pour 10 personnes" },
+        { "amount": "100 000 FCFA", "desc": "Plantation de 50 arbres dans le cadre du reboisement" },
+        { "amount": "250 000 FCFA", "desc": "Formation d'un agriculteur en agroforesterie durable" },
+        { "amount": "500 000 FCFA", "desc": "Soutien complet d'un orphelin pendant 6 mois" }
+      ]
+    },
+    "methods": {
+      "badge": "Modalités de don",
+      "title": "Comment Faire un Don ?",
+      "subtitle": "Plusieurs options s'offrent à vous pour soutenir AMANCE, selon votre localisation et vos préférences.",
+      "items": {
+        "momo": {
+          "title": "Mobile Money",
+          "desc": "MTN MoMo ou Orange Money",
+          "detail": "+237 674 943 368 / +237 689 314 418"
+        },
+        "bank": {
+          "title": "Virement Bancaire",
+          "desc": "Transfert bancaire international",
+          "detail": "Contactez-nous pour les coordonnées bancaires"
+        },
+        "mail": {
+          "title": "Par Courrier",
+          "desc": "Chèque ou mandat postal",
+          "detail": "AMANCE, Buea, Région du Sud-Ouest, Cameroun"
+        }
+      },
+      "cta_info": "Pour tout renseignement sur les modalités de don, n'hésiter pas à nous contacter.",
+      "cta_contact": "Nous Contacter"
+    },
+    "guarantees": {
+      "badge": "Nos engagements",
+      "title": "Votre Don en Toute Confiance",
+      "items": [
+        "100% de votre don est utilisé pour les programmes sur le terrain",
+        "Rapport d'utilisation des fonds disponible sur demande",
+        "Reçu fiscal fourni pour tout don documenté",
+        "Transparence totale sur nos finances et activités"
+      ],
+      "link_transparency": "Voir nos rapports financiers"
+    }
+  },
+  "legals": {
+    "hero": {
+      "badge": "Informations Légales",
+      "title": "Mentions Légales",
+      "subtitle": "Informations générales concernant notre site web et notre association.",
+      "seo_title": "Mentions Légales — AMANCE",
+      "seo_desc": "Informations légales concernant l'association AMANCE au Cameroun."
+    },
+    "body": {
+      "editor": {
+        "title": "1. Éditeur du site",
+        "p1": "Le site <strong>AMANCE</strong> est édité par l'association <em>Angel Mary Association for the Needy and Conservation Education</em>, association à but non lucratif enregistrée au Cameroun.",
+        "headquarters": "Siège social :",
+        "location": "Buea, Division du Fako, Région du Sud-Ouest, Cameroun",
+        "phone": "Téléphone :",
+        "email": "Email de contact :"
+      },
+      "property": {
+        "title": "2. Propriété intellectuelle",
+        "p1": "L'ensemble de ce site relève des législations camerounaises et internationales sur le droit d'auteur et la propriété intellectuelle. Tous les droits de reproduction sont réservés, y compris pour les documents iconographiques et photographiques. La reproduction de tout ou partie de ce site sur un support électronique ou papier quel qu'il soit est formellement interdite sauf autorisation expresse du directeur de la publication."
+      },
+      "liability": {
+        "title": "3. Limitation de responsabilité",
+        "p1": "AMANCE s'efforce d'assurer au mieux de ses possibilités l'exactitude et la mise à jour des informations diffusées sur ce site, dont elle se réserve le droit de corriger, à tout moment et sans préavis, le contenu.",
+        "p2": "Toutefois, AMANCE ne peut garantir l'exactitude, la précision ou l'exhaustivité des informations mises à la disposition sur ce site."
+      },
+      "hosting": {
+        "title": "4. Hébergement",
+        "p1": "Ce site est hébergé par des prestataires tiers garantissant la sécurité et la disponibilité des données. Pour toute question technique concernant l'hébergement, veuillez nous contacter à l'adresse fournie ci-dessus."
+      }
+    }
+  },
+  "privacy": {
+    "hero": {
+      "badge": "Confidentialité & Données",
+      "title": "Politique de Confidentialité",
+      "subtitle": "Comment nous protégeons et gérons vos données personnelles.",
+      "seo_title": "Confidentialité — AMANCE",
+      "seo_desc": "Politique de protection des données personnelles de l'association AMANCE."
+    },
+    "body": {
+      "lead": "L'association AMANCE accorde une grande importance à la protection de la vie privée et des données personnelles de ses utilisateurs, donateurs et partenaires.",
+      "collect": {
+        "title": "1. Collecte des données",
+        "p1": "Nous collectons les données personnelles que vous nous fournissez volontairement lors de :",
+        "items": [
+          "L'utilisation de notre formulaire de contact",
+          "L'inscription à notre newsletter",
+          "La réalisation d'un don",
+          "Votre inscription en tant que bénévole"
+        ]
+      },
+      "usage": {
+        "title": "2. Utilisation des données",
+        "p1": "Les informations recueillies sont exclusivement utilisées pour :",
+        "items": [
+          "Répondre à vos demandes de renseignements",
+          "Gérer vos dons et éditer vos reçus fiscaux",
+          "Vous informer de nos actions et actualités (si vous y avez consenti)",
+          "Organiser nos missions bénévoles"
+        ]
+      },
+      "sharing": {
+        "title": "3. Partage des données",
+        "p1": "Nous nous engageons à ne <strong>jamais</strong> vendre, louer ou échanger vos données personnelles à des tiers à des fins commerciales. Vos données peuvent être partagées uniquement avec nos prestataires techniques (hébergement, plateforme de dons) qui sont soumis à de strictes obligations de confidentialité."
+      },
+      "rights": {
+        "title": "4. Vos droits",
+        "p1": "Conformément à la réglementation applicable, vous disposez d'un droit d'accès, de rectification, de suppression et d'opposition au traitement de vos données personnelles.",
+        "p2": "Pour exercer ces droits, vous pouvez nous contacter à tout moment à l'adresse suivante : <strong>infos@amance.org</strong>"
+      },
+      "security": {
+        "title": "5. Sécurité",
+        "p1": "Nous mettons en œuvre toutes les mesures techniques et organisationnelles nécessaires pour garantir la sécurité et la confidentialité de vos données contre tout accès non autorisé, altération, divulgation ou destruction."
+      }
+    }
+  },
+  "article_detail": {
+    "not_found": "Article non trouvé",
+    "back": "Retour aux actualités",
+    "published_by": "Publié par",
+    "share": "Cet article vous parle ? Partagez-le.",
+    "cta": {
+      "title": "Vous trouvez ce contenu intéressant ?",
+      "subtitle": "Soutenez notre action et contribuez à la réalisation de nos projets.",
+      "button": "Faire un don"
+    },
+    "related": {
+      "title": "Articles Connexes",
+      "placeholder": "D'autres articles seront bientôt disponibles..."
+    }
+  },
+  "project_detail": {
+    "not_found": "Projet non trouvé",
+    "back": "Retour aux projets",
+    "info": {
+      "location": "Localisation",
+      "status": "Statut",
+      "beneficiaries": "Bénéficiaires",
+      "budget": "Budget",
+      "budget_undetermined": "À déterminer"
+    },
+    "share": "Diffusez ce projet autour de vous.",
+    "about": "À propos du projet",
+    "impact": "Impact mesurable",
+    "sdgs": "Objectifs de Développement Durable",
+    "cta": {
+      "title": "Soutenez ce Projet",
+      "subtitle": "Chaque don contribue directement à la réalisation de ce projet et améliore la vie de nos bénéficiaires.",
+      "button": "Soutenir ce Projet"
+    }
+  },
+  "not_found": {
+    "title": "Page Non Trouvée",
+    "desc": "Désolé, la page que vous recherchez n'existe pas ou a été déplacée.",
+    "button": "Retour à l'accueil"
+  },
+  "admin": {
+    "toolbar": {
+      "brand": "AMANCE Admin",
+      "dashboard": "Tableau de bord",
+      "logout": "Déconnexion"
+    },
+    "sidebar": {
+      "dashboard": "Vue d'ensemble",
+      "articles": "Actualités & Articles",
+      "projects": "Projets & Missions",
+      "contacts": "Messages",
+      "registrations": "Bénévoles & Partenaires",
+      "team": "Équipe",
+      "back_to_site": "Retour au site",
+      "logout": "Déconnexion",
+      "admin_label": "Administration",
+      "role_admin": "Administrateur"
+    },
+    "dashboard": {
+      "title": "Tableau de bord",
+      "articles": { "title": "Articles", "unit": "publiés" },
+      "projects": { "title": "Projets", "unit": "en cours" },
+      "messages": { "title": "Messages", "unit": "non lus" },
+      "registrations": { "title": "Inscriptions", "unit": "nouvelles" },
+      "team": { "title": "Équipe", "unit": "actifs" }
+    },
+    "articles": {
+      "form_title_edit": "Modifier l'article",
+      "form_title_create": "Créer un nouvel article",
+      "label_title_fr": "Titre (FR)",
+      "label_title_en": "Titre (EN)",
+      "label_slug": "Slug (URL)",
+      "label_excerpt_fr": "Résumé (FR)",
+      "label_excerpt_en": "Résumé (EN)",
+      "label_content_fr": "Contenu (FR)",
+      "label_content_en": "Contenu (EN)",
+      "label_cover": "Image de couverture (URL)",
+      "label_category": "Catégorie",
+      "label_author": "Auteur",
+      "label_published": "Publier l'article",
+      "update_success": "✅ Article mis à jour avec succès!",
+      "create_success": "✅ Article créé avec succès!",
+      "error_save": "❌ Erreur lors de l'enregistrement",
+      "confirm_delete": "Supprimer cet article ?",
+      "bulk": {
+        "publish": "Publier",
+        "draft": "Dépublier",
+        "delete": "Supprimer"
+      },
+      "bulk_messages": {
+        "publish_success": "✅ Articles publiés",
+        "draft_success": "✅ Articles passés en brouillon",
+        "error": "❌ Erreur lors de la mise à jour en lot",
+        "delete_confirm": "Supprimer {{count}} article(s) ?",
+        "delete_success": "✅ Articles supprimés"
+      },
+      "table": {
+        "article": "Article",
+        "author": "Auteur",
+        "status": "Statut",
+        "date": "Date"
+      },
+      "status": {
+        "published": "Publié",
+        "draft": "Brouillon"
+      }
+    },
+    "projects": {
+      "form_title_edit": "Modifier le projet",
+      "form_title_create": "Créer un nouveau projet",
+      "label_title_fr": "Nom du projet (FR)",
+      "label_title_en": "Nom du projet (EN)",
+      "label_slug": "Slug (URL)",
+      "label_category": "Catégorie",
+      "label_status": "Statut",
+      "label_beneficiaries": "Bénéficiaires",
+      "label_location": "Localisation",
+      "label_cover": "Image de couverture (URL)",
+      "label_desc_fr": "Description courte (FR)",
+      "label_desc_en": "Description courte (EN)",
+      "label_full_desc_fr": "Description complète (FR)",
+      "label_full_desc_en": "Description complète (EN)",
+      "placeholder_location": "Région, Ville...",
+      "placeholder_full_desc_fr": "Description complète en français...",
+      "placeholder_full_desc_en": "Description complète en anglais...",
+      "update_success": "✅ Projet mis à jour avec succès!",
+      "create_success": "✅ Projet créé avec succès!",
+      "error_save": "❌ Erreur lors de l'enregistrement",
+      "confirm_delete": "Êtes-vous sûr de vouloir supprimer ce projet ?",
+      "empty_results": "Aucun projet trouvé.",
+      "loading": "Chargement...",
+      "results_count": "{{count}} résultat(s)",
+      "per_page": "Par page",
+      "selection_count": "{{count}} sélectionné(s)",
+      "no_selection": "Aucune sélection",
+      "bulk": {
+        "active": "En cours",
+        "plan": "Planifier",
+        "finish": "Terminer",
+        "delete": "Supprimer"
+      },
+      "table": {
+        "project": "Projet",
+        "location": "Lieu",
+        "status": "Statut",
+        "date": "Date",
+        "actions": "Actions"
+      },
+      "pagination": {
+        "page": "Page {{current}} / {{total}}",
+        "prev": "Précédent",
+        "next": "Suivant"
+      },
+      "filter_all": "Tous",
+      "filter_active": "En cours",
+      "filter_finished": "Terminés",
+      "filter_planned": "Planifiés",
+      "search_placeholder": "Rechercher par titre, lieu ou statut...",
+      "bulk_messages": {
+        "status_success": "✅ Statut mis à jour pour {{count}} projet(s)",
+        "status_error": "❌ Erreur lors de la mise à jour en lot des projets",
+        "delete_confirm": "Supprimer {{count}} projet(s) ?",
+        "delete_success": "✅ Projets supprimés",
+        "delete_error": "❌ Erreur lors de la suppression en lot des projets"
+      }
+    },
+    "team": {
+      "form_title_edit": "Modifier un membre",
+      "form_title_add": "Ajouter un membre",
+      "btn_new": "Nouveau membre",
+      "desc": "Gérez l'équipe affichée sur la page À Propos avec photo, rôle et ordre d'affichage.",
+      "edit_existing": "Éditer un membre existant",
+      "editing_now": "En cours d'édition:",
+      "label_name": "Nom complet",
+      "label_role": "Rôle",
+      "label_title": "Titre / Fonction",
+      "label_location": "Localisation",
+      "label_image": "Image de profil (URL)",
+      "label_bio": "Biographie",
+      "label_active": "Afficher sur le site",
+      "placeholder_role": "Présidente, Secrétaire...",
+      "placeholder_location": "Buea",
+      "placeholder_image": "https://images.unsplash.com...",
+      "update_success": "✅ Membre mis à jour avec succès!",
+      "create_success": "✅ Membre ajouté avec succès!",
+      "error_save": "❌ Erreur lors de l'enregistrement",
+      "error_reorder": "❌ Erreur lors de la réorganisation",
+      "confirm_delete": "Supprimer ce membre ?",
+      "delete_success": "✅ Membre supprimé"
+    },
+    "contacts": {
+      "title": "Messages de contact",
+      "empty": "Aucun message reçu.",
+      "label_from": "De :",
+      "label_subject": "Sujet :",
+      "status": {
+        "new": "Nouveau",
+        "read": "Lu",
+        "replied": "Répondu"
+      },
+      "bulk_messages": {
+        "status_success": "✅ Statut mis à jour pour {{count}} message(s)",
+        "delete_success": "✅ Messages supprimés",
+        "delete_confirm": "Supprimer {{count}} message(s) ?"
+      }
+    },
+    "registrations": {
+      "title": "Inscriptions Bénévoles & Partenaires",
+      "empty": "Aucune inscription reçue.",
+      "type_volunteer": "Bénévole",
+      "type_partner": "Partenaire",
+      "status": {
+        "new": "Nouveau",
+        "contacted": "Contacté",
+        "validated": "Validé",
+        "rejected": "Refusé"
+      },
+      "bulk_messages": {
+        "status_success": "✅ Statut mis à jour pour {{count}} inscription(s)",
+        "delete_success": "✅ Inscriptions supprimées",
+        "delete_confirm": "Supprimer {{count}} inscription(s) ?"
+      }
+    },
+    "login": {
+      "title": "Connexion Admin AMANCE",
+      "desc": "Accès administrateur restreint",
+      "email_label": "Adresse E-mail",
+      "email_placeholder": "Entrez l'e-mail admin",
+      "password_label": "Mot de passe",
+      "password_placeholder": "Entrez le mot de passe admin",
+      "submit": "Se connecter",
+      "submitting": "Connexion en cours...",
+      "footer_info": "En production, cette connexion ne fonctionne que pour l'e-mail et le mot de passe admin configurés.",
+      "error_email": "Veuillez entrer un e-mail",
+      "error_password": "Veuillez entrer un mot de passe",
+      "error_failed": "Échec de la connexion"
+    }
+  },
+  "footer": {
+    "newsletter": {
+      "title": "Restez informé de nos actions",
+      "subtitle": "Recevez nos actualités, rapports d'impact et appels à l'action directement dans votre boîte mail.",
+      "placeholder": "Votre adresse e-mail",
+      "button": "S'inscrire"
+    },
+    "brand": {
+      "tagline": "\"Parle pour ceux qui ne peuvent pas parler\"",
+      "source": "Proverbes 31:8",
+      "location": "Cameroun"
+    },
+    "sections": {
+      "nav": "Navigation",
+      "domains": "Nos Domaines",
+      "contact": "Contact"
+    },
+    "bottom": {
+      "copyright": "© {{year}} AMANCE — Angel Mary Association for the Needy and Conservation Education. Tous droits réservés.",
+      "legal": "Mentions légales",
+      "privacy": "Confidentialité",
+      "made_with": "Fait avec",
+      "at": "au Cameroun"
+    }
   }
 }

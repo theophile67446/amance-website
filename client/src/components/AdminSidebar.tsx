@@ -12,17 +12,10 @@ import {
   ExternalLink,
   Menu,
   X,
+  UserCheck
 } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
-
-const NAV_ITEMS = [
-  { id: "dashboard", label: "Vue d'ensemble", icon: LayoutDashboard },
-  { id: "articles", label: "Actualités & Articles", icon: FileText },
-  { id: "projets", label: "Projets & Missions", icon: Briefcase },
-  { id: "contacts", label: "Messages", icon: Mail },
-  { id: "registrations", label: "Bénévoles & Partenaires", icon: Users },
-  { id: "equipe", label: "Équipe", icon: Users },
-];
+import { useTranslation } from "react-i18next";
 
 interface AdminSidebarProps {
   activeTab: string;
@@ -34,6 +27,16 @@ export default function AdminSidebar({ activeTab, onTabChange }: AdminSidebarPro
   const [mobileOpen, setMobileOpen] = useState(false);
   const { user, logout } = useAuth();
   const [, navigate] = useLocation();
+  const { t } = useTranslation();
+
+  const NAV_ITEMS = [
+    { id: "dashboard", label: t("admin.sidebar.dashboard"), icon: LayoutDashboard },
+    { id: "articles", label: t("admin.sidebar.articles"), icon: FileText },
+    { id: "projets", label: t("admin.sidebar.projects"), icon: Briefcase },
+    { id: "contacts", label: t("admin.sidebar.contacts"), icon: Mail },
+    { id: "registrations", label: t("admin.sidebar.registrations"), icon: Users },
+    { id: "equipe", label: t("admin.sidebar.team"), icon: UserCheck },
+  ];
 
   const handleLogout = async () => {
     try {
@@ -59,7 +62,7 @@ export default function AdminSidebar({ activeTab, onTabChange }: AdminSidebarPro
           <Link
             href="/"
             className="flex items-center gap-2 group"
-            title="Retour au site"
+            title={t("admin.sidebar.back_to_site")}
           >
             <img
               src="/logo.png"
@@ -76,7 +79,7 @@ export default function AdminSidebar({ activeTab, onTabChange }: AdminSidebarPro
           </Link>
         )}
         {collapsed && (
-          <Link href="/" title="Retour au site">
+          <Link href="/" title={t("admin.sidebar.back_to_site")}>
             <img
               src="/logo.png"
               alt="AMANCE"
@@ -99,15 +102,15 @@ export default function AdminSidebar({ activeTab, onTabChange }: AdminSidebarPro
 
       {/* Admin label */}
       {!collapsed && (
-        <div className="px-4 py-2 flex-shrink-0">
-          <span className="text-xs font-semibold text-white/40 uppercase tracking-widest">
-            Administration
+        <div className="px-4 py-3 flex-shrink-0">
+          <span className="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">
+            {t("admin.sidebar.admin_label")}
           </span>
         </div>
       )}
 
       {/* Nav items */}
-      <nav className="flex-1 overflow-y-auto px-2 py-2 space-y-0.5">
+      <nav className="flex-1 overflow-y-auto px-2 py-2 space-y-1">
         {NAV_ITEMS.map(({ id, label, icon: Icon }) => {
           const isActive = activeTab === id;
           return (
@@ -115,19 +118,22 @@ export default function AdminSidebar({ activeTab, onTabChange }: AdminSidebarPro
               key={id}
               onClick={() => handleTabChange(id)}
               title={collapsed ? label : undefined}
-              className={`w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-150 group ${isActive
-                ? "bg-white/20 text-white shadow-sm"
-                : "text-white/70 hover:bg-white/10 hover:text-white"
+              className={`w-full flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-200 group relative ${isActive
+                ? "bg-white/15 text-white shadow-lg"
+                : "text-white/60 hover:bg-white/5 hover:text-white"
                 } ${collapsed ? "justify-center" : ""}`}
             >
               <Icon
                 size={18}
-                className={`flex-shrink-0 transition-transform duration-150 group-hover:scale-110 ${isActive ? "text-white" : "text-white/60"
+                className={`flex-shrink-0 transition-all duration-200 ${isActive ? "text-amance-green" : "text-white/40 group-hover:text-white/80 group-hover:scale-110"
                   }`}
               />
               {!collapsed && <span className="truncate">{label}</span>}
               {!collapsed && isActive && (
-                <span className="ml-auto w-1.5 h-1.5 rounded-full bg-white flex-shrink-0" />
+                <div className="ml-auto w-1 h-4 rounded-full bg-amance-green shadow-[0_0_8px_rgba(82,180,82,0.6)]" />
+              )}
+              {collapsed && isActive && (
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-r-full bg-amance-green" />
               )}
             </button>
           );
@@ -135,49 +141,51 @@ export default function AdminSidebar({ activeTab, onTabChange }: AdminSidebarPro
       </nav>
 
       {/* Return to site link */}
-      <div className="px-2 flex-shrink-0">
+      <div className="px-2 mt-auto mb-2 flex-shrink-0">
         <Link
           href="/"
-          className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-white/60 hover:bg-white/10 hover:text-white transition-all duration-150 group ${collapsed ? "justify-center" : ""
+          className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-white/50 hover:bg-white/5 hover:text-white transition-all duration-200 group ${collapsed ? "justify-center" : ""
             }`}
-          title={collapsed ? "Retour au site" : undefined}
+          title={collapsed ? t("admin.sidebar.back_to_site") : undefined}
         >
           <ExternalLink
             size={18}
-            className="flex-shrink-0 transition-transform duration-150 group-hover:scale-110"
+            className="flex-shrink-0 text-white/30 group-hover:text-white group-hover:scale-110"
           />
-          {!collapsed && <span>Retour au site</span>}
+          {!collapsed && <span>{t("admin.sidebar.back_to_site")}</span>}
         </Link>
       </div>
 
       {/* User profile + logout */}
-      <div className="border-t border-white/10 px-2 py-3 flex-shrink-0">
+      <div className="border-t border-white/5 px-2 py-4 flex-shrink-0">
         {!collapsed && user && (
-          <div className="flex items-center gap-3 px-3 py-2 mb-1">
-            <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
-              <span className="text-white font-bold text-sm">
-                {(user.name || user.email || "A").charAt(0).toUpperCase()}
-              </span>
+          <div className="flex items-center gap-3 px-3 py-2 mb-4 bg-white/5 rounded-2xl border border-white/5 shadow-inner">
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-amance-green to-amance-green-dark flex items-center justify-center flex-shrink-0 shadow-lg p-0.5">
+               <div className="w-full h-full rounded-full bg-black/20 flex items-center justify-center">
+                  <span className="text-white font-bold text-sm tracking-tighter">
+                    {(user.name || user.email || "A").charAt(0).toUpperCase()}
+                  </span>
+               </div>
             </div>
             <div className="min-w-0">
-              <p className="text-white text-sm font-semibold truncate">
+              <p className="text-white text-xs font-bold truncate tracking-tight">
                 {user.name || user.email}
               </p>
-              <p className="text-white/50 text-xs">Administrateur</p>
+              <p className="text-white/40 text-[10px] uppercase font-bold tracking-widest">{t("admin.sidebar.role_admin")}</p>
             </div>
           </div>
         )}
         <button
           onClick={handleLogout}
-          title={collapsed ? "Déconnexion" : undefined}
-          className={`w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-white/60 hover:bg-red-500/20 hover:text-red-300 transition-all duration-150 group ${collapsed ? "justify-center" : ""
+          title={collapsed ? t("admin.sidebar.logout") : undefined}
+          className={`w-full flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold text-white/50 hover:bg-red-500/15 hover:text-red-400 transition-all duration-200 group ${collapsed ? "justify-center" : ""
             }`}
         >
           <LogOut
             size={18}
-            className="flex-shrink-0 transition-transform duration-150 group-hover:scale-110"
+            className="flex-shrink-0 text-white/30 group-hover:text-red-400 group-hover:scale-110"
           />
-          {!collapsed && <span>Déconnexion</span>}
+          {!collapsed && <span>{t("admin.sidebar.logout")}</span>}
         </button>
       </div>
     </div>
@@ -187,7 +195,7 @@ export default function AdminSidebar({ activeTab, onTabChange }: AdminSidebarPro
     <>
       {/* Desktop sidebar */}
       <aside
-        className={`hidden lg:flex flex-col fixed left-0 top-0 bottom-0 z-40 bg-[#1A361D] transition-all duration-300 ease-in-out ${collapsed ? "w-16" : "w-64"
+        className={`hidden lg:flex flex-col fixed left-0 top-0 bottom-0 z-40 bg-[#122615] transition-all duration-300 ease-in-out border-r border-white/5 ${collapsed ? "w-20" : "w-64"
           }`}
       >
         {sidebarContent}
@@ -196,7 +204,7 @@ export default function AdminSidebar({ activeTab, onTabChange }: AdminSidebarPro
       {/* Mobile: hamburger button */}
       <button
         onClick={() => setMobileOpen(true)}
-        className="lg:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-xl bg-[#1A361D] text-white shadow-lg"
+        className="lg:hidden fixed top-3 left-3 z-[70] w-12 h-12 flex items-center justify-center rounded-2xl bg-amance-green text-white shadow-xl hover:scale-105 active:scale-95 transition-all"
         aria-label="Ouvrir le menu"
       >
         <Menu size={20} />
@@ -205,22 +213,22 @@ export default function AdminSidebar({ activeTab, onTabChange }: AdminSidebarPro
       {/* Mobile: overlay */}
       {mobileOpen && (
         <div
-          className="lg:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+          className="lg:hidden fixed inset-0 z-[80] bg-black/60 backdrop-blur-md"
           onClick={() => setMobileOpen(false)}
         />
       )}
 
       {/* Mobile: drawer */}
       <aside
-        className={`lg:hidden fixed left-0 top-0 bottom-0 z-50 w-72 bg-[#1A361D] transform transition-transform duration-300 ease-in-out ${mobileOpen ? "translate-x-0" : "-translate-x-full"
+        className={`lg:hidden fixed left-0 top-0 bottom-0 z-[90] w-72 bg-[#122615] transform transition-transform duration-300 ease-out shadow-[10px_0_40px_rgba(0,0,0,0.5)] ${mobileOpen ? "translate-x-0" : "-translate-x-full"
           }`}
       >
         <button
           onClick={() => setMobileOpen(false)}
-          className="absolute top-4 right-3 w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
+          className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 hover:bg-white/10 text-white transition-colors"
           aria-label="Fermer le menu"
         >
-          <X size={16} />
+          <X size={20} />
         </button>
         {sidebarContent}
       </aside>

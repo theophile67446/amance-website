@@ -17,64 +17,57 @@ import { trpc } from "@/lib/trpc";
 import { formatDate } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 import SEO from "@/components/SEO";
+import ShareActions from "@/components/ShareActions";
 
 const HERO_PROJETS = "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=1920&q=80";
 
-const categoryConfig = {
-  conservation: { label: "Conservation", color: "var(--amance-blue-light)" },
-  humanitaire: { label: "Humanitaire", color: "var(--amance-green)" },
-  sante: { label: "Santé", color: "var(--amance-blue)" },
-  communautaire: { label: "Communautaire", color: "var(--amance-green-dark)" },
-};
-
-const statusConfig = {
-  en_cours: { label: "En cours", color: "var(--amance-green)", bg: "rgba(42, 100, 60, 0.2)" },
-  termine: { label: "Terminé", color: "var(--amance-blue)", bg: "rgba(22, 36, 71, 0.2)" },
-  planifie: { label: "Planifié", color: "#f59e0b", bg: "rgba(245, 158, 11, 0.2)" },
-};
-
-const getCategoryIcon = (category: string) => {
-  const icons: Record<string, typeof TreePine> = {
-    conservation: TreePine,
-    humanitaire: HandHeart,
-    sante: Stethoscope,
-    communautaire: HomeIcon,
-  };
-  return icons[category] || HomeIcon;
-};
-
-const getStatusIcon = (status: string) => {
-  const icons: Record<string, typeof TreePine> = {
-    en_cours: TreePine,
-    termine: TreePine,
-    planifie: TreePine,
-  };
-  return icons[status] || TreePine;
-};
-
-const filters = [
-  { value: "all", label: "Tous les projets" },
-  { value: "conservation", label: "Conservation" },
-  { value: "humanitaire", label: "Humanitaire" },
-  { value: "sante", label: "Santé" },
-  { value: "communautaire", label: "Communautaire" },
-];
-
 export default function Projets() {
+  const { t, i18n } = useTranslation();
   const [activeFilter, setActiveFilter] = useState("all");
   const queryInput = activeFilter === "all" ? undefined : { category: activeFilter as any };
-
-  const { i18n } = useTranslation();
   const isEn = i18n.language.startsWith('en');
 
-  // Récupérer les projets depuis l'API
   const { data: projects = [], isLoading } = trpc.projects.list.useQuery(queryInput);
 
-  const featured = projects.filter((p) => p.featured);
+  const categoryConfig = {
+    conservation: { label: t("projects.filters.conservation"), color: "var(--amance-blue-light)" },
+    humanitaire: { label: t("projects.filters.humanitaire"), color: "var(--amance-green)" },
+    sante: { label: t("projects.filters.sante"), color: "var(--amance-blue)" },
+    communautaire: { label: t("projects.filters.communautaire"), color: "var(--amance-green-dark)" },
+  };
+
+  const statusConfig = {
+    en_cours: { label: t("projects.status.en_cours"), color: "var(--amance-green)", bg: "rgba(42, 100, 60, 0.2)" },
+    termine: { label: t("projects.status.termine"), color: "var(--amance-blue)", bg: "rgba(22, 36, 71, 0.2)" },
+    planifie: { label: t("projects.status.planifie"), color: "#f59e0b", bg: "rgba(245, 158, 11, 0.2)" },
+  };
+
+  const getCategoryIcon = (category: string) => {
+    const icons: Record<string, typeof TreePine> = {
+      conservation: TreePine,
+      humanitaire: HandHeart,
+      sante: Stethoscope,
+      communautaire: HomeIcon,
+    };
+    return icons[category] || HomeIcon;
+  };
+
+  const getStatusIcon = (status: string) => {
+    // Return appropriate icons if needed, using TreePine as default for now as in original
+    return TreePine;
+  };
+
+  const filters = [
+    { value: "all", label: t("projects.filters.all") },
+    { value: "conservation", label: t("projects.filters.conservation") },
+    { value: "humanitaire", label: t("projects.filters.humanitaire") },
+    { value: "sante", label: t("projects.filters.sante") },
+    { value: "communautaire", label: t("projects.filters.communautaire") },
+  ];
 
   return (
     <Layout>
-      <SEO title="Projets" description="Explorez nos projets de conservation, humanitaires et communautaires au Cameroun." />
+      <SEO title={t("projects.hero.seo_title")} description={t("projects.hero.seo_desc")} />
       {/* Hero */}
       <section className="relative py-32 overflow-hidden">
         <div
@@ -91,17 +84,16 @@ export default function Projets() {
             style={{ backgroundColor: "rgba(255,255,255,0.15)" }}
           >
             <Leaf size={14} />
-            Nos Projets
+            {t("projects.hero.badge")}
           </div>
           <h1
             className="text-4xl md:text-5xl font-extrabold text-white mb-6"
             style={{ fontFamily: "Montserrat, sans-serif" }}
           >
-            Nos Projets & Programmes
+            {t("projects.hero.title")}
           </h1>
           <p className="text-xl text-gray-200 max-w-3xl mx-auto" style={{ fontFamily: "Open Sans, sans-serif" }}>
-            Des projets concrets, mesurables et durables qui transforment des vies et préservent
-            l'environnement au Cameroun.
+            {t("projects.hero.subtitle")}
           </p>
         </div>
       </section>
@@ -125,6 +117,18 @@ export default function Projets() {
                 {f.label}
               </button>
             ))}
+          </div>
+
+          <div className="mb-8 flex items-center justify-between gap-3 flex-wrap">
+            <p className="text-sm text-gray-500" style={{ fontFamily: "Open Sans, sans-serif" }}>
+              Aidez-nous a diffuser ces projets autour de vous.
+            </p>
+            <ShareActions
+              title={t("projects.hero.title")}
+              summary={t("projects.hero.subtitle")}
+              path="/projets"
+              compact
+            />
           </div>
 
           {isLoading ? (
@@ -183,7 +187,7 @@ export default function Projets() {
                           className="absolute bottom-3 left-3 px-3 py-1 rounded-full text-xs font-bold text-white"
                           style={{ backgroundColor: "rgba(0,0,0,0.6)" }}
                         >
-                          ⭐ Projet phare
+                          ⭐ {t("projects.card.featured")}
                         </div>
                       )}
                     </div>
@@ -195,7 +199,7 @@ export default function Projets() {
                         <span>{project.location}</span>
                         <span>·</span>
                         <Calendar size={12} />
-                        <span>{project.startDate ? formatDate(project.startDate) : "Date à venir"}</span>
+                        <span>{project.startDate ? formatDate(project.startDate) : t("projects.card.date_upcoming")}</span>
                       </div>
 
                       <h3
@@ -242,7 +246,7 @@ export default function Projets() {
                         className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full text-sm font-bold text-white transition-all duration-300 hover:opacity-90"
                         style={{ backgroundColor: cat.color, fontFamily: "Montserrat, sans-serif" }}
                       >
-                        En savoir plus <ArrowRight size={14} />
+                        {t("projects.card.learn_more")} <ArrowRight size={14} />
                       </Link>
                     </div>
                   </div>
@@ -251,7 +255,7 @@ export default function Projets() {
             </div>
           ) : (
             <div className="text-center py-16">
-              <p className="text-lg text-gray-600">Aucun projet trouvé dans cette catégorie.</p>
+              <p className="text-lg text-gray-600">{t("projects.card.no_projects")}</p>
             </div>
           )}
         </div>
@@ -267,11 +271,10 @@ export default function Projets() {
             className="text-3xl md:text-4xl font-extrabold text-white mb-6"
             style={{ fontFamily: "Montserrat, sans-serif" }}
           >
-            Soutenez Nos Projets
+            {t("projects.cta.title")}
           </h2>
           <p className="text-lg text-blue-200 mb-10" style={{ fontFamily: "Open Sans, sans-serif" }}>
-            Chaque don, aussi modeste soit-il, contribue directement à la réalisation de ces projets
-            et à l'amélioration des conditions de vie de milliers de personnes au Cameroun.
+            {t("projects.cta.subtitle")}
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link
@@ -280,7 +283,7 @@ export default function Projets() {
               style={{ backgroundColor: "var(--amance-green)", fontFamily: "Montserrat, sans-serif" }}
             >
               <Heart size={18} fill="white" />
-              Soutenir un Projet
+              {t("projects.cta.cta_donate")}
             </Link>
             <Link
               href="/contact"
@@ -289,7 +292,7 @@ export default function Projets() {
               onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = "var(--amance-blue)"; }}
               onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = "white"; }}
             >
-              Devenir Partenaire <ArrowRight size={18} />
+              {t("projects.cta.cta_partner")} <ArrowRight size={18} />
             </Link>
           </div>
         </div>

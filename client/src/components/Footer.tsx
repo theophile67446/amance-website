@@ -1,9 +1,12 @@
 import { Link } from "wouter";
+import { useTranslation } from "react-i18next";
 import { MapPin, Phone, Mail, Facebook, Twitter, Instagram, Linkedin, Heart, ArrowRight } from "lucide-react";
 
 const LOGO_URL = "https://d2xsxph8kpxj0f.cloudfront.net/310519663349492546/QAH5oD3g9NaLpXrMvyrp4h/amance-logo_b61079fb.webp";
 
 export default function Footer() {
+  const { t } = useTranslation();
+
   return (
     <footer className="bg-amance-blue-dark text-white">
       {/* Newsletter Banner */}
@@ -12,10 +15,10 @@ export default function Footer() {
           <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
             <div className="text-center lg:text-left">
               <h3 className="text-2xl font-bold font-heading text-white mb-2">
-                Restez informé de nos actions
+                {t("footer.newsletter.title")}
               </h3>
               <p className="text-gray-300 text-sm font-sans max-w-lg mx-auto lg:mx-0">
-                Recevez nos actualités, rapports d'impact et appels à l'action directement dans votre boîte mail.
+                {t("footer.newsletter.subtitle")}
               </p>
             </div>
             <form
@@ -24,14 +27,14 @@ export default function Footer() {
             >
               <input
                 type="email"
-                placeholder="Votre adresse e-mail"
+                placeholder={t("footer.newsletter.placeholder")}
                 className="flex-1 md:w-80 px-5 py-3.5 rounded-full font-sans text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-amance-green shadow-inner"
               />
               <button
                 type="submit"
                 className="btn-primary"
               >
-                S'inscrire <ArrowRight size={16} />
+                {t("footer.newsletter.button")} <ArrowRight size={16} />
               </button>
             </form>
           </div>
@@ -50,13 +53,13 @@ export default function Footer() {
                   <div className="text-xl font-extrabold font-heading text-white">
                     AMANCE
                   </div>
-                  <div className="text-xs text-gray-400">Cameroun</div>
+                  <div className="text-xs text-gray-400">{t("footer.brand.location")}</div>
                 </div>
               </div>
               <p className="text-gray-300 text-sm font-sans leading-relaxed mb-5">
-                <em>"Speak up for those who cannot speak for themselves"</em>
+                <em>{t("footer.brand.tagline")}</em>
                 <br />
-                <span className="text-xs text-gray-400">— Proverbes 31:8</span>
+                <span className="text-xs text-gray-400">— {t("footer.brand.source")}</span>
               </p>
               <div className="flex gap-3">
                 {[
@@ -80,16 +83,16 @@ export default function Footer() {
             {/* Quick Links */}
             <div className="lg:col-span-2">
               <h4 className="text-xs font-bold font-heading uppercase tracking-widest text-amance-green-light mb-6">
-                Navigation
+                {t("footer.sections.nav")}
               </h4>
               <ul className="space-y-3">
                 {[
-                  { label: "Accueil", href: "/" },
-                  { label: "À Propos", href: "/a-propos" },
-                  { label: "Nos Actions", href: "/nos-actions" },
-                  { label: "Nos Projets", href: "/projets" },
-                  { label: "Actualités", href: "/actualites" },
-                  { label: "Contact", href: "/contact" },
+                  { label: t("nav.home"), href: "/" },
+                  { label: t("nav.about"), href: "/a-propos" },
+                  { label: t("nav.actions"), href: "/nos-actions" },
+                  { label: t("nav.projects"), href: "/projets" },
+                  { label: t("nav.news"), href: "/actualites" },
+                  { label: t("nav.contact"), href: "/contact" },
                 ].map((link) => (
                   <li key={link.href}>
                     <Link
@@ -107,16 +110,15 @@ export default function Footer() {
             {/* Actions */}
             <div className="lg:col-span-3">
               <h4 className="text-xs font-bold font-heading uppercase tracking-widest text-amance-green-light mb-6">
-                Nos Domaines
+                {t("footer.sections.domains")}
               </h4>
               <ul className="space-y-3">
                 {[
-                  { label: "Aide Humanitaire & Sociale", href: "/nos-actions#humanitaire" },
-                  { label: "Santé & Bien-être", href: "/nos-actions#sante" },
-                  { label: "Développement Communautaire", href: "/nos-actions#communautaire" },
-                  { label: "Conservation Environnementale", href: "/nos-actions#conservation" },
-                  { label: "Éducation Environnementale", href: "/nos-actions#conservation" },
-                  { label: "S'impliquer", href: "/s-impliquer" },
+                  { label: t("nav.humanitarian"), href: "/nos-actions#smile" },
+                  { label: t("nav.health"), href: "/nos-actions#education" },
+                  { label: t("nav.community"), href: "/nos-actions#communautaire" },
+                  { label: t("nav.environment"), href: "/nos-actions#conservation" },
+                  { label: t("nav.getInvolved"), href: "/s-impliquer" },
                 ].map((link) => (
                   <li key={link.label}>
                     <Link
@@ -134,7 +136,7 @@ export default function Footer() {
             {/* Contact */}
             <div className="lg:col-span-3">
               <h4 className="text-xs font-bold font-heading uppercase tracking-widest text-amance-green-light mb-6">
-                Contact
+                {t("footer.sections.contact")}
               </h4>
               <ul className="space-y-4">
                 <li className="flex items-start gap-3">
@@ -180,7 +182,7 @@ export default function Footer() {
                   className="btn-primary w-full"
                 >
                   <Heart size={16} fill="white" />
-                  Faire un Don
+                  {t("nav.donate")}
                 </Link>
               </div>
             </div>
@@ -193,17 +195,17 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-gray-400 font-sans text-xs">
-              © {new Date().getFullYear()} AMANCE — Angel Mary Association for the Needy and Conservation Education. Tous droits réservés.
+              {t("footer.bottom.copyright", { year: new Date().getFullYear() })}
             </p>
             <div className="flex items-center gap-4">
               <Link href="/mentions-legales" className="text-gray-400 hover:text-white text-xs transition-colors">
-                Mentions légales
+                {t("footer.bottom.legal")}
               </Link>
               <Link href="/politique-de-confidentialite" className="text-gray-400 hover:text-white text-xs transition-colors">
-                Confidentialité
+                {t("footer.bottom.privacy")}
               </Link>
               <span className="text-gray-500 font-sans text-xs flex items-center gap-1">
-                Fait avec <Heart size={10} fill="currentColor" className="text-amance-green-light" /> au Cameroun
+                {t("footer.bottom.made_with")} <Heart size={10} fill="currentColor" className="text-amance-green-light" /> {t("footer.bottom.at")}
               </span>
             </div>
           </div>
