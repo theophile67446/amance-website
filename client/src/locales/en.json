@@ -823,25 +823,20 @@
     },
     "dashboard": {
       "title": "Dashboard",
-      "articles": {
-        "title": "Articles",
-        "unit": "published"
-      },
-      "projects": {
-        "title": "Projects",
-        "unit": "ongoing"
-      },
-      "messages": {
-        "title": "Messages",
-        "unit": "unread"
-      },
-      "registrations": {
-        "title": "Registrations",
-        "unit": "new"
-      },
-      "team": {
-        "title": "Team",
-        "unit": "active"
+      "articles": { "title": "Articles", "unit": "published" },
+      "projects": { "title": "Projects", "unit": "ongoing" },
+      "messages": { "title": "Messages", "unit": "unread" },
+      "registrations": { "title": "Registrations", "unit": "new" },
+      "team": { "title": "Team", "unit": "active" },
+      "recent_activity": "Recent Activity",
+      "quick_actions": "Quick Actions",
+      "registration_trends": "Registration Trends",
+      "category_distribution": "Category Distribution",
+      "view_all": "View all",
+      "actions": {
+        "write_article": "Write article",
+        "add_project": "New project",
+        "view_messages": "View messages"
       }
     },
     "articles": {

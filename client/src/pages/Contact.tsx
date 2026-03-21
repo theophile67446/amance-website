@@ -40,10 +40,6 @@ export default function Contact() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.firstName || !form.lastName || !form.email || !form.subject || !form.message) {
-      toast.error(t("common.form_required"));
-      return;
-    }
     submitContact.mutate(form);
   };
 

@@ -9,7 +9,47 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Edit2, Trash2, FileText, Briefcase, Eye, EyeOff, MapPin, Mail, Users, ArrowUp, ArrowDown, Search, List, LayoutGrid, Phone, Globe, Building2, Clock } from "lucide-react";
+import { 
+  Edit2, 
+  Trash2, 
+  FileText, 
+  Briefcase, 
+  Eye, 
+  EyeOff, 
+  MapPin, 
+  Mail, 
+  Users, 
+  ArrowUp, 
+  ArrowDown, 
+  Search, 
+  List, 
+  LayoutGrid, 
+  Phone, 
+  Globe, 
+  Building2, 
+  Clock,
+  TrendingUp,
+  PlusCircle,
+  BarChart3,
+  PieChart as PieIcon,
+  ArrowRight,
+  TrendingDown
+} from "lucide-react";
+
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  PieChart as RePieChart,
+  Pie,
+  Cell
+} from 'recharts';
 
 import { useTranslation } from "react-i18next";
 
@@ -166,113 +206,378 @@ function DashboardTab({ setActiveTab }: { setActiveTab: (tab: string) => void })
   const { data: registrations = [] } = trpc.registration.adminList.useQuery();
   const { data: teamMembers = [] } = trpc.team.adminList.useQuery();
 
+  // Process Registrations for Trends (last 6 months)
+  const registrationData = useMemo(() => {
+    const months = [];
+    const now = new Date();
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      months.push({
+        name: d.toLocaleString('fr-FR', { month: 'short' }),
+        count: 0,
+        month: d.getMonth(),
+        year: d.getFullYear()
+      });
+    }
+
+    registrations.forEach((r: any) => {
+      const date = new Date(r.createdAt || now);
+      const m = date.getMonth();
+      const y = date.getFullYear();
+      const match = months.find(mo => mo.month === m && mo.year === y);
+      if (match) match.count++;
+    });
+
+    return months;
+  }, [registrations]);
+
+  // Process Article Categories for Pie Chart
+  const categoryData = useMemo(() => {
+    const counts: Record<string, number> = {};
+    articles.forEach((a: any) => {
+      const cat = a.category || 'actualites';
+      counts[cat] = (counts[cat] || 0) + 1;
+    });
+
+    return Object.entries(counts).map(([name, value]) => ({
+      name: t(`news_page.filters.${name}`),
+      value
+    }));
+  }, [articles, t]);
+
+  const COLORS = ['#1E5D2A', '#F5B100', '#3b82f6', '#8b5cf6', '#ef4444'];
+
   const publishedArticles = articles.filter((a: any) => a.published).length;
   const unreadMessages = contacts.filter((c: any) => c.status === 'nouveau').length;
   const newRegistrations = registrations.filter((r: any) => r.status === 'nouveau').length;
   const activeMembers = teamMembers.filter((member: any) => member.active).length;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 pb-6">
-      <Card
-        className="cursor-pointer hover:shadow-lg transition-shadow border-l-4 border-l-[#F5B100]"
-        onClick={() => setActiveTab("articles")}
-      >
-        <CardContent className="p-6">
-          <div className="flex justify-between items-start">
-            <div>
-              <p className="text-gray-500 font-medium mb-1">{t("admin.dashboard.articles.title")}</p>
-              <h3 className="text-3xl font-bold text-[#1A361D]">{articles.length}</h3>
-            </div>
-            <div className="p-3 bg-orange-50 rounded-full text-[#F5B100]">
-              <FileText className="w-6 h-6" />
-            </div>
-          </div>
-          <div className="mt-4 flex space-x-2 text-sm">
-            <span className="text-green-600 font-medium">{publishedArticles} {t("admin.dashboard.articles.unit")}</span>
-          </div>
-        </CardContent>
-      </Card>
+    <AdminWorkspace
+      mode="browse"
+      title={t("admin.dashboard.title")}
+      collectionLabel={t("admin.sidebar.admin_label")}
+      description={t("admin.dashboard.subtitle") || "Consultez les statistiques clés et l'activité récente de votre plateforme."}
+      count={unreadMessages + newRegistrations}
+      onBack={() => {}}
+      backLabel=""
+      editorBadge=""
+      editorTitle=""
+      accentClassName="bg-[radial-gradient(circle_at_top_right,_rgba(30,93,42,0.05),_transparent_40%),linear-gradient(180deg,#ffffff_0%,#f8faf9_100%)]"
+      collectionContent={
+        <div className="space-y-8 pb-10">
+          {/* Section 1: Top Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <Card
+              className="cursor-pointer hover:shadow-md transition-all border-none bg-white shadow-sm ring-1 ring-gray-100 overflow-hidden relative"
+              onClick={() => setActiveTab("articles")}
+            >
+              <div className="absolute top-0 left-0 w-1 h-full bg-[#F5B100]" />
+              <CardContent className="p-5">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">{t("admin.dashboard.articles.title")}</p>
+                    <h3 className="text-2xl font-black text-[#1A361D]">{articles.length}</h3>
+                  </div>
+                  <div className="p-2.5 bg-orange-50 rounded-xl text-[#F5B100]">
+                    <FileText className="w-5 h-5" />
+                  </div>
+                </div>
+                <div className="mt-3 flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                  <span className="text-[11px] font-bold text-green-600 uppercase tracking-tight">{publishedArticles} {t("admin.dashboard.articles.unit")}</span>
+                </div>
+              </CardContent>
+            </Card>
 
-      <Card
-        className="cursor-pointer hover:shadow-lg transition-shadow border-l-4 border-l-[#1E5D2A]"
-        onClick={() => setActiveTab("projets")}
-      >
-        <CardContent className="p-6">
-          <div className="flex justify-between items-start">
-            <div>
-              <p className="text-gray-500 font-medium mb-1">{t("admin.dashboard.projects.title")}</p>
-              <h3 className="text-3xl font-bold text-[#1A361D]">{projects.length}</h3>
-            </div>
-            <div className="p-3 bg-green-50 rounded-full text-[#1E5D2A]">
-              <Briefcase className="w-6 h-6" />
-            </div>
-          </div>
-          <div className="mt-4 flex space-x-2 text-sm">
-            <span className="text-blue-600 font-medium">{projects.filter(p => p.status === 'en_cours').length} {t("admin.dashboard.projects.unit")}</span>
-          </div>
-        </CardContent>
-      </Card>
+            <Card
+              className="cursor-pointer hover:shadow-md transition-all border-none bg-white shadow-sm ring-1 ring-gray-100 overflow-hidden relative"
+              onClick={() => setActiveTab("projets")}
+            >
+              <div className="absolute top-0 left-0 w-1 h-full bg-[#1E5D2A]" />
+              <CardContent className="p-5">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">{t("admin.dashboard.projects.title")}</p>
+                    <h3 className="text-2xl font-black text-[#1A361D]">{projects.length}</h3>
+                  </div>
+                  <div className="p-2.5 bg-green-50 rounded-xl text-[#1E5D2A]">
+                    <Briefcase className="w-5 h-5" />
+                  </div>
+                </div>
+                <div className="mt-3 flex items-center gap-1.5 text-[11px] font-bold text-blue-600 uppercase tracking-tight">
+                  <TrendingUp className="w-3 h-3" />
+                  <span>{projects.filter(p => p.status === 'en_cours').length} {t("admin.dashboard.projects.unit")}</span>
+                </div>
+              </CardContent>
+            </Card>
 
-      <Card
-        className="cursor-pointer hover:shadow-lg transition-shadow border-l-4 border-l-blue-500"
-        onClick={() => setActiveTab("contacts")}
-      >
-        <CardContent className="p-6">
-          <div className="flex justify-between items-start">
-            <div>
-              <p className="text-gray-500 font-medium mb-1">{t("admin.dashboard.messages.title")}</p>
-              <h3 className="text-3xl font-bold text-[#1A361D]">{contacts.length}</h3>
-            </div>
-            <div className="p-3 bg-blue-50 rounded-full text-blue-500">
-              <Mail className="w-6 h-6" />
-            </div>
-          </div>
-          <div className="mt-4 flex space-x-2 text-sm">
-            <span className={`${unreadMessages > 0 ? 'text-red-500 font-bold' : 'text-gray-500'}`}>{unreadMessages} {t("admin.dashboard.messages.unit")}</span>
-          </div>
-        </CardContent>
-      </Card>
+            <Card
+              className="cursor-pointer hover:shadow-md transition-all border-none bg-white shadow-sm ring-1 ring-gray-100 overflow-hidden relative"
+              onClick={() => setActiveTab("contacts")}
+            >
+              <div className="absolute top-0 left-0 w-1 h-full bg-blue-500" />
+              <CardContent className="p-5">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">{t("admin.dashboard.messages.title")}</p>
+                    <h3 className="text-2xl font-black text-[#1A361D]">{contacts.length}</h3>
+                  </div>
+                  <div className="p-2.5 bg-blue-50 rounded-xl text-blue-500">
+                    <Mail className="w-5 h-5" />
+                  </div>
+                </div>
+                <div className="mt-3 flex items-center gap-1.5">
+                  <span className={`text-[11px] font-bold uppercase tracking-tight ${unreadMessages > 0 ? 'text-red-500' : 'text-gray-400'}`}>
+                    {unreadMessages} {t("admin.dashboard.messages.unit")}
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
 
-      <Card
-        className="cursor-pointer hover:shadow-lg transition-shadow border-l-4 border-l-purple-500"
-        onClick={() => setActiveTab("registrations")}
-      >
-        <CardContent className="p-6">
-          <div className="flex justify-between items-start">
-            <div>
-              <p className="text-gray-500 font-medium mb-1">{t("admin.dashboard.registrations.title")}</p>
-              <h3 className="text-3xl font-bold text-[#1A361D]">{registrations.length}</h3>
-            </div>
-            <div className="p-3 bg-purple-50 rounded-full text-purple-500">
-              <Users className="w-6 h-6" />
-            </div>
-          </div>
-          <div className="mt-4 flex space-x-2 text-sm">
-            <span className={`${newRegistrations > 0 ? 'text-purple-600 font-bold' : 'text-gray-500'}`}>{newRegistrations} {t("admin.dashboard.registrations.unit")}</span>
-          </div>
-        </CardContent>
-      </Card>
+            <Card
+              className="cursor-pointer hover:shadow-md transition-all border-none bg-white shadow-sm ring-1 ring-gray-100 overflow-hidden relative"
+              onClick={() => setActiveTab("registrations")}
+            >
+              <div className="absolute top-0 left-0 w-1 h-full bg-purple-500" />
+              <CardContent className="p-5">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">{t("admin.dashboard.registrations.title")}</p>
+                    <h3 className="text-2xl font-black text-[#1A361D]">{registrations.length}</h3>
+                  </div>
+                  <div className="p-2.5 bg-purple-50 rounded-xl text-purple-500">
+                    <Users className="w-5 h-5" />
+                  </div>
+                </div>
+                <div className="mt-3 flex items-center gap-1.5">
+                  <span className={`text-[11px] font-bold uppercase tracking-tight ${newRegistrations > 0 ? 'text-purple-600' : 'text-gray-400'}`}>
+                    {newRegistrations} {t("admin.dashboard.registrations.unit")}
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
 
-      <Card
-        className="cursor-pointer hover:shadow-lg transition-shadow border-l-4 border-l-emerald-500"
-        onClick={() => setActiveTab("equipe")}
-      >
-        <CardContent className="p-6">
-          <div className="flex justify-between items-start">
-            <div>
-              <p className="text-gray-500 font-medium mb-1">{t("admin.dashboard.team.title")}</p>
-              <h3 className="text-3xl font-bold text-[#1A361D]">{teamMembers.length}</h3>
-            </div>
-            <div className="p-3 bg-emerald-50 rounded-full text-emerald-500">
-              <Users className="w-6 h-6" />
-            </div>
+            <Card
+              className="cursor-pointer hover:shadow-md transition-all border-none bg-white shadow-sm ring-1 ring-gray-100 overflow-hidden relative"
+              onClick={() => setActiveTab("equipe")}
+            >
+              <div className="absolute top-0 left-0 w-1 h-full bg-emerald-500" />
+              <CardContent className="p-5">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">{t("admin.dashboard.team.title")}</p>
+                    <h3 className="text-2xl font-black text-[#1A361D]">{teamMembers.length}</h3>
+                  </div>
+                  <div className="p-2.5 bg-emerald-50 rounded-xl text-emerald-500">
+                    <Users className="w-5 h-5" />
+                  </div>
+                </div>
+                <div className="mt-3 flex items-center gap-1.5">
+                  <span className="text-[11px] font-bold text-emerald-700 uppercase tracking-tight">{activeMembers} {t("admin.dashboard.team.unit")}</span>
+                </div>
+              </CardContent>
+            </Card>
           </div>
-          <div className="mt-4 flex space-x-2 text-sm">
-            <span className="text-emerald-700 font-medium">{activeMembers} {t("admin.dashboard.team.unit")}</span>
+
+          {/* Section 2: Charts Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card className="border-gray-100 shadow-sm overflow-hidden border-none ring-1 ring-gray-100">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-bold flex items-center gap-2 text-[#1A361D]">
+                  <TrendingUp className="w-4 h-4 text-green-600" />
+                  {t("admin.dashboard.registration_trends")}
+                </CardTitle>
+                <CardDescription className="text-[11px]">{t("admin.dashboard.registration_trends_desc") || "Évolution des inscriptions sur les 6 derniers mois"}</CardDescription>
+              </CardHeader>
+              <CardContent className="h-64 pt-4">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={registrationData}>
+                    <defs>
+                      <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#1E5D2A" stopOpacity={0.15}/>
+                        <stop offset="95%" stopColor="#1E5D2A" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                    <XAxis 
+                      dataKey="name" 
+                      axisLine={false} 
+                      tickLine={false} 
+                      tick={{fontSize: 10, fill: '#94a3b8', fontWeight: 600}} 
+                      dy={10}
+                    />
+                    <YAxis 
+                      axisLine={false} 
+                      tickLine={false} 
+                      tick={{fontSize: 10, fill: '#94a3b8', fontWeight: 600}} 
+                    />
+                    <Tooltip 
+                      contentStyle={{borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', padding: '8px 12px'}}
+                      labelStyle={{fontWeight: 800, color: '#1A361D', marginBottom: '4px'}}
+                    />
+                    <Area 
+                      type="monotone" 
+                      dataKey="count" 
+                      stroke="#1E5D2A" 
+                      strokeWidth={3} 
+                      fillOpacity={1} 
+                      fill="url(#colorCount)" 
+                      animationDuration={1500}
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            <Card className="border-gray-100 shadow-sm overflow-hidden border-none ring-1 ring-gray-100">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-bold flex items-center gap-2 text-[#1A361D]">
+                  <PieIcon className="w-4 h-4 text-orange-500" />
+                  {t("admin.dashboard.category_distribution")}
+                </CardTitle>
+                <CardDescription className="text-[11px]">{t("admin.dashboard.category_distribution_desc") || "Répartition des articles par domaine d'action"}</CardDescription>
+              </CardHeader>
+              <CardContent className="h-64 flex items-center">
+                <ResponsiveContainer width="100%" height="100%">
+                  <RePieChart>
+                    <Pie
+                      data={categoryData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={85}
+                      paddingAngle={8}
+                      dataKey="value"
+                      stroke="none"
+                    >
+                      {categoryData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip 
+                       contentStyle={{borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)'}}
+                    />
+                  </RePieChart>
+                </ResponsiveContainer>
+                <div className="pr-4 space-y-2">
+                   {categoryData.slice(0, 4).map((entry, index) => (
+                      <div key={entry.name} className="flex items-center gap-2">
+                         <div className="w-2 h-2 rounded-full" style={{backgroundColor: COLORS[index % COLORS.length]}} />
+                         <span className="text-[10px] font-bold text-gray-500 whitespace-nowrap">{entry.name}</span>
+                      </div>
+                   ))}
+                </div>
+              </CardContent>
+            </Card>
           </div>
-        </CardContent>
-      </Card>
-    </div>
+
+          {/* Section 3: Bottom Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Quick Actions */}
+            <Card className="lg:col-span-1 border-none ring-1 ring-gray-100 shadow-sm bg-white overflow-hidden">
+               <div className="h-1 bg-gradient-to-r from-[#1E5D2A] to-[#F5B100]" />
+              <CardHeader className="pb-4">
+                <CardTitle className="text-sm font-bold text-[#1A361D]">{t("admin.dashboard.quick_actions")}</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start gap-4 h-14 border-gray-100 hover:border-[#1E5D2A]/30 hover:bg-[#1E5D2A]/5 group transition-all rounded-xl" 
+                  onClick={() => setActiveTab('articles')}
+                >
+                  <div className="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center text-[#F5B100] group-hover:scale-110 transition-transform">
+                    <PlusCircle className="w-5 h-5" />
+                  </div>
+                  <span className="font-semibold text-gray-700">{t("admin.dashboard.actions.write_article")}</span>
+                </Button>
+                
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start gap-4 h-14 border-gray-100 hover:border-[#1E5D2A]/30 hover:bg-[#1E5D2A]/5 group transition-all rounded-xl" 
+                  onClick={() => setActiveTab('projets')}
+                >
+                  <div className="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center text-[#1E5D2A] group-hover:scale-110 transition-transform">
+                    <Briefcase className="w-5 h-5" />
+                  </div>
+                  <span className="font-semibold text-gray-700">{t("admin.dashboard.actions.add_project")}</span>
+                </Button>
+
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start gap-4 h-14 border-gray-100 hover:border-[#1E5D2A]/30 hover:bg-[#1E5D2A]/5 group transition-all rounded-xl" 
+                  onClick={() => setActiveTab('contacts')}
+                >
+                  <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-500 group-hover:scale-110 transition-transform">
+                    <Mail className="w-5 h-5" />
+                  </div>
+                  <span className="font-semibold text-gray-700">{t("admin.dashboard.actions.view_messages")}</span>
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Recent Activity */}
+            <Card className="lg:col-span-2 border-none ring-1 ring-gray-100 shadow-sm bg-white overflow-hidden">
+              <CardHeader className="flex flex-row items-center justify-between border-b border-gray-50 pb-4">
+                <CardTitle className="text-sm font-bold text-[#1A361D]">{t("admin.dashboard.recent_activity")}</CardTitle>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="text-xs font-bold text-[#1E5D2A] hover:bg-green-50 h-8 rounded-lg" 
+                  onClick={() => setActiveTab('articles')}
+                >
+                  {t("admin.dashboard.view_all")} <ArrowRight className="ml-1.5 w-3.5 h-3.5" />
+                </Button>
+              </CardHeader>
+              <CardContent className="p-0">
+                <div className="divide-y divide-gray-50">
+                  {articles.length === 0 ? (
+                     <div className="p-10 text-center text-gray-400 text-sm font-medium italic">
+                        {t("common.no_results")}
+                     </div>
+                  ) : articles.slice(0, 4).map((article: any) => (
+                    <div key={article.id} className="px-6 py-4 flex items-center justify-between hover:bg-gray-50/50 transition-colors group">
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-[#F5B100]/10 group-hover:text-[#F5B100] transition-colors">
+                          <FileText className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-bold text-gray-800 line-clamp-1 group-hover:text-[#1A361D] transition-colors">{article.title}</p>
+                          <div className="flex items-center gap-2 mt-0.5">
+                             <Clock className="w-3 h-3 text-gray-300" />
+                             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">{formatDate(article.createdAt || new Date())}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className={`px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest ${article.published ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-100 text-gray-500'}`}>
+                          {article.published ? t('admin.articles.status.published') : t('admin.articles.status.draft')}
+                        </span>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="w-8 h-8 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={() => {
+                             syncAdminSearch((params) => {
+                                params.set("tab", "articles");
+                                params.set("mode", "edit");
+                                params.set("id", String(article.id));
+                             });
+                          }}
+                        >
+                           <Edit2 className="w-3.5 h-3.5 text-gray-400" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      }
+      editorContent={null}
+    />
   );
 }
 

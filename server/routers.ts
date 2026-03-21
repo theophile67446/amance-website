@@ -216,7 +216,7 @@ export const appRouter = router({
         email: z.string().email(),
         phone: z.string().optional(),
         subject: z.string().min(1),
-        message: z.string().min(10),
+        message: z.string().min(1),
       }))
       .mutation(async ({ input }) => {
         const db = await getDb();
@@ -711,13 +711,21 @@ export const appRouter = router({
             .orderBy(asc(teamMembers.displayOrder), asc(teamMembers.id));
         } catch (error) {
           console.error("[Team Router] Drizzle adminList error, using fallback SQL:", error);
+          const fs = await import("node:fs/promises");
+          await fs.appendFile("trpc_debug.txt", `[${new Date().toISOString()}] AdminList Fetch Error: ${JSON.stringify(error, Object.getOwnPropertyNames(error))}\n`);
+          
           const query = `
             SELECT id, name, role, title, location, image, bio, displayOrder, active, createdAt, updatedAt
             FROM team_members
             ORDER BY displayOrder ASC, id ASC
           `;
-          const raw = await db.execute(query as any);
-          return (raw as any[])[0] ?? [];
+          try {
+             const raw = await db.execute(query as any);
+             return (raw as any[])[0] ?? [];
+          } catch (innerError) {
+             await fs.appendFile("trpc_debug.txt", `[${new Date().toISOString()}] Fallback Query Error: ${JSON.stringify(innerError, Object.getOwnPropertyNames(innerError))}\n`);
+             throw innerError;
+          }
         }
       }),
 

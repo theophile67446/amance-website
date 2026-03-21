@@ -810,7 +810,17 @@
       "projects": { "title": "Projets Terrain", "unit": "en cours" },
       "messages": { "title": "Messages Reçus", "unit": "nouveaux" },
       "registrations": { "title": "Candidatures", "unit": "nouvelles" },
-      "team": { "title": "Équipe Amance", "unit": "actifs" }
+      "team": { "title": "Équipe Amance", "unit": "actifs" },
+      "recent_activity": "Activité Récente",
+      "quick_actions": "Actions Rapides",
+      "registration_trends": "Tendances des Inscriptions",
+      "category_distribution": "Distribution par Catégorie",
+      "view_all": "Voir tout",
+      "actions": {
+        "write_article": "Rédiger un article",
+        "add_project": "Nouveau projet",
+        "view_messages": "Consulter les messages"
+      }
     },
     "toolbar": {
       "brand": "AMANCE Admin",
