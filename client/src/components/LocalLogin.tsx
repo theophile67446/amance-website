@@ -8,6 +8,7 @@ import { AlertCircle, Loader } from "lucide-react";
 
 export default function LocalLogin() {
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const utils = trpc.useUtils();
 
@@ -15,6 +16,7 @@ export default function LocalLogin() {
     onSuccess: () => {
       utils.auth.me.refetch();
       setEmail("");
+      setPassword("");
       setError("");
     },
     onError: (err) => {
@@ -29,7 +31,11 @@ export default function LocalLogin() {
       setError("Please enter an email");
       return;
     }
-    await localLoginMutation.mutateAsync({ email });
+    if (!password) {
+      setError("Please enter a password");
+      return;
+    }
+    await localLoginMutation.mutateAsync({ email, password });
   };
 
   return (
@@ -37,7 +43,7 @@ export default function LocalLogin() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>AMANCE Admin Login</CardTitle>
-          <CardDescription>Development - Local Login</CardDescription>
+          <CardDescription>Restricted local admin access</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
@@ -57,6 +63,16 @@ export default function LocalLogin() {
                 disabled={localLoginMutation.isPending}
               />
             </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">Password</label>
+              <Input
+                type="password"
+                placeholder="Enter admin password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={localLoginMutation.isPending}
+              />
+            </div>
             <Button
               type="submit"
               className="w-full"
@@ -72,7 +88,7 @@ export default function LocalLogin() {
               )}
             </Button>
             <p className="text-xs text-gray-500 text-center">
-              This is a local development login. Enter the admin email address.
+              In production, this login only works for the configured admin email and password.
             </p>
           </form>
         </CardContent>

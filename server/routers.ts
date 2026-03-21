@@ -1,6 +1,8 @@
 import { COOKIE_NAME } from "@shared/const";
+import { timingSafeEqual } from "node:crypto";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
+import { ENV } from "./_core/env";
 import { publicProcedure, router, adminProcedure, protectedProcedure } from "./_core/trpc";
 import { sdk } from "./_core/sdk";
 import { z } from "zod";
@@ -37,6 +39,17 @@ const normalizeProject = <T extends { impact?: unknown; sdgs?: unknown }>(projec
   sdgs: parseJsonArray<string>(project.sdgs),
 });
 
+const safeEqual = (left: string, right: string) => {
+  const leftBuffer = Buffer.from(left);
+  const rightBuffer = Buffer.from(right);
+
+  if (leftBuffer.length !== rightBuffer.length) {
+    return false;
+  }
+
+  return timingSafeEqual(leftBuffer, rightBuffer);
+};
+
 export const appRouter = router({
   system: systemRouter,
   auth: router({
@@ -48,33 +61,73 @@ export const appRouter = router({
     }),
     // Local login for development
     localLogin: publicProcedure
-      .input(z.object({ email: z.string().email() }))
+      .input(z.object({
+        email: z.string().email(),
+        password: z.string().min(1).optional(),
+      }))
       .mutation(async ({ input, ctx }) => {
         const db = await getDb();
         if (!db) throw new Error("Database not available");
 
-        // Find user by email
-        let user = await db
-          .select()
-          .from(users)
-          .where(eq(users.email, input.email))
-          .limit(1);
+        const normalizedEmail = input.email.trim().toLowerCase();
+        let user;
 
-        // If user doesn't exist, create it as admin
-        if (user.length === 0) {
-          const openId = "local-" + input.email.replace("@", "-").replace(".", "-");
-          await db.insert(users).values({
-            openId,
-            name: "Admin AMANCE",
-            email: input.email,
-            loginMethod: "local",
-            role: "admin",
-          });
+        if (ENV.isProduction) {
+          if (!ENV.localAdminEmail || !ENV.localAdminPassword) {
+            throw new Error("Local admin login is not configured for production");
+          }
+
+          if (normalizedEmail !== ENV.localAdminEmail.trim().toLowerCase()) {
+            throw new Error("Invalid credentials");
+          }
+
+          if (!input.password || !safeEqual(input.password, ENV.localAdminPassword)) {
+            throw new Error("Invalid credentials");
+          }
+
+          user = await db
+            .select()
+            .from(users)
+            .where(eq(users.email, ENV.localAdminEmail.trim()))
+            .limit(1);
+
+          if (user.length === 0) {
+            const openId = "local-" + ENV.localAdminEmail.trim().replace("@", "-").replaceAll(".", "-");
+            await db.insert(users).values({
+              openId,
+              name: "Admin AMANCE",
+              email: ENV.localAdminEmail.trim(),
+              loginMethod: "local",
+              role: "admin",
+            });
+            user = await db
+              .select()
+              .from(users)
+              .where(eq(users.email, ENV.localAdminEmail.trim()))
+              .limit(1);
+          }
+        } else {
           user = await db
             .select()
             .from(users)
             .where(eq(users.email, input.email))
             .limit(1);
+
+          if (user.length === 0) {
+            const openId = "local-" + input.email.replace("@", "-").replace(".", "-");
+            await db.insert(users).values({
+              openId,
+              name: "Admin AMANCE",
+              email: input.email,
+              loginMethod: "local",
+              role: "admin",
+            });
+            user = await db
+              .select()
+              .from(users)
+              .where(eq(users.email, input.email))
+              .limit(1);
+          }
         }
 
         if (user.length === 0) {
