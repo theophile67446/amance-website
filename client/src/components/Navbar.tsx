@@ -1,17 +1,23 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu, X, Heart, ChevronDown, Globe } from "lucide-react";
+import { Menu, X, Heart, ChevronDown, Globe, LayoutDashboard, LogOut } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "@/_core/hooks/useAuth";
 
-const LOGO_URL = "https://d2xsxph8kpxj0f.cloudfront.net/310519663349492546/QAH5oD3g9NaLpXrMvyrp4h/amance-logo_b61079fb.webp";
+const PRIMARY_LOGO_URL = "/logo.png";
+const FALLBACK_LOGO_URL = "https://d2xsxph8kpxj0f.cloudfront.net/310519663349492546/QAH5oD3g9NaLpXrMvyrp4h/amance-logo_b61079fb.webp";
 
 export default function Navbar() {
+  const [logoSrc, setLogoSrc] = useState(PRIMARY_LOGO_URL);
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
   const { t, i18n } = useTranslation();
+  const { user, logout, loading } = useAuth();
+
+  const isAdmin = user?.role === "admin";
 
   const isFrench = i18n.language.startsWith("fr");
   const nextLangLabel = isFrench ? "EN" : "FR";
@@ -78,20 +84,36 @@ export default function Navbar() {
     setMobileExpanded((prev) => (prev === label ? null : label));
   };
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+      setIsOpen(false);
+      setLocation("/");
+    } catch {
+      // Keep UX non-blocking even if logout endpoint is temporarily unavailable.
+      setLocation("/");
+    }
+  };
+
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
-          ? "bg-white/98 backdrop-blur-md shadow-md border-b border-gray-100"
-          : "bg-white/90 backdrop-blur-sm shadow-sm"
+        ? "bg-white/98 backdrop-blur-md shadow-md border-b border-gray-100"
+        : "bg-white/90 backdrop-blur-sm shadow-sm"
         }`}
     >
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20">
           <Link href="/" className="flex items-center gap-2 sm:gap-3 flex-shrink-0 min-w-0">
             <img
-              src={LOGO_URL}
+              src={logoSrc}
               alt="AMANCE Logo"
               className="h-10 w-10 sm:h-13 sm:w-13 object-contain flex-shrink-0"
+              onError={() => {
+                if (logoSrc !== FALLBACK_LOGO_URL) {
+                  setLogoSrc(FALLBACK_LOGO_URL);
+                }
+              }}
             />
             <div className="hidden xs:block min-w-0">
               <div className="text-lg sm:text-xl font-extrabold leading-tight font-heading text-amance-blue truncate">
@@ -114,8 +136,8 @@ export default function Navbar() {
                 <Link
                   href={link.href}
                   className={`flex items-center gap-1 px-2.5 xl:px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 whitespace-nowrap ${location === link.href
-                      ? "bg-amance-green text-white"
-                      : "text-gray-700 hover:bg-amance-green hover:text-white"
+                    ? "bg-amance-green text-white"
+                    : "text-gray-700 hover:bg-amance-green hover:text-white"
                     }`}
                 >
                   {link.label}
@@ -148,6 +170,24 @@ export default function Navbar() {
               <Globe size={15} />
               <span>{nextLangLabel}</span>
             </button>
+            {isAdmin && !loading && (
+              <>
+                <Link
+                  href="/admin"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-bold text-amance-blue border border-gray-200 hover:border-amance-blue hover:bg-amance-blue hover:text-white transition-colors"
+                >
+                  <LayoutDashboard size={15} />
+                  Tableau de bord
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-bold text-red-600 border border-red-200 hover:bg-red-50 transition-colors"
+                >
+                  <LogOut size={15} />
+                  Déconnexion
+                </button>
+              </>
+            )}
             <Link
               href="/faire-un-don"
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-white text-sm bg-amance-green hover:bg-amance-green-dark transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 whitespace-nowrap"
@@ -222,8 +262,8 @@ export default function Navbar() {
                   <Link
                     href={link.href}
                     className={`block px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${location === link.href
-                        ? "bg-amance-green text-white"
-                        : "text-gray-700 hover:bg-gray-50 active:bg-gray-100"
+                      ? "bg-amance-green text-white"
+                      : "text-gray-700 hover:bg-gray-50 active:bg-gray-100"
                       }`}
                   >
                     {link.label}
@@ -233,6 +273,24 @@ export default function Navbar() {
             ))}
 
             <div className="pt-3 pb-2 border-t border-gray-100 mt-2">
+              {isAdmin && !loading && (
+                <div className="space-y-2 mb-3">
+                  <Link
+                    href="/admin"
+                    className="flex items-center justify-center gap-2 w-full px-6 py-3 rounded-full font-bold text-sm text-amance-blue border border-amance-blue/30 hover:bg-amance-blue hover:text-white transition-all duration-300"
+                  >
+                    <LayoutDashboard size={16} />
+                    Tableau de bord
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center justify-center gap-2 w-full px-6 py-3 rounded-full font-bold text-sm text-red-600 border border-red-200 hover:bg-red-50 transition-all duration-300"
+                  >
+                    <LogOut size={16} />
+                    Déconnexion
+                  </button>
+                </div>
+              )}
               <Link
                 href="/faire-un-don"
                 className="flex items-center justify-center gap-2 w-full px-6 py-3.5 rounded-full font-bold text-white bg-amance-green hover:bg-amance-green-dark transition-all duration-300 shadow-md"
