@@ -34,7 +34,7 @@ function AdminContent({ activeTab, setActiveTab }: { activeTab: string; setActiv
   const TAB_LABELS: Record<string, string> = {
     dashboard: t("admin.sidebar.dashboard"),
     articles: t("admin.sidebar.articles"),
-    projets: t("admin.sidebar.projects"),
+    projets: t("admin.sidebar.projets"),
     contacts: t("admin.sidebar.contacts"),
     registrations: t("admin.sidebar.registrations"),
     equipe: t("admin.sidebar.team"),
@@ -1809,7 +1809,9 @@ function ContactsTab({ setMessage }: { setMessage: (msg: string) => void }) {
             placeholder={t("admin.contacts.search_placeholder")}
             className="pl-9 h-10 bg-white"
           />
-        <CardContent className="p-0">
+        </div>
+      </CardHeader>
+      <CardContent className="p-0">
         {isLoading ? (
           <div className="p-6 text-center text-gray-500">{t("admin.projects.loading")}</div>
         ) : (
@@ -1842,9 +1844,6 @@ function ContactsTab({ setMessage }: { setMessage: (msg: string) => void }) {
               </div>
             ))}
             {filteredContacts.length === 0 && <div className="p-8 text-center text-gray-500">{t("admin.contacts.empty")}</div>}
-          </div>
-        )}
-div>}
           </div>
         )}
       </CardContent>
@@ -1897,7 +1896,7 @@ function RegistrationsTab({ setMessage }: { setMessage: (msg: string) => void })
       </CardHeader>
       <CardContent className="p-0">
         {isLoading ? (
-          <div className="p-6 text-center text-gray-500">Chargement...</div>
+          <div className="p-6 text-center text-gray-500">{t("admin.projects.loading")}</div>
         ) : (
           <div className="divide-y divide-gray-100">
             {filteredRegistrations.map((reg: any) => (
@@ -1912,7 +1911,7 @@ function RegistrationsTab({ setMessage }: { setMessage: (msg: string) => void })
                         {reg.firstName} {reg.lastName} {reg.organization ? `(${reg.organization})` : ''}
                       </h4>
                     </div>
-                    <p className="text-sm text-gray-500 font-medium">Contact: {reg.email} {reg.phone ? `| ${reg.phone}` : ''} | Localisation: {reg.city}, {reg.country}</p>
+                    <p className="text-sm text-gray-500 font-medium">{t("admin.registrations.label_contact")}: {reg.email} {reg.phone ? `| ${reg.phone}` : ''} | {t("admin.registrations.label_location")}: {reg.city}, {reg.country}</p>
                   </div>
                   <select
                     value={reg.status}
@@ -1920,7 +1919,7 @@ function RegistrationsTab({ setMessage }: { setMessage: (msg: string) => void })
                     className={`text-sm rounded-full px-3 py-1 font-medium border ${reg.status === 'nouveau' ? 'bg-purple-100 text-purple-800 border-purple-200' :
                       reg.status === 'actif' ? 'bg-green-100 text-green-800 border-green-200' :
                         'bg-gray-100 text-gray-800 border-gray-200'
-                      }`}
+                       }`}
                   >
                     <option value="nouveau">{t("admin.registrations.status.nouveau")}</option>
                     <option value="contacte">{t("admin.registrations.status.contacte")}</option>
@@ -1931,20 +1930,20 @@ function RegistrationsTab({ setMessage }: { setMessage: (msg: string) => void })
                 <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                   {reg.motivation && (
                     <div className="p-4 bg-white border rounded-lg">
-                      <p className="text-xs font-bold text-gray-400 mb-1 uppercase tracking-wider">Motivation / Description</p>
+                      <p className="text-xs font-bold text-gray-400 mb-1 uppercase tracking-wider">{t("admin.registrations.label_motivation")}</p>
                       <p className="text-sm text-gray-700">{reg.motivation}</p>
                     </div>
                   )}
                   {reg.skills && (
                     <div className="p-4 bg-white border rounded-lg">
-                      <p className="text-xs font-bold text-gray-400 mb-1 uppercase tracking-wider">Compétences / Objectifs</p>
+                      <p className="text-xs font-bold text-gray-400 mb-1 uppercase tracking-wider">{t("admin.registrations.label_skills")}</p>
                       <p className="text-sm text-gray-700">{reg.skills}</p>
                     </div>
                   )}
                 </div>
               </div>
             ))}
-            {filteredRegistrations.length === 0 && <div className="p-8 text-center text-gray-500">Aucune candidature.</div>}
+            {filteredRegistrations.length === 0 && <div className="p-8 text-center text-gray-500">{t("admin.registrations.empty")}</div>}
           </div>
         )}
       </CardContent>
