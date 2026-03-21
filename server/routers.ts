@@ -50,11 +50,6 @@ const safeEqual = (left: string, right: string) => {
   return timingSafeEqual(leftBuffer, rightBuffer);
 };
 
-const hasMissingColumnError = (error: unknown) => {
-  const message = error instanceof Error ? error.message : String(error);
-  return /unknown column/i.test(message);
-};
-
 const escapeSqlValue = (value: string) => value.replace(/'/g, "''");
 
 const selectLegacyArticles = async (db: Awaited<ReturnType<typeof getDb>>, category?: string) => {
@@ -349,7 +344,6 @@ export const appRouter = router({
             .where(and(...conditions))
             .orderBy(desc(articles.publishedAt));
         } catch (error) {
-          if (!hasMissingColumnError(error)) throw error;
           results = await selectLegacyArticles(db, input?.category);
         }
 
@@ -366,7 +360,6 @@ export const appRouter = router({
               .where(fallbackConditions.length > 0 ? and(...fallbackConditions) : undefined)
               .orderBy(desc(articles.createdAt));
           } catch (error) {
-            if (!hasMissingColumnError(error)) throw error;
             const categoryFilter = input?.category ? ` WHERE category = '${escapeSqlValue(input.category)}'` : "";
             const query = `
               SELECT
@@ -405,7 +398,6 @@ export const appRouter = router({
           const result = await db.select().from(articles).where(eq(articles.slug, input));
           return result[0] || null;
         } catch (error) {
-          if (!hasMissingColumnError(error)) throw error;
           const query = `
             SELECT
               id, slug, title,
@@ -439,7 +431,6 @@ export const appRouter = router({
         try {
           return await db.select().from(articles).orderBy(desc(articles.publishedAt));
         } catch (error) {
-          if (!hasMissingColumnError(error)) throw error;
           const query = `
             SELECT
               id, slug, title,
@@ -556,7 +547,6 @@ export const appRouter = router({
             .where(conditions.length > 0 ? and(...conditions) : undefined)
             .orderBy(desc(projects.createdAt));
         } catch (error) {
-          if (!hasMissingColumnError(error)) throw error;
           results = await selectLegacyProjects(db, {
             category: input?.category,
             featured: input?.featured,
@@ -575,7 +565,6 @@ export const appRouter = router({
           const result = await db.select().from(projects).where(eq(projects.slug, input));
           return result[0] ? normalizeProject(result[0]) : null;
         } catch (error) {
-          if (!hasMissingColumnError(error)) throw error;
           const query = `
             SELECT
               id, slug, title,
@@ -613,7 +602,6 @@ export const appRouter = router({
         try {
           results = await db.select().from(projects).orderBy(desc(projects.createdAt));
         } catch (error) {
-          if (!hasMissingColumnError(error)) throw error;
           results = await selectLegacyProjects(db);
         }
         return results.map(normalizeProject);

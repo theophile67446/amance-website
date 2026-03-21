@@ -62,14 +62,13 @@ const filters = [
 
 export default function Projets() {
   const [activeFilter, setActiveFilter] = useState("all");
+  const queryInput = activeFilter === "all" ? undefined : { category: activeFilter as any };
 
   const { i18n } = useTranslation();
   const isEn = i18n.language.startsWith('en');
 
   // Récupérer les projets depuis l'API
-  const { data: projects = [], isLoading } = trpc.projects.list.useQuery({
-    category: activeFilter === "all" ? undefined : (activeFilter as any),
-  });
+  const { data: projects = [], isLoading } = trpc.projects.list.useQuery(queryInput);
 
   const featured = projects.filter((p) => p.featured);
 

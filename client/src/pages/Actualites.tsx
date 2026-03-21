@@ -34,11 +34,10 @@ const filters = [
 export default function Actualites() {
   const [activeFilter, setActiveFilter] = useState("all");
   const [search, setSearch] = useState("");
+  const queryInput = activeFilter === "all" ? undefined : { category: activeFilter as any };
 
   // Récupérer les articles depuis l'API
-  const { data: articles = [], isLoading } = trpc.articles.list.useQuery({
-    category: activeFilter === "all" ? undefined : (activeFilter as any),
-  });
+  const { data: articles = [], isLoading } = trpc.articles.list.useQuery(queryInput);
 
   const { i18n } = useTranslation();
   const isEn = i18n.language.startsWith('en');
