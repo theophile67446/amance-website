@@ -14,6 +14,7 @@ import {
   Heart,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
+import { formatDate } from "@/lib/utils";
 
 const HERO_PROJETS = "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=1920&q=80";
 
@@ -182,7 +183,7 @@ export default function Projets() {
                         <span>{project.location}</span>
                         <span>·</span>
                         <Calendar size={12} />
-                        <span>{project.startDate}</span>
+                        <span>{project.startDate ? formatDate(project.startDate) : "Date à venir"}</span>
                       </div>
 
                       <h3
