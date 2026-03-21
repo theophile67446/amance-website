@@ -29,7 +29,7 @@ export default function ProjetDetail() {
           <p className="text-xl font-bold text-gray-800 mb-6" style={{ fontFamily: "Montserrat, sans-serif" }}>
             {t("project_detail.not_found")}
           </p>
-          <Link href="/projets" className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-white transition-all shadow-md" 
+          <Link href="/projets" className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-white transition-all shadow-md"
             style={{ backgroundColor: "var(--amance-green)", fontFamily: "Montserrat, sans-serif" }}>
             <ArrowLeft size={18} /> {t("project_detail.back")}
           </Link>
@@ -103,6 +103,7 @@ export default function ProjetDetail() {
                   summary={displayDesc || ""}
                   path={`/projets/${project!.slug}`}
                   compact
+                  dark
                 />
               </div>
             </div>
@@ -121,7 +122,7 @@ export default function ProjetDetail() {
                   <MapPin size={20} style={{ color: cat.color }} />
                 </div>
                 <h3 className="font-bold text-gray-400 text-xs uppercase tracking-widest" style={{ fontFamily: "Montserrat, sans-serif" }}>
-                   {t("project_detail.info.location")}
+                  {t("project_detail.info.location")}
                 </h3>
               </div>
               <p className="font-bold text-gray-900">{project!.location || "Cameroon"}</p>
@@ -160,7 +161,7 @@ export default function ProjetDetail() {
                   <TreePine size={20} style={{ color: cat.color }} />
                 </div>
                 <h3 className="font-bold text-gray-400 text-xs uppercase tracking-widest" style={{ fontFamily: "Montserrat, sans-serif" }}>
-                   {t("project_detail.info.budget")}
+                  {t("project_detail.info.budget")}
                 </h3>
               </div>
               <p className="font-bold text-gray-900">{t("project_detail.info.budget_undetermined")}</p>
@@ -244,7 +245,7 @@ export default function ProjetDetail() {
                     key={sdg}
                     className="flex items-center gap-3 px-6 py-3 rounded-2xl font-bold bg-white border-2 border-gray-100 shadow-sm transition-all hover:border-amance-blue hover:text-amance-blue"
                   >
-                     <div className="w-2 h-2 rounded-full bg-amance-blue" />
+                    <div className="w-2 h-2 rounded-full bg-amance-blue" />
                     ODD {sdg}
                   </div>
                 ))}

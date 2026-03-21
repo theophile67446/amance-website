@@ -7,9 +7,10 @@ interface ShareActionsProps {
   path?: string;
   summary?: string;
   compact?: boolean;
+  dark?: boolean;
 }
 
-export default function ShareActions({ title, path = "/", summary = "", compact = false }: ShareActionsProps) {
+export default function ShareActions({ title, path = "/", summary = "", compact = false, dark = false }: ShareActionsProps) {
   const [copied, setCopied] = useState(false);
 
   const shareUrl = useMemo(() => {
@@ -50,21 +51,23 @@ export default function ShareActions({ title, path = "/", summary = "", compact 
   };
 
   const sizeClass = compact ? "h-8 px-3 text-xs" : "h-9 px-3.5 text-sm";
+  const darkClass = dark ? "border-white/60 text-white hover:bg-white/20 hover:text-white" : "";
+  const btnClass = `${sizeClass} ${darkClass}`.trim();
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <Button type="button" variant="outline" className={sizeClass} onClick={handleNativeShare}>
+      <Button type="button" variant="outline" className={btnClass} onClick={handleNativeShare}>
         <Share2 className="w-3.5 h-3.5 mr-1.5" />
         Partager
       </Button>
-      <Button type="button" variant="outline" className={sizeClass} onClick={handleCopyLink}>
+      <Button type="button" variant="outline" className={btnClass} onClick={handleCopyLink}>
         <Copy className="w-3.5 h-3.5 mr-1.5" />
         {copied ? "Copie" : "Copier"}
       </Button>
       <Button
         type="button"
         variant="outline"
-        className={sizeClass}
+        className={btnClass}
         onClick={() => openShareWindow(`https://wa.me/?text=${encodeURIComponent(`${shareText} ${shareUrl}`)}`)}
       >
         WhatsApp
@@ -72,7 +75,7 @@ export default function ShareActions({ title, path = "/", summary = "", compact 
       <Button
         type="button"
         variant="outline"
-        className={sizeClass}
+        className={btnClass}
         onClick={() => openShareWindow(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`)}
       >
         Facebook
@@ -80,7 +83,7 @@ export default function ShareActions({ title, path = "/", summary = "", compact 
       <Button
         type="button"
         variant="outline"
-        className={sizeClass}
+        className={btnClass}
         onClick={() => openShareWindow(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`)}
       >
         X
