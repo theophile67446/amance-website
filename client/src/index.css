@@ -221,7 +221,7 @@
 
   /* AMANCE Custom Utilities */
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-bold text-white transition-all duration-300 shadow-[0_8px_30px_rgb(5, 150, 105, 0.2)] hover:shadow-[0_8px_30px_rgb(5, 150, 105, 0.4)] bg-amance-green hover:bg-amance-green-dark hover:-translate-y-1;
+    @apply inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-bold text-white transition-all duration-300 shadow-lg hover:shadow-xl bg-amance-green hover:bg-amance-green-dark hover:-translate-y-1;
   }
 
   .btn-secondary {
