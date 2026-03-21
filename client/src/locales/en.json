@@ -10,10 +10,10 @@
     "team": "Our Team",
     "transparency": "Transparency",
     "actions": "Our Actions",
-    "humanitarian": "Humanitarian Aid",
-    "health": "Health & Well-being",
+    "humanitarian": "Smile on People's Faces",
+    "health": "Communication & Education",
     "community": "Community Development",
-    "environment": "Environmental Conservation",
+    "environment": "Biodiversity Conservation",
     "projects": "Projects",
     "news": "News",
     "getInvolved": "Get Involved",
@@ -38,24 +38,24 @@
     "stat3_label": "Commitment"
   },
   "domains": {
-    "badge": "Our Areas of Action",
-    "title": "Our Commitment on the Ground",
-    "subtitle": "Four complementary pillars of action for a global, sustainable and measurable impact on Cameroonian communities.",
+    "badge": "Our 4 Programs",
+    "title": "Our Action Programs",
+    "subtitle": "Four complementary programs to alleviate human suffering, educate citizens, strengthen communities and protect Cameroon's unique biodiversity.",
     "humanitarian": {
-      "title": "Humanitarian & Social Aid",
-      "desc": "We provide direct assistance to people in precarious situations: food, shelter, psychosocial support and emergency material aid."
+      "title": "Putting Smile on People's Faces",
+      "desc": "Direct support for people in difficulty: financial, medical and emergency material assistance, transparent and verifiable by all partners."
     },
     "health": {
-      "title": "Health & Well-being",
-      "desc": "Facilitating access to basic health care, hygiene education and well-being for rural communities and vulnerable populations."
+      "title": "Communication & Education",
+      "desc": "Empowering individuals to make informed choices for environmental protection and social well-being through digital media and educational programs."
     },
     "community": {
       "title": "Community Development",
-      "desc": "Strengthening the autonomy of local communities through sustainable development projects, education, vocational training and entrepreneurship."
+      "desc": "Equipping communities with the skills to generate positive change: health, infrastructure, economic opportunities and multi-sector partnerships."
     },
     "environment": {
-      "title": "Environmental Conservation",
-      "desc": "Protecting Cameroon's exceptional fauna and flora through environmental education programs and active biodiversity conservation."
+      "title": "Biodiversity Conservation",
+      "desc": "Halting biodiversity loss and restoring nature: reforestation, protected area management, sustainable agroforestry and wildlife conservation in Cameroon."
     }
   },
   "impact": {

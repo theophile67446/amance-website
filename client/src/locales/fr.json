@@ -10,10 +10,10 @@
     "team": "Notre Équipe",
     "transparency": "Transparence",
     "actions": "Nos Actions",
-    "humanitarian": "Aide Humanitaire",
-    "health": "Santé & Bien-être",
+    "humanitarian": "Sourire sur les Visages",
+    "health": "Communication & Éducation",
     "community": "Développement Communautaire",
-    "environment": "Conservation Environnementale",
+    "environment": "Conservation de la Biodiversité",
     "projects": "Projets",
     "news": "Actualités",
     "getInvolved": "S'impliquer",
@@ -38,24 +38,24 @@
     "stat3_label": "D'engagement"
   },
   "domains": {
-    "badge": "Nos Domaines d'Action",
-    "title": "Notre Engagement sur le Terrain",
-    "subtitle": "Quatre piliers d'action complémentaires pour un impact global, durable et mesurable sur les communautés camerounaises.",
+    "badge": "Nos 4 Programmes",
+    "title": "Nos Programmes d'Action",
+    "subtitle": "Quatre programmes complémentaires pour atténuer les souffrances humaines, sensibiliser les citoyens, renforcer les communautés et protéger la biodiversité camerounaise.",
     "humanitarian": {
-      "title": "Aide Humanitaire & Sociale",
-      "desc": "Nous apportons une assistance directe aux personnes en situation de précarité : nourriture, abri, soutien psychosocial et aide matérielle d'urgence."
+      "title": "Mettre le Sourire sur les Visages",
+      "desc": "Soutien direct aux personnes en difficulté : assistance financière, médicale et matérielle d'urgence, transparent et vérifiable par tous les partenaires."
     },
     "health": {
-      "title": "Santé & Bien-être",
-      "desc": "Faciliter l'accès aux soins de santé de base, à l'éducation à l'hygiène et au bien-être pour les communautés rurales et les populations vulnérables."
+      "title": "Communication & Éducation",
+      "desc": "Doter les individus des outils pour faire des choix éclairés en faveur de l'environnement et du bien-être social via les médias numériques et les programmes éducatifs."
     },
     "community": {
       "title": "Développement Communautaire",
-      "desc": "Renforcer l'autonomie des communautés locales par des projets de développement durable, l'éducation, la formation professionnelle et l'entrepreneuriat."
+      "desc": "Doter les communautés des compétences nécessaires pour générer des changements positifs : santé, infrastructures, opportunités économiques et partenariats multi-secteurs."
     },
     "environment": {
-      "title": "Conservation Environnementale",
-      "desc": "Protéger la faune et la flore exceptionnelles du Cameroun à travers des programmes d'éducation environnementale et de conservation active de la biodiversité."
+      "title": "Conservation de la Biodiversité",
+      "desc": "Enrayer la perte de biodiversité et restaurer la nature : reboisement, protection des aires protégées, agroforesterie durable et conservation de la faune camerounaise."
     }
   },
   "impact": {

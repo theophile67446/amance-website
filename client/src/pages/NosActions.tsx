@@ -1,8 +1,6 @@
 import Layout from "@/components/Layout";
 import { Link } from "wouter";
 import {
-  HandHeart,
-  Stethoscope,
   Home as HomeIcon,
   TreePine,
   ArrowRight,
@@ -11,68 +9,72 @@ import {
   Leaf,
   Heart,
   BookOpen,
-  Droplets,
   Sprout,
   Bird,
   GraduationCap,
+  Smile,
+  Megaphone,
+  MapPin,
 } from "lucide-react";
 
 const HERO_ACTIONS = "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=1920&q=80";
 const IMG_HUMANITAIRE = "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800&q=80";
-const IMG_SANTE = "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80";
+const HERO_ACTIONS = "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=1920&q=80";
+const IMG_SMILE = "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800&q=80";
+const IMG_EDUCATION = "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80";
 const IMG_COMMUNAUTAIRE = "https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=800&q=80";
 const IMG_CONSERVATION = "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&q=80";
 
 const domains = [
   {
-    id: "humanitaire",
-    icon: HandHeart,
-    title: "Aide Humanitaire & Sociale",
-    subtitle: "Soutien aux personnes en situation de vulnérabilité",
+    id: "smile",
+    icon: Smile,
+    title: "Mettre le Sourire sur les Visages",
+    subtitle: "Soutien aux personnes en difficulté",
     description:
-      "AMANCE apporte une assistance directe et immédiate aux personnes en situation de précarité extrême. Nous intervenons auprès des familles déplacées, des orphelins, des personnes âgées isolées et des personnes en situation de handicap.",
-    image: IMG_HUMANITAIRE,
+      "Ce programme soutient les personnes confrontées à des défis de vie particuliers. Toute personne en difficulté peut partager sa situation avec AMANCE. L'association priorise les urgences et histoires touchantes pour une assistance directe, transparente et vérifiable par tous les partenaires.",
+    image: IMG_SMILE,
     color: "var(--amance-green)",
     colorLight: "rgba(82,180,82,0.08)",
     activities: [
-      "Distribution alimentaire d'urgence aux familles déplacées",
-      "Fourniture de matériels scolaires aux enfants défavorisés",
-      "Soutien psychosocial et accompagnement des personnes traumatisées",
-      "Aide matérielle d'urgence (vêtements, abri, hygiène)",
-      "Visites et assistance aux personnes âgées et isolées",
-      "Soutien aux orphelins et enfants vulnérables",
+      "Assistance financière, médicale et matérielle d'urgence aux personnes en détresse",
+      "Distribution alimentaire aux familles déplacées et communautés vulnérables",
+      "Soutien aux orphelins, personnes âgées isolées et personnes handicapées",
+      "Mise à disposition des contacts des bénéficiaires pour vérification et confirmation",
+      "Coordination transparente avec les partenaires et bienfaiteurs",
+      "Section dédiée sur le site pour partager les urgences et histoires touchantes",
     ],
     impact: [
       { value: "500+", label: "Familles assistées" },
       { value: "1 200+", label: "Enfants soutenus" },
-      { value: "300+", label: "Personnes âgées accompagnées" },
+      { value: "300+", label: "Personnes accompagnées" },
     ],
     subIcons: [Heart, Users, HomeIcon],
   },
   {
-    id: "sante",
-    icon: Stethoscope,
-    title: "Santé & Bien-être",
-    subtitle: "Accès aux soins pour les communautés rurales",
+    id: "education",
+    icon: Megaphone,
+    title: "Communication & Éducation",
+    subtitle: "Sensibilisation et autonomisation des citoyens",
     description:
-      "L'accès aux soins de santé reste un défi majeur dans les zones rurales camerounaises. AMANCE facilite l'accès aux soins de base, organise des campagnes de sensibilisation à l'hygiène et au bien-être, et soutient les structures de santé communautaires.",
-    image: IMG_SANTE,
+      "Ce programme vise à doter les individus des outils nécessaires pour faire des choix éclairés en faveur de la protection de l'environnement et du bien-être social. AMANCE promeut l'utilisation des médias numériques pour sensibiliser et mobiliser autour des objectifs de développement durable.",
+    image: IMG_EDUCATION,
     color: "var(--amance-blue)",
     colorLight: "rgba(28,58,95,0.08)",
     activities: [
-      "Campagnes de sensibilisation à l'hygiène et la santé publique",
-      "Facilitation de l'accès aux soins de santé primaires",
-      "Soutien aux femmes enceintes et à la santé maternelle",
-      "Prévention des maladies endémiques (paludisme, choléra)",
-      "Distribution de médicaments essentiels dans les zones reculées",
-      "Formation des relais communautaires en santé de base",
+      "Campagnes de sensibilisation via les médias digitaux et traditionnels",
+      "Éducation au développement durable dans les écoles et communautés",
+      "Promotion des ODD des Nations Unies auprès des populations locales",
+      "Formation des jeunes aux outils numériques et à la communication",
+      "Ateliers d'alphabétisation environnementale et sanitaire",
+      "Sensibilisation sur les lois camerounaises (foresterie, environnement)",
     ],
     impact: [
-      { value: "2 000+", label: "Consultations facilitées" },
-      { value: "50+", label: "Campagnes de sensibilisation" },
-      { value: "800+", label: "Femmes et enfants soutenus" },
+      { value: "2 000+", label: "Personnes sensibilisées" },
+      { value: "50+", label: "Campagnes menées" },
+      { value: "800+", label: "Élèves formés" },
     ],
-    subIcons: [Stethoscope, Droplets, Heart],
+    subIcons: [Megaphone, BookOpen, GraduationCap],
   },
   {
     id: "communautaire",
@@ -80,20 +82,20 @@ const domains = [
     title: "Développement Communautaire",
     subtitle: "Autonomisation des communautés rurales",
     description:
-      "Nous croyons fermement que le développement durable passe par l'autonomisation des communautés locales. AMANCE met en œuvre des programmes de formation, d'éducation et d'entrepreneuriat qui permettent aux populations de prendre en main leur propre développement.",
+      "AMANCE cherche à doter les individus et les groupes des compétences nécessaires pour générer des changements positifs dans leurs communautés. Le programme inclut des projets axés sur la santé, le développement infrastructurel et les opportunités économiques, créant des partenariats entre différents secteurs et améliorant la qualité de vie.",
     image: IMG_COMMUNAUTAIRE,
     color: "var(--amance-green-dark)",
     colorLight: "rgba(42,100,60,0.08)",
     activities: [
-      "Formation professionnelle et développement des compétences",
-      "Programmes d'alphabétisation pour adultes",
+      "Formation professionnelle et développement des compétences locales",
       "Soutien à l'entrepreneuriat rural et aux micro-entreprises",
       "Construction et réhabilitation d'infrastructures communautaires",
       "Programmes d'éducation pour les enfants déscolarisés",
+      "Initiatives de développement économique pour les communautés rurales",
       "Renforcement des capacités des leaders communautaires",
     ],
     impact: [
-      { value: "80+", label: "Agriculteurs formés" },
+      { value: "80+", label: "Personnes formées" },
       { value: "200+", label: "Familles autonomisées" },
       { value: "15+", label: "Communautés touchées" },
     ],
@@ -102,31 +104,38 @@ const domains = [
   {
     id: "conservation",
     icon: TreePine,
-    title: "Conservation Environnementale",
-    subtitle: "Protection de la biodiversité camerounaise",
+    title: "Conservation de la Biodiversité",
+    subtitle: "Protection des écosystèmes camerounais",
     description:
-      "Le Cameroun est l'un des pays les plus riches en biodiversité d'Afrique. AMANCE s'engage à protéger ce patrimoine naturel exceptionnel à travers des programmes de conservation active, d'éducation environnementale et de reboisement.",
+      "Ce programme cherche à enrayer la perte de biodiversité et à remettre la nature sur la voie de la récupération. AMANCE travaille avec des partenaires de conservation pour restaurer les écosystèmes, conserver la biodiversité et permettre des moyens de subsistance durables. Nous renforçons la protection des aires protégées, restaurons forêts et zones humides, et promouvons l'agroforesterie.",
     image: IMG_CONSERVATION,
     color: "var(--amance-blue-light)",
     colorLight: "rgba(28,100,150,0.08)",
     activities: [
-      "Programmes de reboisement et restauration des forêts dégradées",
-      "Éducation environnementale dans les écoles et communautés",
-      "Conservation de la faune sauvage (primates, éléphants, etc.)",
-      "Sensibilisation à la lutte contre le braconnage",
-      "Promotion de l'agroforesterie durable",
-      "Partenariats avec les aires protégées et parcs nationaux",
+      "Reboisement et restauration des forêts et zones humides dégradées",
+      "Promotion de l'agriculture intelligente et des systèmes agroforestiers",
+      "Conservation de la faune sauvage (primates, éléphants, reptiles, oiseaux…)",
+      "Sensibilisation contre le braconnage et le commerce illégal d'espèces",
+      "Partenariats avec les gestionnaires d'aires protégées et parcs nationaux",
+      "Éducation environnementale dans les communautés riveraines des forêts",
     ],
     impact: [
       { value: "50 ha", label: "Forêt reboisée" },
-      { value: "5+", label: "Espèces protégées" },
+      { value: "7+", label: "Aires protégées partenaires" },
       { value: "1 000+", label: "Élèves sensibilisés" },
+    ],
+    landscapes: [
+      "Parc National de Bakossi",
+      "Sanctuaire de Faune de Banyang Mbo",
+      "Parc National du Mont Cameroun",
+      "Parc National de Korup",
+      "Parc National de Takamanda",
+      "Sanctuaire Herpéto-Ornithologique du Mont Muanenguba",
+      "Parc National de Deng-Deng",
     ],
     subIcons: [TreePine, Bird, Leaf],
   },
 ];
-
-export default function NosActions() {
   return (
     <Layout>
       {/* Hero */}
@@ -145,17 +154,16 @@ export default function NosActions() {
             style={{ backgroundColor: "rgba(255,255,255,0.15)" }}
           >
             <Leaf size={14} />
-            Nos Domaines d'Intervention
+            Nos 4 Programmes
           </div>
           <h1
             className="text-4xl md:text-5xl font-extrabold text-white mb-6"
             style={{ fontFamily: "Montserrat, sans-serif" }}
           >
-            Nos Actions sur le Terrain
+            Nos Programmes d'Action
           </h1>
           <p className="text-xl text-gray-200 max-w-3xl mx-auto" style={{ fontFamily: "Open Sans, sans-serif" }}>
-            Quatre domaines d'intervention complémentaires pour un impact global, durable et mesurable
-            sur les communautés camerounaises et leur environnement.
+            Quatre programmes complémentaires pour atténuer les souffrances humaines, renforcer les communautés, sensibiliser les citoyens et protéger la biodiversité unique du Cameroun.
           </p>
 
           {/* Quick Nav */}
@@ -167,7 +175,7 @@ export default function NosActions() {
                 className="px-4 py-2 rounded-full text-sm font-semibold text-white border border-white/30 hover:bg-white/20 transition-all duration-200"
                 style={{ fontFamily: "Montserrat, sans-serif" }}
               >
-                {d.title.split(" ")[0]} {d.title.split(" ")[1]}
+                {d.title}
               </a>
             ))}
           </div>
@@ -249,6 +257,21 @@ export default function NosActions() {
                       </div>
                     ))}
                   </div>
+
+                    {"landscapes" in domain && domain.landscapes && (
+                      <div className="mb-8 p-4 rounded-2xl" style={{ backgroundColor: domain.colorLight }}>
+                        <h4 className="flex items-center gap-2 font-bold text-sm uppercase tracking-wide mb-3" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>
+                          <MapPin size={14} /> Zones d'intervention clés
+                        </h4>
+                        <div className="flex flex-wrap gap-2">
+                          {domain.landscapes.map((l, j) => (
+                            <span key={j} className="px-3 py-1 rounded-full text-xs font-semibold text-white" style={{ backgroundColor: domain.color }}>
+                              {l}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
 
                   <Link
                     href="/projets"

@@ -446,34 +446,34 @@ export default function APropos() {
                   >
                     <Download size={16} />
                     Télécharger
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="py-20 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2
-            className="text-3xl font-extrabold mb-6"
-            style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}
-          >
-            Prêt à rejoindre notre mission ?
-          </h2>
-          <p className="text-lg text-gray-600 mb-8" style={{ fontFamily: "Open Sans, sans-serif" }}>
-            Que vous souhaitiez faire un don, devenir bénévole ou établir un partenariat,
-            nous vous accueillons avec enthousiasme.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link
-              href="/s-impliquer"
-              className="flex items-center gap-2 px-8 py-4 rounded-full text-base font-bold text-white transition-all duration-300 hover:-translate-y-1 shadow-md"
-              style={{ backgroundColor: "var(--amance-green)", fontFamily: "Montserrat, sans-serif" }}
-            >
-              S'impliquer <ArrowRight size={18} />
+                  {
+                    icon: Shield,
+                    title: "Intégrité",
+                    description:
+                      "L'association aligne ce qui est dit et ce qui est fait. Elle se concentre sur l'honnêteté, la cohérence et la responsabilité dans chacune de ses actions quotidiennes.",
+                    color: "var(--amance-blue)",
+                  },
+                  {
+                    icon: Heart,
+                    title: "Compassion",
+                    description:
+                      "AMANCE comprend et ressent la souffrance des personnes moins privilégiées. La compassion favorise la confiance, renforce les communautés et promeut la résilience pour le donneur comme pour le receveur.",
+                    color: "var(--amance-green)",
+                  },
+                  {
+                    icon: Users,
+                    title: "Diversité & Inclusion",
+                    description:
+                      "AMANCE travaille avec des personnes aux différences d'ethnicité, de genre, de religion, d'opinions et de statut. Respect, équité, inclusion, ouverture et collaboration sont ses piliers fondamentaux.",
+                    color: "var(--amance-blue-light)",
+                  },
+                  {
+                    icon: Globe,
+                    title: "Impact",
+                    description:
+                      "AMANCE se concentre sur le travail qui crée le plus d'impact sur les vies et l'environnement. Nous encourageons la responsabilité individuelle et créons une culture de redevabilité au sein de l'équipe.",
+                    color: "var(--amance-green-dark)",
+                  },
             </Link>
             <Link
               href="/contact"
