@@ -9,7 +9,7 @@ import { z } from "zod";
 import { getDb } from "./db";
 import { contacts, registrations, articles, projects, users } from "../drizzle/schema";
 import { notifyOwner } from "./_core/notification";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, and } from "drizzle-orm";
 
 type ProjectImpactStat = {
   value: string;
@@ -174,6 +174,25 @@ export const appRouter = router({
         });
         return { success: true };
       }),
+
+    adminList: adminProcedure
+      .query(async () => {
+        const db = await getDb();
+        if (!db) return [];
+        return await db.select().from(contacts).orderBy(desc(contacts.createdAt));
+      }),
+
+    updateStatus: adminProcedure
+      .input(z.object({
+        id: z.number(),
+        status: z.enum(["nouveau", "lu", "traite"]),
+      }))
+      .mutation(async ({ input }) => {
+        const db = await getDb();
+        if (!db) throw new Error("Database not available");
+        await db.update(contacts).set({ status: input.status }).where(eq(contacts.id, input.id));
+        return { success: true };
+      }),
   }),
 
   registration: router({
@@ -219,6 +238,25 @@ export const appRouter = router({
         });
         return { success: true };
       }),
+
+    adminList: adminProcedure
+      .query(async () => {
+        const db = await getDb();
+        if (!db) return [];
+        return await db.select().from(registrations).orderBy(desc(registrations.createdAt));
+      }),
+
+    updateStatus: adminProcedure
+      .input(z.object({
+        id: z.number(),
+        status: z.enum(["nouveau", "contacte", "actif", "inactif"]),
+      }))
+      .mutation(async ({ input }) => {
+        const db = await getDb();
+        if (!db) throw new Error("Database not available");
+        await db.update(registrations).set({ status: input.status }).where(eq(registrations.id, input.id));
+        return { success: true };
+      }),
   }),
 
   articles: router({
@@ -231,11 +269,15 @@ export const appRouter = router({
         const db = await getDb();
         if (!db) return [];
 
-        let query = db.select().from(articles).where(eq(articles.published, true));
+        const conditions = [eq(articles.published, true)];
         if (input?.category) {
-          query = query.where(eq(articles.category, input.category)) as any;
+          conditions.push(eq(articles.category, input.category));
         }
-        const results = await query.orderBy(desc(articles.publishedAt));
+        
+        const results = await db.select()
+          .from(articles)
+          .where(and(...conditions))
+          .orderBy(desc(articles.publishedAt));
         return results;
       }),
 
@@ -248,12 +290,22 @@ export const appRouter = router({
         return result[0] || null;
       }),
 
+    adminList: adminProcedure
+      .query(async () => {
+        const db = await getDb();
+        if (!db) return [];
+        return await db.select().from(articles).orderBy(desc(articles.publishedAt));
+      }),
+
     create: adminProcedure
       .input(z.object({
         title: z.string().min(1),
+        titleEn: z.string().optional(),
         slug: z.string().min(1),
         excerpt: z.string().optional(),
+        excerptEn: z.string().optional(),
         content: z.string().min(1),
+        contentEn: z.string().optional(),
         coverImage: z.string().optional(),
         category: z.enum(["actualites", "terrain", "communique", "rapport"]),
         author: z.string().optional(),
@@ -275,9 +327,12 @@ export const appRouter = router({
       .input(z.object({
         id: z.number(),
         title: z.string().optional(),
+        titleEn: z.string().optional(),
         slug: z.string().optional(),
         excerpt: z.string().optional(),
+        excerptEn: z.string().optional(),
         content: z.string().optional(),
+        contentEn: z.string().optional(),
         coverImage: z.string().optional(),
         category: z.enum(["actualites", "terrain", "communique", "rapport"]).optional(),
         published: z.boolean().optional(),
@@ -319,14 +374,19 @@ export const appRouter = router({
         const db = await getDb();
         if (!db) return [];
 
-        let query = db.select().from(projects);
+        const conditions = [];
         if (input?.category) {
-          query = query.where(eq(projects.category, input.category)) as any;
+          conditions.push(eq(projects.category, input.category));
         }
         if (input?.featured) {
-          query = query.where(eq(projects.featured, true)) as any;
+          conditions.push(eq(projects.featured, true));
         }
-        const results = await query.orderBy(desc(projects.createdAt));
+
+        const results = await db.select()
+          .from(projects)
+          .where(conditions.length > 0 ? and(...conditions) : undefined)
+          .orderBy(desc(projects.createdAt));
+          
         return results.map(normalizeProject);
       }),
 
@@ -339,12 +399,23 @@ export const appRouter = router({
         return result[0] ? normalizeProject(result[0]) : null;
       }),
 
+    adminList: adminProcedure
+      .query(async () => {
+        const db = await getDb();
+        if (!db) return [];
+        const results = await db.select().from(projects).orderBy(desc(projects.createdAt));
+        return results.map(normalizeProject);
+      }),
+
     create: adminProcedure
       .input(z.object({
         title: z.string().min(1),
+        titleEn: z.string().optional(),
         slug: z.string().min(1),
         description: z.string().min(1),
+        descriptionEn: z.string().optional(),
         fullDescription: z.string().optional(),
+        fullDescriptionEn: z.string().optional(),
         coverImage: z.string().optional(),
         category: z.enum(["humanitaire", "sante", "communautaire", "conservation"]),
         status: z.enum(["en_cours", "termine", "planifie"]).optional(),
@@ -369,9 +440,12 @@ export const appRouter = router({
       .input(z.object({
         id: z.number(),
         title: z.string().optional(),
+        titleEn: z.string().optional(),
         slug: z.string().optional(),
         description: z.string().optional(),
+        descriptionEn: z.string().optional(),
         fullDescription: z.string().optional(),
+        fullDescriptionEn: z.string().optional(),
         coverImage: z.string().optional(),
         category: z.enum(["humanitaire", "sante", "communautaire", "conservation"]).optional(),
         status: z.enum(["en_cours", "termine", "planifie"]).optional(),

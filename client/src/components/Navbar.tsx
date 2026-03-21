@@ -13,11 +13,12 @@ export default function Navbar() {
   const [location] = useLocation();
   const { t, i18n } = useTranslation();
 
-  const currentLang = i18n.language.startsWith("fr") ? "FR" : "EN";
+  const isFrench = i18n.language.startsWith("fr");
+  const nextLangLabel = isFrench ? "EN" : "FR";
+  const nextLangCode = isFrench ? "en" : "fr";
 
   const toggleLanguage = () => {
-    const newLang = currentLang === "FR" ? "en" : "fr";
-    i18n.changeLanguage(newLang);
+    i18n.changeLanguage(nextLangCode);
   };
 
   const navLinks = [
@@ -35,8 +36,8 @@ export default function Navbar() {
       label: t("nav.actions"),
       href: "/nos-actions",
       children: [
-        { label: t("nav.humanitarian"), href: "/nos-actions#humanitaire" },
-        { label: t("nav.health"), href: "/nos-actions#sante" },
+        { label: t("nav.humanitarian"), href: "/nos-actions#smile" },
+        { label: t("nav.health"), href: "/nos-actions#education" },
         { label: t("nav.community"), href: "/nos-actions#communautaire" },
         { label: t("nav.environment"), href: "/nos-actions#conservation" },
       ],
@@ -66,10 +67,11 @@ export default function Navbar() {
     setMobileExpanded(null);
   }, [location]);
 
-  // Prevent body scroll when mobile menu is open
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [isOpen]);
 
   const toggleMobileSection = (label: string) => {
@@ -81,16 +83,15 @@ export default function Navbar() {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
           ? "bg-white/98 backdrop-blur-md shadow-md border-b border-gray-100"
           : "bg-white/90 backdrop-blur-sm shadow-sm"
-        {
-          label: t("nav.actions"),
-          href: "/nos-actions",
-          children: [
-            { label: t("nav.humanitarian"), href: "/nos-actions#smile" },
-            { label: t("nav.health"), href: "/nos-actions#education" },
-            { label: t("nav.community"), href: "/nos-actions#communautaire" },
-            { label: t("nav.environment"), href: "/nos-actions#conservation" },
-          ],
-        },
+        }`}
+    >
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 sm:h-20">
+          <Link href="/" className="flex items-center gap-2 sm:gap-3 flex-shrink-0 min-w-0">
+            <img
+              src={LOGO_URL}
+              alt="AMANCE Logo"
+              className="h-10 w-10 sm:h-13 sm:w-13 object-contain flex-shrink-0"
             />
             <div className="hidden xs:block min-w-0">
               <div className="text-lg sm:text-xl font-extrabold leading-tight font-heading text-amance-blue truncate">
@@ -102,7 +103,6 @@ export default function Navbar() {
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-0.5 xl:gap-1">
             {navLinks.map((link) => (
               <div
@@ -122,7 +122,6 @@ export default function Navbar() {
                   {link.children && <ChevronDown size={13} />}
                 </Link>
 
-                {/* Dropdown */}
                 {link.children && activeDropdown === link.label && (
                   <div className="absolute top-full left-0 mt-1 w-56 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50">
                     {link.children.map((child) => (
@@ -140,15 +139,14 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* CTA & Lang — desktop */}
           <div className="hidden lg:flex items-center gap-2 xl:gap-3 flex-shrink-0">
             <button
               onClick={toggleLanguage}
-              title={currentLang === "FR" ? "Switch to English" : "Passer en français"}
+              title={isFrench ? "Switch to English" : "Passer en français"}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-bold text-gray-700 border border-gray-200 hover:border-amance-green hover:text-amance-green transition-colors"
             >
               <Globe size={15} />
-              <span>{currentLang}</span>
+              <span>{nextLangLabel}</span>
             </button>
             <Link
               href="/faire-un-don"
@@ -159,16 +157,14 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Mobile actions */}
           <div className="lg:hidden flex items-center gap-1.5 flex-shrink-0">
-            {/* Language toggle — visible pill on mobile */}
             <button
               onClick={toggleLanguage}
-              title={currentLang === "FR" ? "Switch to English" : "Passer en français"}
+              title={isFrench ? "Switch to English" : "Passer en français"}
               className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-gray-200 text-gray-700 hover:border-amance-green hover:text-amance-green transition-colors"
             >
               <Globe size={14} />
-              <span className="text-xs font-bold">{currentLang}</span>
+              <span className="text-xs font-bold">{nextLangLabel}</span>
             </button>
             <button
               onClick={() => setIsOpen(!isOpen)}
@@ -181,7 +177,6 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu — full-height slide-down */}
       {isOpen && (
         <div className="lg:hidden bg-white border-t border-gray-100 shadow-xl">
           <div
@@ -237,7 +232,6 @@ export default function Navbar() {
               </div>
             ))}
 
-            {/* Donate CTA in mobile menu */}
             <div className="pt-3 pb-2 border-t border-gray-100 mt-2">
               <Link
                 href="/faire-un-don"

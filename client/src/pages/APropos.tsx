@@ -20,16 +20,9 @@ const ABOUT_HERO = "https://images.unsplash.com/photo-1509099836639-18ba1795216d
 
 const teamMembers = [
   {
-    name: "Ngueping Samuel",
-    role: "Président",
-    title: "Gestionnaire d'Aires Protégées (MSc)",
-    location: "Buea",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80",
-  },
-  {
     name: "Fule Ndiba Juliette",
-    role: "Vice-Présidente",
-    title: "Administration (HND)",
+    role: "Présidente",
+    title: "BSc Administration",
     location: "Buea",
     image: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=200&q=80",
   },
@@ -446,48 +439,10 @@ export default function APropos() {
                   >
                     <Download size={16} />
                     Télécharger
-                  {
-                    icon: Shield,
-                    title: "Intégrité",
-                    description:
-                      "L'association aligne ce qui est dit et ce qui est fait. Elle se concentre sur l'honnêteté, la cohérence et la responsabilité dans chacune de ses actions quotidiennes.",
-                    color: "var(--amance-blue)",
-                  },
-                  {
-                    icon: Heart,
-                    title: "Compassion",
-                    description:
-                      "AMANCE comprend et ressent la souffrance des personnes moins privilégiées. La compassion favorise la confiance, renforce les communautés et promeut la résilience pour le donneur comme pour le receveur.",
-                    color: "var(--amance-green)",
-                  },
-                  {
-                    icon: Users,
-                    title: "Diversité & Inclusion",
-                    description:
-                      "AMANCE travaille avec des personnes aux différences d'ethnicité, de genre, de religion, d'opinions et de statut. Respect, équité, inclusion, ouverture et collaboration sont ses piliers fondamentaux.",
-                    color: "var(--amance-blue-light)",
-                  },
-                  {
-                    icon: Globe,
-                    title: "Impact",
-                    description:
-                      "AMANCE se concentre sur le travail qui crée le plus d'impact sur les vies et l'environnement. Nous encourageons la responsabilité individuelle et créons une culture de redevabilité au sein de l'équipe.",
-                    color: "var(--amance-green-dark)",
-                  },
-            </Link>
-            <Link
-              href="/contact"
-              className="flex items-center gap-2 px-8 py-4 rounded-full text-base font-bold border-2 transition-all duration-300 hover:text-white"
-              style={{ borderColor: "var(--amance-blue)", color: "var(--amance-blue)", fontFamily: "Montserrat, sans-serif" }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor = "var(--amance-blue)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor = "";
-              }}
-            >
-              Nous Contacter
-            </Link>
+                  </button>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>

@@ -3,15 +3,23 @@ import Layout from "@/components/Layout";
 import { trpc } from "@/lib/trpc";
 import { Loader, ArrowLeft, MapPin, Users, Calendar, TreePine, Heart, Link as LinkIcon } from "lucide-react";
 import { Link } from "wouter";
+import { useTranslation } from "react-i18next";
+import SEO from "@/components/SEO";
 
 export default function ProjetDetail() {
   const params = useParams<{ slug: string }>();
   const slug = params?.slug;
 
+  const { i18n, t } = useTranslation();
   const { data: project, isLoading } = trpc.projects.getBySlug.useQuery(
     slug!,
     { enabled: !!slug }
   );
+
+  const isEn = i18n.language.startsWith('en');
+  const displayTitle = (isEn && project?.titleEn) ? project.titleEn : project?.title;
+  const displayDesc = (isEn && project?.descriptionEn) ? project.descriptionEn : project?.description;
+  const displayFullDesc = (isEn && project?.fullDescriptionEn) ? project.fullDescriptionEn : project?.fullDescription;
 
   if (!slug) {
     return (
@@ -60,11 +68,16 @@ export default function ProjetDetail() {
 
   return (
     <Layout>
+      <SEO 
+        title={displayTitle || "Projet"} 
+        description={displayDesc || undefined}
+        image={project.coverImage || undefined}
+      />
       {/* Hero */}
       <section className="relative h-screen overflow-hidden">
         <img
           src={project.coverImage || "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=1920&q=80"}
-          alt={project.title}
+          alt={displayTitle || ""}
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent" />
@@ -89,11 +102,11 @@ export default function ProjetDetail() {
                   className="text-5xl xl:text-6xl font-extrabold text-white mb-4"
                   style={{ fontFamily: "Montserrat, sans-serif" }}
                 >
-                  {project.title}
+                  {displayTitle}
                 </h1>
               </div>
             </div>
-            <p className="text-xl text-gray-300 max-w-2xl">{project.description}</p>
+            <p className="text-xl text-gray-300 max-w-2xl">{displayDesc}</p>
           </div>
         </div>
       </section>
@@ -162,8 +175,13 @@ export default function ProjetDetail() {
             className="text-lg text-gray-700 leading-relaxed space-y-6 mb-12"
             style={{ fontFamily: "Open Sans, sans-serif" }}
           >
-            <p>{project.description}</p>
-            {project.fullDescription && <p>{project.fullDescription}</p>}
+            <p>{displayDesc}</p>
+            {displayFullDesc && (
+              <div 
+                className="whitespace-pre-wrap"
+                dangerouslySetInnerHTML={{ __html: displayFullDesc }} 
+              />
+            )}
           </div>
 
           {/* Impact Stats */}

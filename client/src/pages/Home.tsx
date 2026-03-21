@@ -180,18 +180,16 @@ export default function Home() {
         {/* Content */}
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
           <div
-            className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium font-sans text-white mb-6 backdrop-blur-md bg-white/15 transition-all duration-700 ${
-              heroLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
+            className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium font-sans text-white mb-6 backdrop-blur-md bg-white/15 transition-all duration-700 ${heroLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
           >
             <Star size={14} fill="currentColor" className="text-amance-green-light" />
             {t("hero.badge")}
           </div>
 
           <h1
-            className={`text-5xl md:text-6xl lg:text-[5.5rem] font-extrabold font-heading text-white leading-[1.1] mb-8 transition-all duration-700 delay-100 ${
-              heroLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
+            className={`text-5xl md:text-6xl lg:text-[5.5rem] font-extrabold font-heading text-white leading-[1.1] mb-8 transition-all duration-700 delay-100 ${heroLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
             style={{ textShadow: "0 10px 30px rgba(0,0,0,0.5)" }}
           >
             {t("hero.title1")} <span className="text-amance-green-light relative inline-block">
@@ -202,17 +200,15 @@ export default function Home() {
           </h1>
 
           <p
-            className={`text-lg md:text-xl text-gray-300 font-sans leading-relaxed mb-10 max-w-2xl mx-auto transition-all duration-700 delay-200 ${
-              heroLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
+            className={`text-lg md:text-xl text-gray-300 font-sans leading-relaxed mb-10 max-w-2xl mx-auto transition-all duration-700 delay-200 ${heroLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
           >
             {t("hero.subtitle")}
           </p>
 
           <div
-            className={`flex flex-col sm:flex-row w-full sm:w-auto justify-center items-center gap-4 sm:gap-5 transition-all duration-700 delay-300 ${
-              heroLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
+            className={`flex flex-col sm:flex-row w-full sm:w-auto justify-center items-center gap-4 sm:gap-5 transition-all duration-700 delay-300 ${heroLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
           >
             <Link
               href="/faire-un-don"

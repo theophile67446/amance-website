@@ -4,15 +4,23 @@ import { trpc } from "@/lib/trpc";
 import { formatDate } from "@/lib/utils";
 import { Loader, ArrowLeft, Share2 } from "lucide-react";
 import { Link } from "wouter";
+import { useTranslation } from "react-i18next";
+import SEO from "@/components/SEO";
 
 export default function ActualiteDetail() {
   const params = useParams<{ slug: string }>();
   const slug = params?.slug;
 
+  const { i18n, t } = useTranslation();
   const { data: article, isLoading } = trpc.articles.getBySlug.useQuery(
     slug!,
     { enabled: !!slug }
   );
+
+  const isEn = i18n.language.startsWith('en');
+  const displayTitle = (isEn && article?.titleEn) ? article.titleEn : article?.title;
+  const displayExcerpt = (isEn && article?.excerptEn) ? article.excerptEn : article?.excerpt;
+  const displayContent = (isEn && article?.contentEn) ? article.contentEn : article?.content;
 
   if (!slug) {
     return (
@@ -52,11 +60,16 @@ export default function ActualiteDetail() {
 
   return (
     <Layout>
+      <SEO 
+        title={displayTitle || "Actualité"} 
+        description={displayExcerpt || undefined}
+        image={article.coverImage || undefined}
+      />
       {/* Hero */}
       <section className="relative h-96 overflow-hidden">
         <img
           src={article.coverImage || "https://images.unsplash.com/photo-1552664730-d307ca884978?w=1920&q=80"}
-          alt={article.title}
+          alt={displayTitle || ""}
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
@@ -73,7 +86,7 @@ export default function ActualiteDetail() {
               className="text-4xl md:text-5xl font-extrabold text-white mb-4"
               style={{ fontFamily: "Montserrat, sans-serif" }}
             >
-              {article.title}
+              {displayTitle}
             </h1>
             <div className="flex items-center gap-4 text-gray-300">
               <span className="text-sm">{formatDate(new Date(article.createdAt))}</span>
@@ -109,10 +122,11 @@ export default function ActualiteDetail() {
             className="prose prose-lg max-w-none mb-16"
             style={{ fontFamily: "Open Sans, sans-serif" }}
           >
-            <p className="text-xl text-gray-700 leading-relaxed mb-8">{article.excerpt}</p>
-            <div className="text-base text-gray-600 leading-relaxed whitespace-pre-wrap">
-              {article.content}
-            </div>
+            <p className="text-xl text-gray-700 leading-relaxed mb-8">{displayExcerpt}</p>
+            <div 
+              className="text-base text-gray-600 leading-relaxed whitespace-pre-wrap"
+              dangerouslySetInnerHTML={{ __html: displayContent || "" }}
+            />
           </article>
 
           {/* CTA */}

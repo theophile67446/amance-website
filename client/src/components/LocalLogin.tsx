@@ -57,7 +57,7 @@ export default function LocalLogin() {
               <label className="block text-sm font-medium mb-2">Email Address</label>
               <Input
                 type="email"
-                placeholder="mimb.nout@gmail.com"
+                placeholder="Enter admin email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={localLoginMutation.isPending}

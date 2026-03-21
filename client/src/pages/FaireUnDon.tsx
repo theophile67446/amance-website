@@ -1,5 +1,7 @@
-import Layout from "@/components/Layout";
 import { Link } from "wouter";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import SEO from "@/components/SEO";
 import {
   Heart,
   ArrowRight,
@@ -59,9 +61,32 @@ const guarantees = [
   "Transparence totale sur nos finances et activités",
 ];
 
+const PRESET_AMOUNTS = [
+  { value: 5000, label: "5 000 FCFA" },
+  { value: 10000, label: "10 000 FCFA" },
+  { value: 25000, label: "25 000 FCFA" },
+  { value: 50000, label: "50 000 FCFA" },
+  { value: 100000, label: "100 000 FCFA" },
+];
+
 export default function FaireUnDon() {
+  const [selectedAmount, setSelectedAmount] = useState<number | null>(10000);
+  const [customAmount, setCustomAmount] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const handleDonate = () => {
+    setIsProcessing(true);
+    // Simulation d'une redirection vers une passerelle de paiement (Flutterwave/Campay)
+    setTimeout(() => {
+      alert("Redirection vers la passerelle de paiement sécurisée...");
+      setIsProcessing(false);
+    }, 1500);
+  };
+
+  const finalAmount = selectedAmount === null ? (parseInt(customAmount) || 0) : selectedAmount;
   return (
     <Layout>
+      <SEO title="Faire un Don" description="Soutenez les actions de l'AMANCE au Cameroun. Votre don contribue à la protection de l'environnement et au soutien des populations vulnérables." />
       {/* Hero */}
       <section className="relative py-32 overflow-hidden">
         <div
@@ -73,31 +98,105 @@ export default function FaireUnDon() {
           style={{ background: "linear-gradient(135deg, rgba(22,36,71,0.90) 0%, rgba(42,100,60,0.85) 100%)" }}
         />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold mb-6 text-white"
             style={{ backgroundColor: "rgba(255,255,255,0.15)" }}
           >
             <Heart size={14} fill="white" />
-            Faire un Don
-          </div>
-          <h1
-            className="text-4xl md:text-5xl font-extrabold text-white mb-6"
+            Soutien et Solidarité
+          </motion.div>
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-4xl md:text-6xl font-extrabold text-white mb-6 leading-tight"
             style={{ fontFamily: "Montserrat, sans-serif" }}
           >
-            Votre Générosité Change des Vies
-          </h1>
-          <p className="text-xl text-gray-200 max-w-3xl mx-auto mb-10" style={{ fontFamily: "Open Sans, sans-serif" }}>
-            Chaque contribution, quelle que soit sa taille, permet à AMANCE de poursuivre sa mission
-            auprès des personnes vulnérables et de préserver la biodiversité camerounaise.
-          </p>
-          <a
-            href="#comment-donner"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-white text-base transition-all duration-300 hover:-translate-y-1 shadow-lg"
-            style={{ backgroundColor: "var(--amance-green)", fontFamily: "Montserrat, sans-serif" }}
+            Votre Générosité <br /><span style={{ color: "var(--amance-green-light)" }}>Change des Vies</span>
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-xl text-gray-200 max-w-3xl mx-auto mb-10" 
+            style={{ fontFamily: "Open Sans, sans-serif" }}
           >
-            <Heart size={18} fill="white" />
-            Faire un Don Maintenant
-          </a>
+            Chaque contribution permet à AMANCE de poursuivre sa mission
+            auprès des personnes vulnérables et de préserver la biodiversité camerounaise.
+          </motion.p>
+        </div>
+      </section>
+
+      {/* Interactive Donation Box */}
+      <section className="relative -mt-16 z-20 pb-12">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 border border-gray-100 backdrop-blur-sm"
+          >
+            <div className="text-center mb-10">
+              <h3 className="text-2xl font-bold mb-4" style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}>
+                Faire un don ponctuel
+              </h3>
+              <p className="text-gray-500">Choisissez le montant de votre soutien</p>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+              {PRESET_AMOUNTS.map((amt) => (
+                <button
+                  key={amt.value}
+                  onClick={() => { setSelectedAmount(amt.value); setCustomAmount(""); }}
+                  className={`py-4 rounded-2xl font-bold text-lg transition-all duration-300 border-2 ${
+                    selectedAmount === amt.value 
+                    ? 'border-[#1E5D2A] bg-[#1E5D2A] text-white shadow-lg' 
+                    : 'border-gray-100 hover:border-[#1E5D2A] hover:bg-gray-50 text-[#1E5D2A]'
+                  }`}
+                  style={{ fontFamily: "Montserrat, sans-serif" }}
+                >
+                  {amt.label}
+                </button>
+              ))}
+              <div className="relative col-span-2 md:col-span-1">
+                <input
+                  type="number"
+                  placeholder="Autre montant"
+                  value={customAmount}
+                  onChange={(e) => { setCustomAmount(e.target.value); setSelectedAmount(null); }}
+                  className={`w-full h-full py-4 px-6 rounded-2xl font-bold text-lg border-2 transition-all outline-none ${
+                    selectedAmount === null 
+                    ? 'border-[#F5B100] ring-2 ring-[#F5B100]/20' 
+                    : 'border-gray-100 text-gray-500'
+                  }`}
+                  style={{ fontFamily: "Montserrat, sans-serif" }}
+                />
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 font-bold text-[#1E5D2A]">FCFA</span>
+              </div>
+            </div>
+
+            <button
+               onClick={handleDonate}
+              disabled={finalAmount <= 0 || isProcessing}
+              className={`w-full py-5 rounded-2xl text-xl font-bold text-white transition-all shadow-xl flex items-center justify-center gap-3 ${
+                finalAmount > 0 ? 'bg-[#1E5D2A] hover:bg-[#152e18] shadow-[#1E5D2A]/30' : 'bg-gray-300 cursor-not-allowed'
+              }`}
+              style={{ fontFamily: "Montserrat, sans-serif" }}
+            >
+              {isProcessing ? (
+                <div className="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <>
+                  Continuer le paiement de {finalAmount.toLocaleString()} FCFA
+                  <ArrowRight size={22} />
+                </>
+              )}
+            </button>
+            <p className="text-center mt-6 text-xs text-gray-400">
+               Paiement sécurisé via MTN Mobile Money, Orange Money ou Carte Bancaire.
+            </p>
+          </motion.div>
         </div>
       </section>
 
