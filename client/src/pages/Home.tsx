@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 import Layout from "@/components/Layout";
 import { useTranslation } from "react-i18next";
+import SEO from "@/components/SEO";
 import {
   Heart,
   Users,
@@ -167,6 +168,7 @@ export default function Home() {
 
   return (
     <Layout>
+      <SEO title={t("hero.title1") + " " + t("hero.title2")} />
       {/* ===== SECTION 1: HERO ===== */}
       <section className="relative pt-24 pb-10 md:pt-32 md:pb-48 lg:pt-48 lg:pb-64 overflow-hidden bg-gray-900">
         {/* Background Image */}
@@ -212,7 +214,7 @@ export default function Home() {
           >
             <Link
               href="/faire-un-don"
-              className="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-8 py-4 rounded-full font-bold text-white transition-all duration-300 shadow-[0_8px_30px_rgb(5,150,105,0.4)] hover:shadow-[0_8px_30px_rgb(5,150,105,0.6)] bg-amance-green hover:bg-amance-green-dark hover:-translate-y-1"
+              className="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-8 py-4 rounded-full font-bold text-white transition-all duration-300 shadow-lg hover:shadow-xl bg-amance-green hover:bg-amance-green-dark hover:-translate-y-1"
             >
               <Heart size={18} fill="white" />
               {t("hero.cta_donate")}
@@ -477,7 +479,7 @@ export default function Home() {
                   </p>
                   <Link
                     href={way.href}
-                    className={`flex items-center justify-center gap-2 px-6 py-4 rounded-full font-bold font-heading text-white text-sm transition-all duration-300 ${way.bg} hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:-translate-y-1`}
+                    className={`flex items-center justify-center gap-2 px-6 py-4 rounded-full font-bold font-heading text-white text-sm transition-all duration-300 ${way.bg} hover:shadow-xl hover:-translate-y-1`}
                   >
                     {t(way.ctaKey)}
                     <ArrowRight size={16} />

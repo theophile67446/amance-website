@@ -15,6 +15,8 @@ import {
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { formatDate } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
+import SEO from "@/components/SEO";
 
 const HERO_PROJETS = "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=1920&q=80";
 
@@ -61,6 +63,9 @@ const filters = [
 export default function Projets() {
   const [activeFilter, setActiveFilter] = useState("all");
 
+  const { i18n } = useTranslation();
+  const isEn = i18n.language.startsWith('en');
+
   // Récupérer les projets depuis l'API
   const { data: projects = [], isLoading } = trpc.projects.list.useQuery({
     category: activeFilter === "all" ? undefined : (activeFilter as any),
@@ -70,6 +75,7 @@ export default function Projets() {
 
   return (
     <Layout>
+      <SEO title="Projets" description="Explorez nos projets de conservation, humanitaires et communautaires au Cameroun." />
       {/* Hero */}
       <section className="relative py-32 overflow-hidden">
         <div
@@ -141,7 +147,7 @@ export default function Projets() {
                     <div className="relative overflow-hidden h-52">
                       <img
                         src={project.coverImage || "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&q=80"}
-                        alt={project.title}
+                        alt={(isEn && project.titleEn) ? project.titleEn : project.title}
                         className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                       />
                       <div className="absolute top-3 left-3 flex gap-2">
@@ -190,10 +196,10 @@ export default function Projets() {
                         className="text-lg font-bold mb-3"
                         style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}
                       >
-                        {project.title}
+                        {(isEn && project.titleEn) ? project.titleEn : project.title}
                       </h3>
                       <p className="text-sm text-gray-600 leading-relaxed flex-1 mb-5" style={{ fontFamily: "Open Sans, sans-serif" }}>
-                        {project.description}
+                        {(isEn && project.descriptionEn) ? project.descriptionEn : project.description}
                       </p>
 
                       {/* Impact */}

@@ -1,3 +1,4 @@
+import Layout from "@/components/Layout";
 import { Link } from "wouter";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -180,7 +181,7 @@ export default function FaireUnDon() {
                onClick={handleDonate}
               disabled={finalAmount <= 0 || isProcessing}
               className={`w-full py-5 rounded-2xl text-xl font-bold text-white transition-all shadow-xl flex items-center justify-center gap-3 ${
-                finalAmount > 0 ? 'bg-[#1E5D2A] hover:bg-[#152e18] shadow-[#1E5D2A]/30' : 'bg-gray-300 cursor-not-allowed'
+                finalAmount > 0 ? 'bg-[#1E5D2A] hover:bg-[#152e18] shadow-xl' : 'bg-gray-300 cursor-not-allowed'
               }`}
               style={{ fontFamily: "Montserrat, sans-serif" }}
             >

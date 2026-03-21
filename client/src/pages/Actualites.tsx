@@ -11,6 +11,8 @@ import {
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { formatDate } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
+import SEO from "@/components/SEO";
 
 const HERO_BLOG = "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1920&q=80";
 
@@ -38,13 +40,18 @@ export default function Actualites() {
     category: activeFilter === "all" ? undefined : (activeFilter as any),
   });
 
+  const { i18n } = useTranslation();
+  const isEn = i18n.language.startsWith('en');
+
   const filtered = articles.filter((a) => {
-    const matchSearch = search === "" || a.title.toLowerCase().includes(search.toLowerCase());
+    const title = (isEn && a.titleEn) ? a.titleEn : a.title;
+    const matchSearch = search === "" || title.toLowerCase().includes(search.toLowerCase());
     return matchSearch;
   });
 
   return (
     <Layout>
+      <SEO title="Actualités" description="Découvrez les dernières actualités et les actions sur le terrain de l'AMANCE au Cameroun." />
       {/* Hero */}
       <section className="relative py-32 overflow-hidden">
         <div
@@ -125,7 +132,7 @@ export default function Actualites() {
                     <div className="relative overflow-hidden h-48">
                       <img
                         src={article.coverImage || "https://images.unsplash.com/photo-1500595046891-c1da58dd7e9c?w=800&q=80"}
-                        alt={article.title}
+                        alt={(isEn && article.titleEn) ? article.titleEn : article.title}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                       <div
@@ -150,10 +157,10 @@ export default function Actualites() {
                         className="text-base font-bold mb-3 line-clamp-2"
                         style={{ fontFamily: "Montserrat, sans-serif", color: "var(--amance-blue)" }}
                       >
-                        {article.title}
+                        {(isEn && article.titleEn) ? article.titleEn : article.title}
                       </h3>
                       <p className="text-sm text-gray-600 leading-relaxed flex-1 line-clamp-3" style={{ fontFamily: "Open Sans, sans-serif" }}>
-                        {article.excerpt || article.content}
+                        {(isEn && article.excerptEn) ? article.excerptEn : (article.excerpt || article.content)}
                       </p>
                       <div
                         className="flex items-center gap-1 mt-4 text-sm font-semibold"
