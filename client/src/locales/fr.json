@@ -930,12 +930,13 @@
     "contacts": {
       "title": "Messages de contact",
       "empty": "Aucun message reçu.",
-      "label_from": "De :",
-      "label_subject": "Sujet :",
+      "search_placeholder": "Rechercher sujet, nom ou email...",
+      "label_from": "De",
+      "label_subject": "Sujet",
       "status": {
-        "new": "Nouveau",
-        "read": "Lu",
-        "replied": "Répondu"
+        "nouveau": "Nouveau",
+        "lu": "Lu",
+        "traite": "Traité"
       },
       "bulk_messages": {
         "status_success": "✅ Statut mis à jour pour {{count}} message(s)",
@@ -946,13 +947,20 @@
     "registrations": {
       "title": "Inscriptions Bénévoles & Partenaires",
       "empty": "Aucune inscription reçue.",
-      "type_volunteer": "Bénévole",
-      "type_partner": "Partenaire",
+      "search_placeholder": "Rechercher nom, email, org, ville...",
+      "label_contact": "Contact",
+      "label_location": "Localisation",
+      "label_motivation": "Motivation / Description",
+      "label_skills": "Compétences / Objectifs",
+      "type": {
+        "benevole": "Bénévole",
+        "partenaire": "Partenaire"
+      },
       "status": {
-        "new": "Nouveau",
-        "contacted": "Contacté",
-        "validated": "Validé",
-        "rejected": "Refusé"
+        "nouveau": "Nouveau",
+        "contacte": "Contacté",
+        "actif": "Actif",
+        "inactif": "Inactif"
       },
       "bulk_messages": {
         "status_success": "✅ Statut mis à jour pour {{count}} inscription(s)",

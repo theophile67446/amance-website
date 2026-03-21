@@ -930,34 +930,42 @@
     "contacts": {
       "title": "Contact Messages",
       "empty": "No messages received.",
-      "label_from": "From:",
-      "label_subject": "Subject:",
+      "search_placeholder": "Search subject, name or email...",
+      "label_from": "From",
+      "label_subject": "Subject",
       "status": {
-        "new": "New",
-        "read": "Read",
-        "replied": "Replied"
+        "nouveau": "New",
+        "lu": "Read",
+        "traite": "Processed"
       },
       "bulk_messages": {
         "status_success": "✅ Status updated for {{count}} message(s)",
         "delete_success": "✅ Messages deleted",
-        "delete_confirm": "Delete {{count}} message(s)?"
+        "delete_confirm": "Delete {{count}} message(s) ?"
       }
     },
     "registrations": {
       "title": "Volunteer & Partner Registrations",
       "empty": "No registrations received.",
-      "type_volunteer": "Volunteer",
-      "type_partner": "Partner",
+      "search_placeholder": "Search name, email, org, city...",
+      "label_contact": "Contact",
+      "label_location": "Location",
+      "label_motivation": "Motivation / Description",
+      "label_skills": "Skills / Objectives",
+      "type": {
+        "benevole": "Volunteer",
+        "partenaire": "Partner"
+      },
       "status": {
-        "new": "New",
-        "contacted": "Contacted",
-        "validated": "Validated",
-        "rejected": "Rejected"
+        "nouveau": "New",
+        "contacte": "Contacted",
+        "actif": "Active",
+        "inactif": "Inactive"
       },
       "bulk_messages": {
         "status_success": "✅ Status updated for {{count}} registration(s)",
         "delete_success": "✅ Registrations deleted",
-        "delete_confirm": "Delete {{count}} registration(s)?"
+        "delete_confirm": "Delete {{count}} registration(s) ?"
       }
     },
     "login": {
