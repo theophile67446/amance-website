@@ -3,6 +3,9 @@
  * Usage: npx tsx scripts/migrate-data.ts
  */
 
+import { config } from "dotenv";
+config();
+
 import { drizzle } from "drizzle-orm/mysql2";
 import mysql from "mysql2/promise";
 import { articles, projects } from "../drizzle/schema";
@@ -194,7 +197,7 @@ async function migrate() {
     console.log("🚀 Démarrage de la migration des données...\n");
 
     // Créer la connexion
-    const connection = await mysql.createConnection(process.env.DATABASE_URL!);
+    const connection = await mysql.createConnection({ uri: process.env.DATABASE_URL! });
     const db = drizzle(connection);
 
     // Insérer les articles
