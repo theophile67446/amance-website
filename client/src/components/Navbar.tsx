@@ -9,11 +9,14 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const [location] = useLocation();
   const { t, i18n } = useTranslation();
 
+  const currentLang = i18n.language.startsWith("fr") ? "FR" : "EN";
+
   const toggleLanguage = () => {
-    const newLang = i18n.language === "fr" ? "en" : "fr";
+    const newLang = currentLang === "FR" ? "en" : "fr";
     i18n.changeLanguage(newLang);
   };
 
@@ -60,39 +63,48 @@ export default function Navbar() {
   useEffect(() => {
     setIsOpen(false);
     setActiveDropdown(null);
+    setMobileExpanded(null);
   }, [location]);
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [isOpen]);
+
+  const toggleMobileSection = (label: string) => {
+    setMobileExpanded((prev) => (prev === label ? null : label));
+  };
 
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100 py-1"
-          : "bg-white/80 backdrop-blur-sm py-3"
+          ? "bg-white/98 backdrop-blur-md shadow-md border-b border-gray-100"
+          : "bg-white/90 backdrop-blur-sm shadow-sm"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20 transition-all duration-300">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 flex-shrink-0">
+          <Link href="/" className="flex items-center gap-2 sm:gap-3 flex-shrink-0 min-w-0">
             <img
               src={LOGO_URL}
               alt="AMANCE Logo"
-              className="h-14 w-14 object-contain"
+              className="h-10 w-10 sm:h-13 sm:w-13 object-contain flex-shrink-0"
             />
-            <div className="hidden sm:block">
-              <div
-                className="text-xl font-extrabold leading-tight font-heading text-amance-blue"
-              >
+            <div className="hidden xs:block min-w-0">
+              <div className="text-lg sm:text-xl font-extrabold leading-tight font-heading text-amance-blue truncate">
                 AMANCE
               </div>
-              <div className="text-xs text-gray-500 leading-tight max-w-[200px]">
+              <div className="text-[10px] sm:text-xs text-gray-500 leading-tight truncate">
                 Angel Mary Association
               </div>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-0.5 xl:gap-1">
             {navLinks.map((link) => (
               <div
                 key={link.href}
@@ -102,14 +114,14 @@ export default function Navbar() {
               >
                 <Link
                   href={link.href}
-                  className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
+                  className={`flex items-center gap-1 px-2.5 xl:px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 whitespace-nowrap ${
                     location === link.href
                       ? "bg-amance-green text-white"
                       : "text-gray-700 hover:bg-amance-green hover:text-white"
                   }`}
                 >
                   {link.label}
-                  {link.children && <ChevronDown size={14} />}
+                  {link.children && <ChevronDown size={13} />}
                 </Link>
 
                 {/* Dropdown */}
@@ -130,76 +142,113 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* CTA & Lang */}
-          <div className="hidden lg:flex items-center gap-3">
+          {/* CTA & Lang — desktop */}
+          <div className="hidden lg:flex items-center gap-2 xl:gap-3 flex-shrink-0">
             <button
               onClick={toggleLanguage}
-              className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-bold text-gray-700 hover:bg-gray-100 transition-colors"
+              title={currentLang === "FR" ? "Switch to English" : "Passer en français"}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-bold text-gray-700 border border-gray-200 hover:border-amance-green hover:text-amance-green transition-colors"
             >
-              <Globe size={16} />
-              {i18n.language.toUpperCase()}
+              <Globe size={15} />
+              <span>{currentLang}</span>
             </button>
             <Link
               href="/faire-un-don"
-              className="btn-primary"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-white text-sm bg-amance-green hover:bg-amance-green-dark transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 whitespace-nowrap"
             >
-              <Heart size={16} fill="white" />
+              <Heart size={14} fill="white" />
               {t("nav.donate")}
             </Link>
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="lg:hidden flex items-center gap-2">
+          {/* Mobile actions */}
+          <div className="lg:hidden flex items-center gap-1.5 flex-shrink-0">
+            {/* Language toggle — visible pill on mobile */}
             <button
               onClick={toggleLanguage}
-              className="p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+              title={currentLang === "FR" ? "Switch to English" : "Passer en français"}
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-gray-200 text-gray-700 hover:border-amance-green hover:text-amance-green transition-colors"
             >
-              <Globe size={18} />
+              <Globe size={14} />
+              <span className="text-xs font-bold">{currentLang}</span>
             </button>
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+              aria-label={isOpen ? "Fermer le menu" : "Ouvrir le menu"}
             >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
+              {isOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu — full-height slide-down */}
       {isOpen && (
-        <div className="lg:hidden bg-white/95 backdrop-blur-md border-t border-gray-100 shadow-lg animate-in slide-in-from-top-2 fade-in duration-300">
-          <div className="px-4 py-4 space-y-1 max-h-[80vh] overflow-y-auto">
+        <div className="lg:hidden bg-white border-t border-gray-100 shadow-xl">
+          <div
+            className="px-3 py-3 space-y-0.5 overflow-y-auto"
+            style={{ maxHeight: "calc(100dvh - 4rem)" }}
+          >
             {navLinks.map((link) => (
               <div key={link.href}>
-                <Link
-                  href={link.href}
-                  className="block px-4 py-3 rounded-lg text-sm font-medium font-sans text-gray-700 hover:bg-amance-green hover:text-white transition-colors"
-                >
-                  {link.label}
-                </Link>
-                {link.children && (
-                  <div className="pl-4 space-y-1 mt-1">
-                    {link.children.map((child) => (
-                      <Link
-                        key={child.href}
-                        href={child.href}
-                        className="block px-4 py-2 rounded-lg text-xs text-gray-500 hover:bg-amance-blue hover:text-white transition-colors"
-                      >
-                        {child.label}
-                      </Link>
-                    ))}
-                  </div>
+                {link.children ? (
+                  <>
+                    <button
+                      onClick={() => toggleMobileSection(link.label)}
+                      className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold text-gray-700 hover:bg-gray-50 active:bg-gray-100 transition-colors"
+                    >
+                      <span>{link.label}</span>
+                      <ChevronDown
+                        size={16}
+                        className={`flex-shrink-0 text-amance-green transition-transform duration-200 ${
+                          mobileExpanded === link.label ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+                    {mobileExpanded === link.label && (
+                      <div className="mt-0.5 mb-1 ml-4 pl-3 border-l-2 border-amance-green/30 space-y-0.5">
+                        <Link
+                          href={link.href}
+                          className="block px-3 py-2 rounded-lg text-sm font-semibold text-amance-blue hover:bg-amance-blue/5 transition-colors"
+                        >
+                          → Voir tout
+                        </Link>
+                        {link.children.map((child) => (
+                          <Link
+                            key={child.href}
+                            href={child.href}
+                            className="block px-3 py-2.5 rounded-lg text-sm text-gray-600 hover:bg-amance-green hover:text-white transition-colors"
+                          >
+                            {child.label}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <Link
+                    href={link.href}
+                    className={`block px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${
+                      location === link.href
+                        ? "bg-amance-green text-white"
+                        : "text-gray-700 hover:bg-gray-50 active:bg-gray-100"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
                 )}
               </div>
             ))}
-            <div className="pt-4 border-t border-gray-100">
+
+            {/* Donate CTA in mobile menu */}
+            <div className="pt-3 pb-2 border-t border-gray-100 mt-2">
               <Link
                 href="/faire-un-don"
-                className="btn-primary w-full"
+                className="flex items-center justify-center gap-2 w-full px-6 py-3.5 rounded-full font-bold text-white bg-amance-green hover:bg-amance-green-dark transition-all duration-300 shadow-md"
               >
                 <Heart size={16} fill="white" />
-                Faire un Don
+                {t("nav.donate")}
               </Link>
             </div>
           </div>
