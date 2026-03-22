@@ -34,6 +34,10 @@ function Router() {
       <Route path="/projets/:slug" component={ProjetDetail} />
       <Route path="/actualites/:slug" component={ActualiteDetail} />
       <Route path="/admin" component={Admin} />
+      <Route path="/admin/:section" component={Admin} />
+      <Route path="/admin/:section/new" component={Admin} />
+      <Route path="/admin/:section/:id" component={Admin} />
+      <Route path="/admin/:section/:id/edit" component={Admin} />
       <Route path="/mentions-legales" component={MentionsLegales} />
       <Route path="/politique-de-confidentialite" component={PolitiqueConfidentialite} />
       <Route path="/404" component={NotFound} />
